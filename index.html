@@ -55,7 +55,7 @@
     /* Marquesina superior 2000s */
     .marquee-bar {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       background: #000;
       color: var(--text-main);
       border: 2px inset #fff;
@@ -83,7 +83,7 @@
     /* Ventana Retro Principal */
     .retro-window {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       background: var(--window-bg);
       border-top: 3px solid var(--window-border-light);
       border-left: 3px solid var(--window-border-light);
@@ -235,11 +235,11 @@
     /* Layout Principal */
     .profile-grid {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: 16px;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 740px) {
       .profile-grid { grid-template-columns: 1fr; }
     }
 
@@ -251,18 +251,26 @@
     }
 
     .avatar-box {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 10px;
+      width: 115px;
+      height: 115px;
+      margin: 0 auto 8px;
       border: 4px ridge var(--text-secondary);
       background: radial-gradient(circle, var(--text-secondary), var(--text-accent));
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 46px;
+      font-size: 44px;
       box-shadow: 0 0 12px var(--text-accent);
       position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
     }
 
     .avatar-tag {
@@ -286,7 +294,7 @@
       font-size: 11px;
       font-weight: bold;
       border: 2px outset #fff;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .status-dot {
@@ -303,16 +311,16 @@
       font-size: 12px;
       border-top: 1px dotted var(--text-secondary);
       padding-top: 8px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
-    .profile-info div { margin-bottom: 5px; }
+    .profile-info div { margin-bottom: 4px; }
 
     /* =========================================================
-       WINAMP v2.91 CON AUDIO REAL (Web Audio Synth + Radio MP3)
+       ARES / WINAMP MP3 BUSCADOR DE CANCIONES REALES + SYNTH
        ========================================================= */
     .winamp-box {
-      margin-top: 12px;
+      margin-top: 10px;
       background: #1b1b29;
       border: 2px ridge #a0a0a0;
       padding: 8px;
@@ -324,7 +332,7 @@
     }
 
     .winamp-title {
-      background: linear-gradient(90deg, #000044, #004488, #000044);
+      background: linear-gradient(90deg, #000044, #0055aa, #000044);
       color: #fff;
       padding: 3px 6px;
       font-weight: bold;
@@ -343,11 +351,12 @@
     }
 
     #song-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-weight: bold;
       margin-bottom: 4px;
+      font-size: 11px;
+      color: #00ff66;
+      line-height: 1.25;
+      min-height: 26px;
     }
 
     .winamp-meta {
@@ -361,7 +370,7 @@
     .equalizer {
       display: flex;
       gap: 2px;
-      height: 18px;
+      height: 16px;
       align-items: flex-end;
       background: #080808;
       padding: 2px;
@@ -375,11 +384,11 @@
     }
 
     .playing .eq-bar {
-      animation: eqBounce 0.45s infinite alternate;
+      animation: eqBounce 0.4s infinite alternate;
     }
-    .playing .eq-bar:nth-child(2n) { animation-duration: 0.3s; }
-    .playing .eq-bar:nth-child(3n) { animation-duration: 0.6s; }
-    .playing .eq-bar:nth-child(5n) { animation-duration: 0.25s; }
+    .playing .eq-bar:nth-child(2n) { animation-duration: 0.28s; }
+    .playing .eq-bar:nth-child(3n) { animation-duration: 0.52s; }
+    .playing .eq-bar:nth-child(5n) { animation-duration: 0.22s; }
 
     @keyframes eqBounce {
       0% { height: 15%; }
@@ -387,15 +396,57 @@
     }
 
     .winamp-controls {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 3px;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .winamp-controls button {
-      flex: 1;
       font-size: 10px;
-      padding: 3px 2px;
+      padding: 4px 2px;
+    }
+
+    /* Buscador estilo Ares Galaxy 2005 */
+    .ares-search-box {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 6px;
+      border-top: 1px dotted #555;
+      padding-top: 6px;
+    }
+
+    .ares-input {
+      flex: 1;
+      background: #080812;
+      color: #00ffcc;
+      border: 1px inset #666;
+      padding: 3px 5px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      width: 100%;
+    }
+
+    .genre-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-bottom: 6px;
+    }
+
+    .genre-pill {
+      background: #2b2b40;
+      color: #00ffff;
+      border: 1px outset #666;
+      font-size: 9px;
+      padding: 2px 4px;
+      cursor: pointer;
+      font-family: Tahoma, sans-serif;
+    }
+
+    .genre-pill:hover, .genre-pill.active {
+      background: #ff00aa;
+      color: #fff;
     }
 
     .volume-row {
@@ -603,13 +654,13 @@
   <!-- Marquesina Clásica -->
   <div class="marquee-bar">
     <div class="marquee-content" id="marquee-text">
-      ★·.·´¯`·.·★ ESPACIO RETRO CON IA EN VIVO + MÚSICA GENERATIVA INFINITA ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ DALE PLAY AL WINAMP PARA ESCUCHAR MÚSICA Y2K REAL ★·.·´¯`·.·★
+      ★·.·´¯`·.·★ ESPACIO RETRO CON CANCIONES REALES DE LOS 2000s + IA EN VIVO ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ BUSCA CUALQUIER ARTISTA O DALE PLAY AL WINAMP ★·.·´¯`·.·★
     </div>
   </div>
 
   <div class="retro-window" id="main-window">
     <div class="title-bar">
-      <div id="window-title">🌐 CyberLife_2004_AI.exe - [15-10-2004]</div>
+      <div id="window-title">🌐 CyberLife_2004_Ares_MP3.exe - [15-10-2004]</div>
       <div class="title-bar-controls">
         <div class="win-btn" title="Minimizar">_</div>
         <div class="win-btn" title="Maximizar">□</div>
@@ -647,11 +698,12 @@
       </div>
 
       <div class="profile-grid">
-        <!-- Columna Izquierda: Perfil + Reproductor con Sonido Real -->
+        <!-- Columna Izquierda: Perfil + Winamp con Canciones Reales (API iTunes) -->
         <div class="sidebar">
           <div class="avatar-box" id="avatar-box">
             <span id="avatar-emoji">💿</span>
-            <div class="avatar-tag">xX_15_10_2004_Xx</div>
+            <img id="album-cover" alt="Carátula 2000s">
+            <div class="avatar-tag" id="avatar-tag-text">xX_15_10_2004_Xx</div>
           </div>
 
           <div class="msn-status">
@@ -666,17 +718,17 @@
             <div><strong>🎨 Skin ID:</strong> <span id="skin-name">#Y2K-001</span></div>
           </div>
 
-          <!-- WINAMP CON SINTETIZADOR CHIPTUNE Y2K + STREAM DE RADIO -->
+          <!-- WINAMP + ARES GALAXY CON CANCIONES REALES (iTunes API) + SYNTH RETRO -->
           <div class="winamp-box" id="winamp-player">
             <div class="winamp-title">
-              <span>⚡ WINAMP SYNTH + RADIO</span>
-              <span id="audio-status">STOPPED</span>
+              <span>⚡ WINAMP + ARES MP3</span>
+              <span id="audio-status">LISTO</span>
             </div>
             <div class="winamp-screen">
-              <div id="song-title">▶ Pulsa PLAY para activar el audio 🔊</div>
+              <div id="song-title">🎵 Pulsa PLAY para escuchar canciones reales 2000s</div>
               <div class="winamp-meta">
-                <span id="music-mode-label">Modo: Synth 2000s</span>
-                <span id="music-bpm-label">128 BPM</span>
+                <span id="music-mode-label">Modo: Canciones Reales</span>
+                <span id="music-time-label">00:30 AAC</span>
               </div>
               <div class="equalizer" id="equalizer">
                 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
@@ -685,18 +737,37 @@
                 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
               </div>
             </div>
+
+            <!-- Botones principales de reproducción -->
             <div class="winamp-controls">
               <button class="retro-btn" onclick="togglePlayMusic()" id="play-btn">▶ PLAY</button>
-              <button class="retro-btn" onclick="nextProceduralTrack()">⏭ OTRA PISTA</button>
-              <button class="retro-btn" onclick="switchMusicMode()" id="mode-btn">📻 RADIO</button>
+              <button class="retro-btn" onclick="nextTrack()">⏭ OTRA CANCIÓN</button>
+              <button class="retro-btn" onclick="switchMusicMode()" id="mode-btn">🎹 MODO SYNTH</button>
             </div>
+
+            <!-- Géneros rápidos de los 2000s -->
+            <div class="genre-pills">
+              <span class="genre-pill active" onclick="loadGenreCrate('rock2000s', this)">🎸 Rock/Emo</span>
+              <span class="genre-pill" onclick="loadGenreCrate('pop2000s', this)">✨ Pop/Dance</span>
+              <span class="genre-pill" onclick="loadGenreCrate('latino2000s', this)">🔥 Latino/Reggaeton</span>
+              <span class="genre-pill" onclick="loadGenreCrate('hiphop2000s', this)">🎧 HipHop/R&B</span>
+              <span class="genre-pill" onclick="loadGenreCrate('indie2000s', this)">🛸 Electro/Indie</span>
+            </div>
+
+            <!-- Buscador estilo Ares Galaxy para cualquier canción o artista -->
+            <div class="ares-search-box">
+              <input type="text" id="ares-query" class="ares-input" placeholder="Buscar artista/canción (ej: Kudai, Eminem)..." onkeydown="if(event.key==='Enter') searchCustomSongs()">
+              <button class="retro-btn" onclick="searchCustomSongs()" style="font-size:10px; padding:2px 6px;">🔍</button>
+            </div>
+
             <div class="volume-row">
               <span>🔊 Vol:</span>
-              <input type="range" id="volume-slider" min="0" max="100" value="45" oninput="changeVolume(this.value)">
+              <input type="range" id="volume-slider" min="0" max="100" value="65" oninput="changeVolume(this.value)">
             </div>
           </div>
-          <!-- Audio HTML5 oculto para modo Radio MP3 en vivo -->
-          <audio id="radio-audio" preload="none" crossorigin="anonymous"></audio>
+
+          <!-- Reproductor HTML5 real para las canciones de iTunes CDN -->
+          <audio id="real-audio-player" preload="auto"></audio>
         </div>
 
         <!-- Columna Derecha: Contadores y Frases IA -->
@@ -759,8 +830,9 @@
       </div>
 
       <div class="badges-footer">
-        <div class="micro-badge"><span>AI</span>LIVE GENERATOR</div>
-        <div class="micro-badge"><span>SYNTH</span>WEB AUDIO API</div>
+        <div class="micro-badge"><span>MP3</span>REAL 2000s HITS</div>
+        <div class="micro-badge"><span>ARES</span>SEARCH ENGINE</div>
+        <div class="micro-badge"><span>AI</span>LIVE QUOTES</div>
         <div class="micro-badge"><span>CSS</span>INFINITE SKINS</div>
         <div class="micro-badge"><span>SPAWN</span>15-10-2004</div>
       </div>
@@ -1004,30 +1076,213 @@
     }
 
     // =========================================================================
-    // 4. MOTOR DE MÚSICA INFINITA (Web Audio API Chiptune Y2K + Radio Stream)
+    // 4. MOTOR DE MÚSICA CON CANCIONES REALES (iTunes API HTTPS) + MULTI-SYNTH
+    // =========================================================================
+    const GENRE_CRATES = {
+      rock2000s: [
+        'Linkin Park', 'Green Day', 'Evanescence', 'Blink-182', 'My Chemical Romance',
+        'Avril Lavigne', 'Paramore', 'The Killers', 'System of a Down', 'Red Hot Chili Peppers',
+        'Sum 41', 'Simple Plan', 'Good Charlotte', 'Fall Out Boy', 'Panic! At The Disco',
+        'Coldplay', 'Muse', 'The Strokes', 'Arctic Monkeys', 'Foo Fighters', 'Limp Bizkit', 'Korn'
+      ],
+      pop2000s: [
+        'Britney Spears', 'Lady Gaga', 'Rihanna', 'Black Eyed Peas', 'Gwen Stefani',
+        'Katy Perry', 'Nelly Furtado', 'Christina Aguilera', 'Justin Timberlake', 'Madonna',
+        'Cascada', 'Basshunter', 't.A.T.u.', 'Backstreet Boys', 'Outkast', 'Maroon 5', 'Beyonce'
+      ],
+      latino2000s: [
+        'Daddy Yankee', 'Don Omar', 'RBD', 'Kudai', 'Belanova', 'Pxndx', 'Miranda!',
+        'Shakira', 'Juanes', 'Calle 13', 'Wisin & Yandel', 'Aventura', 'Camila', 'Sin Bandera',
+        'Julieta Venegas', 'La Oreja de Van Gogh', 'El Canto del Loco', 'Soda Stereo', 'Mana'
+      ],
+      hiphop2000s: [
+        'Eminem', '50 Cent', 'Gorillaz', 'Snoop Dogg', 'Usher', 'Akon', 'Sean Paul',
+        'Kanye West', 'Nelly', 'Jay-Z', 'Alicia Keys', 'Dr. Dre', 'Timbaland', 'Flo Rida'
+      ],
+      indie2000s: [
+        'Daft Punk', 'MGMT', 'Empire of the Sun', 'Justice', 'David Guetta', 'Tiesto',
+        'Pendulum', 'The Prodigy', 'Chemical Brothers', 'Moby', 'Fatboy Slim', 'Darude', 'Gigi D Agostino'
+      ]
+    };
+
+    let currentGenreKey = 'rock2000s';
+    let realSongsQueue = [];
+    let currentSongIndex = 0;
+    let isPlaying = false;
+    let musicMode = 'real';
+    let masterVolume = 0.65;
+
+    const realAudio = document.getElementById('real-audio-player');
+    realAudio.volume = masterVolume;
+
+    realAudio.addEventListener('ended', () => {
+      if (musicMode === 'real' && isPlaying) {
+        nextTrack();
+      }
+    });
+
+    realAudio.addEventListener('timeupdate', () => {
+      if (musicMode === 'real' && realAudio.duration) {
+        const cur = Math.floor(realAudio.currentTime);
+        const tot = Math.floor(realAudio.duration);
+        document.getElementById('music-time-label').textContent =
+          `00:${String(cur).padStart(2, '0')} / 00:${String(tot).padStart(2, '0')}`;
+      }
+    });
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    async function fetchRealSongsFromiTunes(searchTerm, autoPlayAfter = false) {
+      const titleEl = document.getElementById('song-title');
+      const statusEl = document.getElementById('audio-status');
+      statusEl.textContent = 'BUSCANDO...';
+      titleEl.textContent = `🔍 Descargando lista de "${searchTerm}" en Ares...`;
+
+      try {
+        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&media=music&entity=song&limit=35`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const validTracks = (data.results || []).filter(item => item.previewUrl);
+        if (validTracks.length > 0) {
+          realSongsQueue = shuffleArray(validTracks);
+          currentSongIndex = 0;
+          statusEl.textContent = `${realSongsQueue.length} MP3 LISTOS`;
+
+          if (autoPlayAfter || isPlaying) {
+            playCurrentRealSong();
+          } else {
+            const first = realSongsQueue[0];
+            titleEl.textContent = `🎵 Listo: ${first.artistName} - ${first.trackName}`;
+            updateAlbumCover(first.artworkUrl100, first.artistName);
+          }
+          return true;
+        }
+      } catch (err) {
+        console.warn('Error consultando iTunes API:', err);
+      }
+
+      statusEl.textContent = 'MODO SYNTH';
+      titleEl.textContent = '⚠️ Sin resultados o sin red. Activando Sintetizador Retro...';
+      return false;
+    }
+
+    function updateAlbumCover(artworkUrl, artistName) {
+      const img = document.getElementById('album-cover');
+      const emoji = document.getElementById('avatar-emoji');
+      const tag = document.getElementById('avatar-tag-text');
+      if (artworkUrl && !isBirthdayToday(new Date())) {
+        img.src = artworkUrl.replace('100x100bb', '200x200bb');
+        img.style.display = 'block';
+        emoji.style.display = 'none';
+        tag.textContent = artistName.slice(0, 16);
+      } else {
+        img.style.display = 'none';
+        emoji.style.display = 'block';
+        tag.textContent = 'xX_15_10_2004_Xx';
+      }
+    }
+
+    function playCurrentRealSong() {
+      stopSynthEngine();
+      if (realSongsQueue.length === 0) {
+        loadRandomArtistFromCurrentGenre(true);
+        return;
+      }
+
+      const track = realSongsQueue[currentSongIndex % realSongsQueue.length];
+      realAudio.src = track.previewUrl;
+      realAudio.volume = masterVolume;
+
+      document.getElementById('song-title').textContent = `▶ ${track.artistName} - ${track.trackName}`;
+      document.getElementById('music-mode-label').textContent = `💿 ${track.primaryGenreName || '2000s Hit'}`;
+      updateAlbumCover(track.artworkUrl100, track.artistName);
+
+      isPlaying = true;
+      updatePlayerUI(true);
+
+      realAudio.play().catch(err => {
+        console.warn('El navegador pidió interacción o falló el stream:', err);
+        updatePlayerUI(false);
+        isPlaying = false;
+      });
+    }
+
+    async function loadRandomArtistFromCurrentGenre(autoPlay = false) {
+      const artists = GENRE_CRATES[currentGenreKey] || GENRE_CRATES.rock2000s;
+      const randomArtist = artists[Math.floor(Math.random() * artists.length)];
+      await fetchRealSongsFromiTunes(randomArtist, autoPlay);
+    }
+
+    function loadGenreCrate(genreKey, pillEl) {
+      currentGenreKey = genreKey;
+      document.querySelectorAll('.genre-pill').forEach(el => el.classList.remove('active'));
+      if (pillEl) pillEl.classList.add('active');
+      musicMode = 'real';
+      document.getElementById('mode-btn').textContent = '🎹 MODO SYNTH';
+      loadRandomArtistFromCurrentGenre(true);
+    }
+
+    function searchCustomSongs() {
+      const input = document.getElementById('ares-query');
+      const query = input.value.trim();
+      if (!query) return;
+      musicMode = 'real';
+      document.getElementById('mode-btn').textContent = '🎹 MODO SYNTH';
+      fetchRealSongsFromiTunes(query, true);
+    }
+
+    // =========================================================================
+    // 4B. SINTETIZADOR MULTI-GÉNERO COMPLETAMENTE DIVERSO
     // =========================================================================
     let audioCtx = null;
-    let isPlaying = false;
-    let musicMode = 'synth';
     let synthInterval = null;
-    let masterVolume = 0.45;
-    let currentTrackSeed = 20041015;
     let stepIndex = 0;
+    let currentTrackSeed = 20041015;
 
-    const RADIO_STATIONS = [
-      { name: "📻 SomaFM: PopTron (Electropop / Indie 2000s)", url: "https://ice1.somafm.com/poptron-128-mp3" },
-      { name: "📻 Nightride FM (Synthwave / Cyber Retro)", url: "https://stream.nightride.fm/nightride.m4a" },
-      { name: "📻 Chillsynth FM (Retro Chiptune & Synth)", url: "https://stream.nightride.fm/chillsynth.m4a" },
-      { name: "📻 SomaFM: DEF CON Radio (Hacker Y2K Beats)", url: "https://ice1.somafm.com/defcon-128-mp3" }
-    ];
-    let radioIndex = 0;
-
-    const SCALES = [
-      { name: "Eurodance 2004", notes: [0, 3, 5, 7, 10, 12, 15, 17], baseFreq: 220, bpm: 136 },
-      { name: "Keygen Chiptune XP", notes: [0, 2, 4, 7, 9, 12, 14, 16], baseFreq: 261.63, bpm: 142 },
-      { name: "Metroflog SynthPop", notes: [0, 4, 7, 11, 12, 16, 19], baseFreq: 196, bpm: 124 },
-      { name: "Frutiger Aero Dream", notes: [0, 2, 5, 7, 9, 12, 14, 17], baseFreq: 246.94, bpm: 118 },
-      { name: "PS2 Menu Ambient", notes: [0, 3, 7, 8, 12, 15, 19], baseFreq: 174.61, bpm: 110 }
+    const SYNTH_STYLES = [
+      {
+        name: "Eurodance 2004 Club",
+        prog: [[0, 4, 7], [5, 9, 12], [9, 12, 16], [7, 11, 14]],
+        baseFreq: 220, bpm: 138, leadWave: 'sawtooth', padWave: 'triangle',
+        kickPattern: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+        hatPattern:  [0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,1]
+      },
+      {
+        name: "8-Bit Keygen Cracker",
+        prog: [[0, 3, 7], [8, 12, 15], [3, 7, 10], [10, 14, 17]],
+        baseFreq: 261.63, bpm: 150, leadWave: 'square', padWave: 'square',
+        kickPattern: [1,0,0,1, 0,0,1,0, 1,0,0,1, 0,1,0,0],
+        hatPattern:  [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1]
+      },
+      {
+        name: "Reggaeton Old School 2005",
+        prog: [[0, 3, 7], [0, 3, 7], [7, 10, 14], [5, 8, 12]],
+        baseFreq: 196.00, bpm: 96, leadWave: 'sawtooth', padWave: 'sine',
+        kickPattern: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+        hatPattern:  [0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0]
+      },
+      {
+        name: "Frutiger Aero Dreamscape",
+        prog: [[0, 4, 7, 11], [5, 9, 12, 16], [2, 5, 9, 12], [7, 11, 14, 17]],
+        baseFreq: 246.94, bpm: 112, leadWave: 'sine', padWave: 'triangle',
+        kickPattern: [1,0,0,0, 0,0,1,0, 0,0,1,0, 0,0,0,0],
+        hatPattern:  [0,0,1,0, 0,1,0,0, 0,0,1,0, 0,1,0,1]
+      },
+      {
+        name: "Emo Punk Bass Drive",
+        prog: [[0, 7, 12], [7, 14, 19], [9, 16, 21], [5, 12, 17]],
+        baseFreq: 164.81, bpm: 160, leadWave: 'sawtooth', padWave: 'sawtooth',
+        kickPattern: [1,0,1,0, 0,0,1,0, 1,0,1,0, 0,1,0,0],
+        hatPattern:  [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0]
+      }
     ];
 
     function initAudioContext() {
@@ -1035,123 +1290,127 @@
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContextClass();
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function playSynthNote(freq, duration, type = 'square', volMultiplier = 0.18) {
+    function playNote(freq, dur, wave, vol) {
       if (!audioCtx || !isPlaying) return;
       const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-
-      osc.type = type;
+      osc.type = wave;
       osc.frequency.setValueAtTime(freq, now);
-
-      const peakGain = Math.max(0.0001, masterVolume * volMultiplier);
-      gain.gain.setValueAtTime(peakGain, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
+      gain.gain.setValueAtTime(Math.max(0.0001, masterVolume * vol), now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       osc.start(now);
-      osc.stop(now + duration);
+      osc.stop(now + dur);
     }
 
-    function playDrumKick() {
+    function playKick() {
       if (!audioCtx || !isPlaying) return;
       const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(130, now);
-      osc.frequency.exponentialRampToValueAtTime(35, now + 0.12);
-
-      gain.gain.setValueAtTime(masterVolume * 0.35, now);
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(32, now + 0.12);
+      gain.gain.setValueAtTime(masterVolume * 0.4, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
-
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start(now);
       osc.stop(now + 0.13);
     }
 
-    function startProceduralSynth() {
-      stopAllAudio();
+    function playHiHat() {
+      if (!audioCtx || !isPlaying) return;
+      const now = audioCtx.currentTime;
+      const bufferSize = audioCtx.sampleRate * 0.05;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(5000, now);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(masterVolume * 0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(now);
+    }
+
+    function startSynthEngine() {
+      realAudio.pause();
+      stopSynthEngine();
       initAudioContext();
       isPlaying = true;
 
       const rand = mulberry32(currentTrackSeed);
-      const scaleObj = SCALES[Math.floor(rand() * SCALES.length)];
-      const bpm = scaleObj.bpm + Math.floor(rand() * 16) - 8;
-      const stepTimeMs = (60 / bpm / 2) * 1000;
-      const waveTypes = ['square', 'sawtooth', 'triangle'];
-      const leadWave = waveTypes[Math.floor(rand() * waveTypes.length)];
+      const style = SYNTH_STYLES[Math.floor(rand() * SYNTH_STYLES.length)];
+      const transpose = Math.floor(rand() * 7) - 3;
+      const rootFreq = style.baseFreq * Math.pow(2, transpose / 12);
+      const bpm = style.bpm + Math.floor(rand() * 14) - 7;
+      const stepMs = (60 / bpm / 4) * 1000;
 
-      const pattern = [];
-      for (let i = 0; i < 16; i++) {
-        if (rand() > 0.2) {
-          const semitone = scaleObj.notes[Math.floor(rand() * scaleObj.notes.length)];
-          pattern.push(scaleObj.baseFreq * Math.pow(2, semitone / 12));
+      const melody = [];
+      for (let i = 0; i < 32; i++) {
+        const chord = style.prog[Math.floor(i / 8) % style.prog.length];
+        if (rand() > 0.22) {
+          const noteSemi = chord[Math.floor(rand() * chord.length)] + (rand() > 0.6 ? 12 : 0);
+          melody.push(rootFreq * Math.pow(2, noteSemi / 12));
         } else {
-          pattern.push(null);
+          melody.push(null);
         }
       }
 
-      const trackCode = (currentTrackSeed % 9999).toString().padStart(4, '0');
-      document.getElementById('song-title').textContent = `🎵 ${scaleObj.name} #${trackCode}.xm`;
-      document.getElementById('music-mode-label').textContent = `Synth: ${leadWave.toUpperCase()}`;
-      document.getElementById('music-bpm-label').textContent = `${bpm} BPM`;
+      updateAlbumCover(null, '');
+      document.getElementById('song-title').textContent = `🎹 ${style.name} #${currentTrackSeed % 9999}`;
+      document.getElementById('music-mode-label').textContent = `Synth Procedural`;
+      document.getElementById('music-time-label').textContent = `${bpm} BPM`;
       updatePlayerUI(true);
 
       stepIndex = 0;
       synthInterval = setInterval(() => {
         if (!isPlaying) return;
-        const s = stepIndex % 16;
+        const s16 = stepIndex % 16;
+        const s32 = stepIndex % 32;
+        const chord = style.prog[Math.floor(s32 / 8) % style.prog.length];
 
-        if (s % 4 === 0) playDrumKick();
-        if (s % 2 === 0 && pattern[0]) {
-          playSynthNote(scaleObj.baseFreq / 2, stepTimeMs / 1000 * 0.8, 'triangle', 0.22);
+        if (style.kickPattern[s16]) playKick();
+        if (style.hatPattern[s16]) playHiHat();
+
+        if (s16 % 2 === 0) {
+          const bassFreq = (rootFreq / 2) * Math.pow(2, chord[0] / 12);
+          playNote(bassFreq, stepMs / 1000 * 1.5, style.padWave, 0.22);
         }
 
-        const noteFreq = pattern[s];
-        if (noteFreq) {
-          playSynthNote(noteFreq, stepTimeMs / 1000 * 0.85, leadWave, 0.14);
+        if (melody[s32]) {
+          playNote(melody[s32], stepMs / 1000 * 0.9, style.leadWave, 0.14);
         }
-
         stepIndex++;
-      }, stepTimeMs);
+      }, stepMs);
     }
 
-    function startRadioStream() {
-      stopAllAudio();
-      isPlaying = true;
-      const radioEl = document.getElementById('radio-audio');
-      const station = RADIO_STATIONS[radioIndex % RADIO_STATIONS.length];
-
-      radioEl.src = station.url;
-      radioEl.volume = masterVolume;
-      document.getElementById('song-title').textContent = station.name;
-      document.getElementById('music-mode-label').textContent = 'Modo: Radio Stream';
-      document.getElementById('music-bpm-label').textContent = 'LIVE MP3';
-      updatePlayerUI(true);
-
-      radioEl.play().catch(() => {
-        musicMode = 'synth';
-        startProceduralSynth();
-      });
-    }
-
-    function stopAllAudio() {
-      isPlaying = false;
+    function stopSynthEngine() {
       if (synthInterval) {
         clearInterval(synthInterval);
         synthInterval = null;
       }
-      const radioEl = document.getElementById('radio-audio');
-      radioEl.pause();
+    }
+
+    function stopAllAudio() {
+      isPlaying = false;
+      realAudio.pause();
+      stopSynthEngine();
       updatePlayerUI(false);
     }
 
@@ -1163,11 +1422,11 @@
       if (playing) {
         playerBox.classList.add('playing');
         playBtn.textContent = '⏹ STOP';
-        statusText.textContent = 'PLAYING 🔊';
+        statusText.textContent = 'SONANDO 🔊';
       } else {
         playerBox.classList.remove('playing');
         playBtn.textContent = '▶ PLAY';
-        statusText.textContent = 'STOPPED';
+        statusText.textContent = 'PAUSADO';
       }
     }
 
@@ -1175,38 +1434,42 @@
       if (isPlaying) {
         stopAllAudio();
       } else {
-        if (musicMode === 'synth') startProceduralSynth();
-        else startRadioStream();
+        if (musicMode === 'real') playCurrentRealSong();
+        else startSynthEngine();
       }
     }
 
-    function nextProceduralTrack() {
-      if (musicMode === 'synth') {
-        currentTrackSeed = Math.floor(Math.random() * 99999999);
-        startProceduralSynth();
+    function nextTrack() {
+      if (musicMode === 'real') {
+        currentSongIndex++;
+        if (currentSongIndex >= realSongsQueue.length || currentSongIndex % 4 === 0) {
+          loadRandomArtistFromCurrentGenre(true);
+        } else {
+          playCurrentRealSong();
+        }
       } else {
-        radioIndex = (radioIndex + 1) % RADIO_STATIONS.length;
-        startRadioStream();
+        currentTrackSeed = Math.floor(Math.random() * 99999999);
+        startSynthEngine();
       }
     }
 
     function switchMusicMode() {
       const modeBtn = document.getElementById('mode-btn');
-      if (musicMode === 'synth') {
-        musicMode = 'radio';
-        modeBtn.textContent = '🎹 SYNTH';
-        startRadioStream();
-      } else {
+      if (musicMode === 'real') {
         musicMode = 'synth';
-        modeBtn.textContent = '📻 RADIO';
-        startProceduralSynth();
+        modeBtn.textContent = '💿 CANCIONES REALES';
+        currentTrackSeed = Math.floor(Math.random() * 99999999);
+        startSynthEngine();
+      } else {
+        musicMode = 'real';
+        modeBtn.textContent = '🎹 MODO SYNTH';
+        playCurrentRealSong();
       }
     }
 
     function changeVolume(val) {
       masterVolume = Number(val) / 100;
-      const radioEl = document.getElementById('radio-audio');
-      radioEl.volume = masterVolume;
+      realAudio.volume = masterVolume;
     }
 
     // =========================================================================
@@ -1329,6 +1592,7 @@
     }
 
     updateCounters();
+    loadRandomArtistFromCurrentGenre(false);
     if (isBirthdayToday(new Date())) spawnRetroConfetti();
     setInterval(updateCounters, 1000);
   </script>
