@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>~* xX_Mi_Vida_En_Pixeles_Xx *~ [15/10/2004]</title>
+  <style>
+    /* ==========================================================
+       VARIABLES Y TEMAS DE LOS 2000s - 2010s (Rotan cada 6 horas)
+       ========================================================== */
+    :root {
+      --bg-pattern: radial-gradient(#ff00ff 1px, transparent 1px), radial-gradient(#00ffff 1px, #000022 1px);
+      --bg-size: 20px 20px;
+      --window-bg: #c0c0c0;
+      --window-border-light: #ffffff;
+      --window-border-dark: #808080;
+      --titlebar-bg: linear-gradient(90deg, #000080, #1084d0);
+      --titlebar-text: #ffffff;
+      --content-bg: #000000;
+      --text-main: #00ff00;
+      --text-accent: #ff00ff;
+      --text-secondary: #00ffff;
+      --font-main: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
+      --font-mono: 'Courier New', monospace;
+      --box-glow: 0 0 10px #ff00ff;
+      --badge-bg: #ffff00;
+      --badge-text: #000000;
+    }
+
+    /* Tema 0: Cyber Y2K / Geocities (Madrugada: 00:00 - 05:59) */
+    body.theme-0 {
+      --bg-pattern: radial-gradient(#ff00ff 1px, transparent 1px), radial-gradient(#00ffff 1px, #05001a 1px);
+      --window-bg: #c0c0c0;
+      --titlebar-bg: linear-gradient(90deg, #ff00cc, #333399);
+      --content-bg: #0a001a;
+      --text-main: #00ffcc;
+      --text-accent: #ff00ff;
+      --text-secondary: #ffff00;
+      --font-main: 'Comic Sans MS', cursive, sans-serif;
+      --box-glow: 0 0 15px #ff00ff;
+    }
+
+    /* Tema 1: Windows XP Luna / MSN Messenger (Mañana: 06:00 - 11:59) */
+    body.theme-1 {
+      --bg-pattern: linear-gradient(180deg, #3a6ea5 0%, #73a9ff 50%, #4b941d 100%);
+      --bg-size: 100% 100%;
+      --window-bg: #ece9d8;
+      --titlebar-bg: linear-gradient(180deg, #0997ff 0%, #0053ee 8%, #0050ee 40%, #06f 88%, #003dd9 100%);
+      --content-bg: #ffffff;
+      --text-main: #003399;
+      --text-accent: #e65c00;
+      --text-secondary: #2e8b57;
+      --font-main: 'Tahoma', 'Verdana', sans-serif;
+      --box-glow: 2px 4px 12px rgba(0,0,0,0.4);
+      --badge-bg: #ff6600;
+      --badge-text: #ffffff;
+    }
+
+    /* Tema 2: Metroflog / MySpace Emo-Pop (Tarde: 12:00 - 17:59) */
+    body.theme-2 {
+      --bg-pattern: repeating-linear-gradient(45deg, #111 0px, #111 10px, #222 10px, #222 20px);
+      --bg-size: auto;
+      --window-bg: #2b2b2b;
+      --titlebar-bg: linear-gradient(90deg, #ff0055, #000000);
+      --content-bg: #141414;
+      --text-main: #ffffff;
+      --text-accent: #ff0066;
+      --text-secondary: #b300ff;
+      --font-main: 'Trebuchet MS', 'Arial', sans-serif;
+      --box-glow: 0 0 12px #ff0066;
+      --badge-bg: #ff0066;
+      --badge-text: #ffffff;
+    }
+
+    /* Tema 3: Frutiger Aero / Tuenti 2009 (Noche: 18:00 - 23:59) */
+    body.theme-3 {
+      --bg-pattern: radial-gradient(circle at 50% 0%, #a8ff78 0%, #78ffd6 45%, #0072ff 100%);
+      --bg-size: 100% 100%;
+      --window-bg: rgba(235, 248, 255, 0.9);
+      --titlebar-bg: linear-gradient(180deg, #7ad7f0 0%, #1ca3de 50%, #0077b6 51%, #0096c7 100%);
+      --content-bg: #f0faff;
+      --text-main: #023e8a;
+      --text-accent: #0096c7;
+      --text-secondary: #38b000;
+      --font-main: 'Verdana', 'Segoe UI', sans-serif;
+      --box-glow: 0 8px 24px rgba(0, 114, 255, 0.35);
+      --badge-bg: #38b000;
+      --badge-text: #ffffff;
+    }
+
+    /* Tema Especial de Cumpleaños (Super Fiesta 2000s) */
+    body.birthday-mode {
+      --bg-pattern: repeating-radial-gradient(circle, #ff00aa 0, #ff00aa 10px, #440066 10px, #440066 20px);
+      --titlebar-bg: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #33cc33, #3399ff, #9933ff);
+      --box-glow: 0 0 25px #ffff00, 0 0 40px #ff00ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 15px;
+      background-image: var(--bg-pattern);
+      background-size: var(--bg-size);
+      background-attachment: fixed;
+      font-family: var(--font-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    .marquee-bar {
+      width: 100%;
+      max-width: 820px;
+      background: #000;
+      color: #0f0;
+      border: 2px inset #fff;
+      padding: 6px 0;
+      margin-bottom: 15px;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      font-size: 14px;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: var(--box-glow);
+    }
+
+    .marquee-content {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 22s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .retro-window {
+      width: 100%;
+      max-width: 820px;
+      background: var(--window-bg);
+      border-top: 3px solid var(--window-border-light);
+      border-left: 3px solid var(--window-border-light);
+      border-right: 3px solid var(--window-border-dark);
+      border-bottom: 3px solid var(--window-border-dark);
+      box-shadow: var(--box-glow);
+      border-radius: 6px 6px 0 0;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .title-bar {
+      background: var(--titlebar-bg);
+      color: var(--titlebar-text);
+      padding: 6px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px 4px 0 0;
+      text-shadow: 1px 1px 1px #000;
+    }
+
+    .title-bar-controls { display: flex; gap: 4px; }
+
+    .win-btn {
+      width: 20px;
+      height: 20px;
+      background: #d4d0c8;
+      border-top: 2px solid #fff;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #404040;
+      border-bottom: 2px solid #404040;
+      color: #000;
+      font-family: Tahoma, sans-serif;
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .win-btn.close { background: #e04343; color: #fff; }
+
+    .menu-bar {
+      background: #ece9d8;
+      color: #000;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-bottom: 1px solid #808080;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-family: Tahoma, sans-serif;
+    }
+
+    .menu-items span { margin-right: 12px; text-decoration: underline; cursor: pointer; }
+    .theme-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .retro-btn {
+      background: #ece9d8;
+      border-top: 2px solid #fff;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #404040;
+      border-bottom: 2px solid #404040;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .retro-btn:hover { background: #ffffcc; }
+    .retro-btn:active { border-style: inset; }
+
+    .window-body {
+      margin: 8px;
+      background: var(--content-bg);
+      border: 2px inset #808080;
+      padding: 20px;
+    }
+
+    #birthday-banner {
+      display: none;
+      background: linear-gradient(45deg, #ff0055, #ffcc00, #00ffcc, #ff00ff);
+      background-size: 300% 300%;
+      animation: partyGradient 3s ease infinite;
+      border: 4px dashed #ffffff;
+      padding: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #000;
+      box-shadow: 0 0 20px #ffff00;
+    }
+
+    @keyframes partyGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #birthday-banner h2 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000, -2px -2px 0 #ff0055;
+      animation: blinkText 0.8s infinite alternate;
+    }
+
+    #birthday-banner p {
+      margin: 6px 0;
+      font-weight: bold;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 8px;
+      border-radius: 4px;
+      border: 2px solid #000;
+    }
+
+    .ascii-cake {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.15;
+      background: #000;
+      color: #ffff00;
+      padding: 10px;
+      display: inline-block;
+      margin: 8px auto;
+      border: 2px ridge #ff00ff;
+      text-align: left;
+      white-space: pre;
+    }
+
+    @keyframes blinkText {
+      from { transform: scale(1); }
+      to { transform: scale(1.04); }
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 680px) {
+      .profile-grid { grid-template-columns: 1fr; }
+    }
+
+    .sidebar {
+      border: 2px dashed var(--text-accent);
+      padding: 12px;
+      text-align: center;
+      background: rgba(128, 128, 128, 0.08);
+    }
+
+    .avatar-box {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 10px;
+      border: 4px ridge var(--text-secondary);
+      background: radial-gradient(circle, #ffcc00, #ff0066);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      box-shadow: 0 0 10px var(--text-accent);
+      position: relative;
+    }
+
+    .avatar-tag {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      color: #0f0;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      padding: 2px 0;
+    }
+
+    .msn-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      border: 2px outset #fff;
+      margin-bottom: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: #00ff00;
+      border: 1px solid #000;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .profile-info {
+      text-align: left;
+      font-size: 13px;
+      border-top: 1px dotted var(--text-secondary);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+
+    .profile-info div { margin-bottom: 6px; }
+
+    .winamp-box {
+      margin-top: 14px;
+      background: #191926;
+      border: 2px ridge #808080;
+      padding: 8px;
+      color: #00ff00;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: left;
+    }
+
+    .winamp-title {
+      background: #000044;
+      color: #fff;
+      padding: 2px 5px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .winamp-screen {
+      background: #000;
+      border: 1px inset #555;
+      padding: 5px;
+      color: #00ff00;
+      margin-bottom: 6px;
+    }
+
+    .equalizer {
+      display: flex;
+      gap: 2px;
+      height: 16px;
+      align-items: flex-end;
+      margin-top: 4px;
+    }
+
+    .eq-bar {
+      flex: 1;
+      background: linear-gradient(to top, #00ff00, #ffff00, #ff0000);
+      animation: eqBounce 0.6s infinite alternate;
+    }
+
+    .eq-bar:nth-child(2n) { animation-duration: 0.4s; }
+    .eq-bar:nth-child(3n) { animation-duration: 0.75s; }
+
+    @keyframes eqBounce {
+      0% { height: 20%; }
+      100% { height: 100%; }
+    }
+
+    .main-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    .hero-counter-box {
+      border: 3px double var(--text-secondary);
+      padding: 16px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-accent);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .digital-counter {
+      display: inline-flex;
+      gap: 4px;
+      background: #000;
+      padding: 8px 12px;
+      border: 3px inset #666;
+      box-shadow: inset 0 0 8px #000;
+      margin: 6px 0;
+    }
+
+    .digit-cell {
+      background: #111;
+      color: #00ff33;
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border: 1px solid #004400;
+      text-shadow: 0 0 8px #00ff33;
+    }
+
+    .age-breakdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 500px) {
+      .age-breakdown { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+      border: 2px outset var(--window-border-light);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 8px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--text-accent);
+    }
+
+    .stat-label { font-size: 11px; opacity: 0.9; }
+
+    .quote-box {
+      border: 2px solid var(--text-accent);
+      padding: 14px;
+      background: rgba(255, 0, 255, 0.05);
+      position: relative;
+    }
+
+    .quote-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--text-secondary);
+      padding-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .quote-text {
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.4;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .quote-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      opacity: 0.85;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .extra-stats {
+      border: 2px groove var(--text-secondary);
+      padding: 12px;
+      font-size: 13px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .extra-stats { grid-template-columns: 1fr; }
+    }
+
+    .badges-footer {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 2px dotted var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .micro-badge {
+      font-family: 'Tahoma', monospace;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 6px;
+      border: 2px outset #fff;
+      background: #222;
+      color: #fff;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    .micro-badge span {
+      background: #ff0066;
+      color: #fff;
+      padding: 1px 4px;
+      margin-right: 4px;
+    }
+
+    @keyframes nudgeShake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(-8px, -4px) rotate(-1deg); }
+      20%, 40%, 60%, 80% { transform: translate(8px, 4px) rotate(1deg); }
+    }
+
+    .nudge-active { animation: nudgeShake 0.5s ease-in-out; }
+
+    .confetti-piece {
+      position: fixed;
+      top: -20px;
+      font-size: 20px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: fallDown linear forwards;
+    }
+
+    @keyframes fallDown {
+      to { transform: translateY(105vh) rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="theme-0">
+
+  <div class="marquee-bar">
+    <div class="marquee-content">
+      ★·.·´¯`·.·★ BIENVENID@ A MI ESPACIO RETRO 2000s - 2010s ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ FIRMA MI LIBRO DE VISITAS Y DEJA +10 PUNTOS ★·.·´¯`·.·★
+    </div>
+  </div>
+
+  <div class="retro-window" id="main-window">
+    <div class="title-bar">
+      <div>🌐 Internet_Explorer_6.exe - [Contador_De_Vida_15-10-2004.html]</div>
+      <div class="title-bar-controls">
+        <div class="win-btn" title="Minimizar">_</div>
+        <div class="win-btn" title="Maximizar">□</div>
+        <div class="win-btn close" title="Cerrar" onclick="sendNudge()">X</div>
+      </div>
+    </div>
+
+    <div class="menu-bar">
+      <div class="menu-items">
+        <span>Archivo</span>
+        <span>Edición</span>
+        <span>Ver</span>
+        <span>Favoritos</span>
+        <span id="current-slot-label" style="text-decoration:none; font-weight:bold; color:#0050ee;"></span>
+      </div>
+      <div class="theme-controls">
+        <button class="retro-btn" onclick="cycleThemeManual()">🎨 Cambiar Skin (2000s)</button>
+        <button class="retro-btn" onclick="randomizeQuoteManual()">💬 Otra Frase</button>
+        <button class="retro-btn" onclick="sendNudge()">📳 Enviar Zumbido</button>
+        <button class="retro-btn" onclick="toggleBirthdayPreview()">🎂 Modo Cumple</button>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div id="birthday-banner">
+        <h2>🎉 ¡¡FELIZ CUMPLEAÑOS!! 🎂✨</h2>
+        <div class="ascii-cake">
+       , , , , , ,
+       | | | | | |
+      {~*~*~*~*~*~}
+    __{           }__
+   |  ~*~ 15/10 ~*~  |
+   |  ¡LEVEL UP IRL! |
+   |_________________|</div>
+        <p id="birthday-message"></p>
+      </div>
+
+      <div class="profile-grid">
+        <div class="sidebar">
+          <div class="avatar-box" id="avatar-emoji">
+            💿
+            <div class="avatar-tag">xX_2004_Xx</div>
+          </div>
+
+          <div class="msn-status">
+            <span class="status-dot"></span>
+            <span id="status-text">Conectado (MSN)</span>
+          </div>
+
+          <div class="profile-info">
+            <div><strong>📅 Spawn Date:</strong> 15/10/2004</div>
+            <div><strong>🎂 Edad actual:</strong> <span id="exact-years">0</span> años</div>
+            <div><strong>♈ Signo:</strong> Libra ♎</div>
+            <div><strong>🕹️ Generación:</strong> Era 2000s Kid</div>
+            <div><strong>🎨 Skin activa:</strong> <span id="skin-name">Cyber Y2K</span></div>
+          </div>
+
+          <div class="winamp-box">
+            <div class="winamp-title">
+              <span>⚡ WINAMP v2.91</span>
+              <span>128kbps</span>
+            </div>
+            <div class="winamp-screen">
+              <div id="song-title">▶ 01. Linkin Park - In The End.mp3</div>
+              <div class="equalizer">
+                <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+                <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+                <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">⏮</button>
+              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">▶</button>
+              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">⏭ Track</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-panel">
+          <div class="hero-counter-box">
+            <div class="hero-label">✨ CONTEO OFICIAL DE DÍAS DE VIDA EN LA TIERRA ✨</div>
+            <div class="digital-counter" id="days-counter"></div>
+            <div style="font-size: 13px; margin-top: 4px;">
+              Días vividos desde el <strong>15 de Octubre de 2004</strong>
+            </div>
+
+            <div class="age-breakdown">
+              <div class="stat-card">
+                <div class="stat-num" id="stat-years">0</div>
+                <div class="stat-label">Años Cumplidos</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num" id="stat-hours">0</div>
+                <div class="stat-label">Horas Totales</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num" id="stat-minutes">0</div>
+                <div class="stat-label">Minutos Totales</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num" id="stat-seconds">0</div>
+                <div class="stat-label">Segundos (Live)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-box">
+            <div class="quote-header">
+              <span>💬 ESTADO DE MSN / FRASE DEL MOMENTO</span>
+              <span id="rotation-countdown">Cambia en: --:--:--</span>
+            </div>
+            <div class="quote-text" id="daily-quote"></div>
+            <div class="quote-footer">
+              <span>🔄 Se actualiza sola cada 6 horas junto con el diseño</span>
+              <span id="nudge-log" style="color:var(--text-accent); font-weight:bold;"></span>
+            </div>
+          </div>
+
+          <div class="extra-stats">
+            <div>
+              <strong>⏳ Edad exacta desglosada:</strong><br>
+              <span id="detailed-age">-- años, -- meses y -- días</span>
+            </div>
+            <div>
+              <strong>🎈 Próximo Cumpleaños (15/Oct):</strong><br>
+              <span id="next-bday-countdown">Calculando...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="badges-footer">
+        <div class="micro-badge"><span>Y2K</span>15-10-2004</div>
+        <div class="micro-badge"><span>MSN</span>PLUS! LIVE</div>
+        <div class="micro-badge"><span>HTML</span>100% RETRO</div>
+        <div class="micro-badge"><span>WIN</span>XP SP2 READY</div>
+        <div class="micro-badge"><span>METRO</span>FLOG GOLD</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const BIRTH_YEAR = 2004;
+    const BIRTH_MONTH = 9; // Octubre (0-indexado)
+    const BIRTH_DAY = 15;
+
+    const THEMES = [
+      { className: 'theme-0', name: 'Cyber Y2K / Geocities (2000)', emoji: '👽', status: 'Navegando a 56kbps' },
+      { className: 'theme-1', name: 'Windows XP / MSN Messenger (2004)', emoji: '🦋', status: 'Conectado (No molestar)' },
+      { className: 'theme-2', name: 'Metroflog / MySpace Era (2007)', emoji: '🎸', status: 'xX_Escuchando_Musica_Xx' },
+      { className: 'theme-3', name: 'Frutiger Aero / 2010s Vibe', emoji: '🫧', status: 'En línea desde mi PC' }
+    ];
+
+    const QUOTES = [
+      "~* No cuentes los días, haz que los días cuenten... y deja +10 en mi Metroflog *~",
+      "« Sobreviviendo desde el 15 de octubre de 2004 sin usar trucos del GTA San Andreas »",
+      "★ Si la vida te da limones, conéctate y desconéctate de MSN para llamar su atención ★",
+      "~ La edad es solo el nivel de experiencia acumulada en este servidor llamado Tierra ~",
+      "« Ayer eras un niño viendo Cartoon Network y hoy llevas miles de días haciendo historia »",
+      "✧ Cada bloque de 6 horas es un nuevo checkpoint guardado en la Memory Card de 8MB ✧",
+      "~* No soy más viejo, soy una edición limitada del 2004 que sube de valor cada día *~",
+      "« Recuerda tomar agua, respaldar tus MP3 en el Ares y disfrutar cada día de vida »",
+      "★ Más de dos décadas brillando más fuerte que un texto de WordArt con sombra 3D ★",
+      "~ Si pudimos esperar 3 horas para descargar una canción en el 2006, podemos con todo ~",
+      "« Hoy es un gran día para agradecer todos los días vividos y seguir subiendo de nivel »",
+      "~* Mi estado de MSN hoy: agradecido por cada día desde aquel 15-10-2004 *~"
+    ];
+
+    const SONGS = [
+      "▶ 01. Linkin Park - In The End.mp3",
+      "▶ 02. Gorillaz - Feel Good Inc.mp3",
+      "▶ 03. Evanescence - Bring Me To Life.mp3",
+      "▶ 04. Avril Lavigne - Complicated.mp3",
+      "▶ 05. Daddy Yankee - Gasolina (2004).mp3",
+      "▶ 06. Daft Punk - One More Time.mp3",
+      "▶ 07. Green Day - Boulevard of Broken Dreams.mp3",
+      "▶ 08. Kudai - Sin Despertar.mp3"
+    ];
+
+    let manualThemeIndex = null;
+    let manualQuoteIndex = null;
+    let forceBirthdayPreview = false;
+    let currentSongIndex = 0;
+
+    function getSixHourSeed(now) {
+      const slot = Math.floor(now.getHours() / 6);
+      const dayKey = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+      return { slot, seed: dayKey * 10 + slot };
+    }
+
+    function getDetailedAge(birthDate, now) {
+      let years = now.getFullYear() - birthDate.getFullYear();
+      let months = now.getMonth() - birthDate.getMonth();
+      let days = now.getDate() - birthDate.getDate();
+
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      return { years, months, days };
+    }
+
+    function isBirthdayToday(now) {
+      return (now.getMonth() === BIRTH_MONTH && now.getDate() === BIRTH_DAY) || forceBirthdayPreview;
+    }
+
+    function applySixHourRotation(now) {
+      const { slot, seed } = getSixHourSeed(now);
+      const slotNames = [
+        "🌙 Bloque 1/4 (00h-06h)",
+        "☀️ Bloque 2/4 (06h-12h)",
+        "⚡ Bloque 3/4 (12h-18h)",
+        "🌌 Bloque 4/4 (18h-24h)"
+      ];
+      document.getElementById('current-slot-label').textContent = slotNames[slot];
+
+      const themeIdx = manualThemeIndex !== null ? manualThemeIndex : (seed % THEMES.length);
+      const activeTheme = THEMES[themeIdx];
+
+      document.body.className = activeTheme.className;
+      if (isBirthdayToday(now)) document.body.classList.add('birthday-mode');
+
+      document.getElementById('skin-name').textContent = activeTheme.name;
+      document.getElementById('avatar-emoji').childNodes[0].nodeValue = isBirthdayToday(now) ? '🎂' : activeTheme.emoji;
+      document.getElementById('status-text').textContent = isBirthdayToday(now) ? '🥳 ¡DE CUMPLEAÑOS HOY!' : activeTheme.status;
+
+      const quoteIdx = manualQuoteIndex !== null ? manualQuoteIndex : ((seed * 2654435761) >>> 0) % QUOTES.length;
+      document.getElementById('daily-quote').textContent = QUOTES[quoteIdx];
+    }
+
+    function updateCounters() {
+      const now = new Date();
+      const birthDate = new Date(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
+
+      const diffMs = now - birthDate;
+      const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const totalHours = Math.floor(totalMinutes / 60);
+      const totalDays = Math.floor(totalHours / 24);
+
+      const daysStr = String(totalDays).padStart(5, '0');
+      const counterContainer = document.getElementById('days-counter');
+      counterContainer.innerHTML = '';
+      for (const ch of daysStr) {
+        const span = document.createElement('span');
+        span.className = 'digit-cell';
+        span.textContent = ch;
+        counterContainer.appendChild(span);
+      }
+
+      const detailed = getDetailedAge(birthDate, now);
+      document.getElementById('exact-years').textContent = detailed.years;
+      document.getElementById('stat-years').textContent = detailed.years;
+      document.getElementById('stat-hours').textContent = totalHours.toLocaleString('es-ES');
+      document.getElementById('stat-minutes').textContent = totalMinutes.toLocaleString('es-ES');
+      document.getElementById('stat-seconds').textContent = totalSeconds.toLocaleString('es-ES');
+      document.getElementById('detailed-age').textContent = `${detailed.years} años, ${detailed.months} meses y ${detailed.days} días`;
+
+      const nextSlotHour = (Math.floor(now.getHours() / 6) + 1) * 6;
+      const nextRotation = new Date(now.getFullYear(), now.getMonth(), now.getDate(), nextSlotHour, 0, 0);
+      const rotDiff = Math.max(0, Math.floor((nextRotation - now) / 1000));
+      const rH = String(Math.floor(rotDiff / 3600)).padStart(2, '0');
+      const rM = String(Math.floor((rotDiff % 3600) / 60)).padStart(2, '0');
+      const rS = String(rotDiff % 60).padStart(2, '0');
+      document.getElementById('rotation-countdown').textContent = `Nuevo estilo/frase en: ${rH}:${rM}:${rS}`;
+
+      const bdayBanner = document.getElementById('birthday-banner');
+      if (isBirthdayToday(now)) {
+        bdayBanner.style.display = 'block';
+        document.getElementById('birthday-message').innerHTML =
+          `¡FELICES <strong>${detailed.years} AÑOS</strong>! Hoy 15 de Octubre celebramos tus <strong>${totalDays.toLocaleString('es-ES')} días</strong> de vida desde aquel épico 15-10-2004. ¡Que este nuevo nivel venga lleno de éxitos, salud y buena vibra! 🎂🎈💿`;
+        document.getElementById('next-bday-countdown').innerHTML = `<strong style="color:#ff00ff;">🎉 ¡¡ES HOY, ES HOY!! 🎉</strong>`;
+      } else {
+        bdayBanner.style.display = 'none';
+        let nextBday = new Date(now.getFullYear(), BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
+        if (now > nextBday) nextBday = new Date(now.getFullYear() + 1, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
+        const daysToBday = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+        document.getElementById('next-bday-countdown').textContent = `Faltan ${daysToBday} días para cumplir ${detailed.years + 1} años`;
+      }
+
+      applySixHourRotation(now);
+    }
+
+    function cycleThemeManual() {
+      const { seed } = getSixHourSeed(new Date());
+      const current = manualThemeIndex !== null ? manualThemeIndex : (seed % THEMES.length);
+      manualThemeIndex = (current + 1) % THEMES.length;
+      updateCounters();
+    }
+
+    function randomizeQuoteManual() {
+      const current = manualQuoteIndex !== null ? manualQuoteIndex : 0;
+      manualQuoteIndex = (current + 1) % QUOTES.length;
+      updateCounters();
+    }
+
+    function sendNudge() {
+      const win = document.getElementById('main-window');
+      win.classList.remove('nudge-active');
+      void win.offsetWidth;
+      win.classList.add('nudge-active');
+      document.getElementById('nudge-log').textContent = '📳 ¡Has enviado un Zumbido de MSN!';
+      setTimeout(() => { document.getElementById('nudge-log').textContent = ''; }, 3000);
+    }
+
+    function nextSong() {
+      currentSongIndex = (currentSongIndex + 1) % SONGS.length;
+      document.getElementById('song-title').textContent = SONGS[currentSongIndex];
+    }
+
+    function spawnRetroConfetti() {
+      const icons = ['🎂', '🎉', '✨', '💿', '🎈', '⭐', '🕹️'];
+      for (let i = 0; i < 28; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5000);
+      }
+    }
+
+    function toggleBirthdayPreview() {
+      forceBirthdayPreview = !forceBirthdayPreview;
+      updateCounters();
+      if (isBirthdayToday(new Date())) spawnRetroConfetti();
+    }
+
+    updateCounters();
+    if (isBirthdayToday(new Date())) spawnRetroConfetti();
+    setInterval(updateCounters, 1000);
+  </script>
+</body>
+</html>
