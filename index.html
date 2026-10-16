@@ -3,96 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>~* xX_Mi_Vida_En_Pixeles_Xx *~ [15/10/2004]</title>
+  <title>~* xX_Mi_Vida_En_Pixeles_AI_Xx *~ [15/10/2004]</title>
   <style>
-    /* ==========================================================
-       VARIABLES Y TEMAS DE LOS 2000s - 2010s (Rotan cada 6 horas)
-       ========================================================== */
+    /* =====================================================================
+       MOTOR CSS DINÁMICO (Variables inyectadas por el Generador Procedural)
+       ===================================================================== */
     :root {
-      --bg-pattern: radial-gradient(#ff00ff 1px, transparent 1px), radial-gradient(#00ffff 1px, #000022 1px);
+      --bg-pattern: radial-gradient(#ff00ff 1px, transparent 1px), radial-gradient(#00ffff 1px, #05001a 1px);
       --bg-size: 20px 20px;
       --window-bg: #c0c0c0;
       --window-border-light: #ffffff;
-      --window-border-dark: #808080;
-      --titlebar-bg: linear-gradient(90deg, #000080, #1084d0);
-      --titlebar-text: #ffffff;
-      --content-bg: #000000;
-      --text-main: #00ff00;
-      --text-accent: #ff00ff;
-      --text-secondary: #00ffff;
-      --font-main: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
-      --font-mono: 'Courier New', monospace;
-      --box-glow: 0 0 10px #ff00ff;
-      --badge-bg: #ffff00;
-      --badge-text: #000000;
-    }
-
-    /* Tema 0: Cyber Y2K / Geocities (Madrugada: 00:00 - 05:59) */
-    body.theme-0 {
-      --bg-pattern: radial-gradient(#ff00ff 1px, transparent 1px), radial-gradient(#00ffff 1px, #05001a 1px);
-      --window-bg: #c0c0c0;
+      --window-border-dark: #555555;
       --titlebar-bg: linear-gradient(90deg, #ff00cc, #333399);
+      --titlebar-text: #ffffff;
       --content-bg: #0a001a;
       --text-main: #00ffcc;
       --text-accent: #ff00ff;
       --text-secondary: #ffff00;
-      --font-main: 'Comic Sans MS', cursive, sans-serif;
-      --box-glow: 0 0 15px #ff00ff;
+      --font-main: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
+      --font-mono: 'Courier New', monospace;
+      --box-glow: 0 0 18px #ff00ff;
+      --badge-bg: #ffff00;
+      --badge-text: #000000;
+      --win-radius: 6px;
     }
 
-    /* Tema 1: Windows XP Luna / MSN Messenger (Mañana: 06:00 - 11:59) */
-    body.theme-1 {
-      --bg-pattern: linear-gradient(180deg, #3a6ea5 0%, #73a9ff 50%, #4b941d 100%);
-      --bg-size: 100% 100%;
-      --window-bg: #ece9d8;
-      --titlebar-bg: linear-gradient(180deg, #0997ff 0%, #0053ee 8%, #0050ee 40%, #06f 88%, #003dd9 100%);
-      --content-bg: #ffffff;
-      --text-main: #003399;
-      --text-accent: #e65c00;
-      --text-secondary: #2e8b57;
-      --font-main: 'Tahoma', 'Verdana', sans-serif;
-      --box-glow: 2px 4px 12px rgba(0,0,0,0.4);
-      --badge-bg: #ff6600;
-      --badge-text: #ffffff;
-    }
-
-    /* Tema 2: Metroflog / MySpace Emo-Pop (Tarde: 12:00 - 17:59) */
-    body.theme-2 {
-      --bg-pattern: repeating-linear-gradient(45deg, #111 0px, #111 10px, #222 10px, #222 20px);
-      --bg-size: auto;
-      --window-bg: #2b2b2b;
-      --titlebar-bg: linear-gradient(90deg, #ff0055, #000000);
-      --content-bg: #141414;
-      --text-main: #ffffff;
-      --text-accent: #ff0066;
-      --text-secondary: #b300ff;
-      --font-main: 'Trebuchet MS', 'Arial', sans-serif;
-      --box-glow: 0 0 12px #ff0066;
-      --badge-bg: #ff0066;
-      --badge-text: #ffffff;
-    }
-
-    /* Tema 3: Frutiger Aero / Tuenti 2009 (Noche: 18:00 - 23:59) */
-    body.theme-3 {
-      --bg-pattern: radial-gradient(circle at 50% 0%, #a8ff78 0%, #78ffd6 45%, #0072ff 100%);
-      --bg-size: 100% 100%;
-      --window-bg: rgba(235, 248, 255, 0.9);
-      --titlebar-bg: linear-gradient(180deg, #7ad7f0 0%, #1ca3de 50%, #0077b6 51%, #0096c7 100%);
-      --content-bg: #f0faff;
-      --text-main: #023e8a;
-      --text-accent: #0096c7;
-      --text-secondary: #38b000;
-      --font-main: 'Verdana', 'Segoe UI', sans-serif;
-      --box-glow: 0 8px 24px rgba(0, 114, 255, 0.35);
-      --badge-bg: #38b000;
-      --badge-text: #ffffff;
-    }
-
-    /* Tema Especial de Cumpleaños (Super Fiesta 2000s) */
     body.birthday-mode {
-      --bg-pattern: repeating-radial-gradient(circle, #ff00aa 0, #ff00aa 10px, #440066 10px, #440066 20px);
-      --titlebar-bg: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #33cc33, #3399ff, #9933ff);
-      --box-glow: 0 0 25px #ffff00, 0 0 40px #ff00ff;
+      --titlebar-bg: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #33cc33, #3399ff, #9933ff) !important;
+      --box-glow: 0 0 28px #ffff00, 0 0 45px #ff00ff !important;
     }
 
     * { box-sizing: border-box; }
@@ -111,16 +49,18 @@
       align-items: center;
       overflow-x: hidden;
       cursor: crosshair;
+      transition: background 0.5s ease, color 0.3s ease;
     }
 
+    /* Marquesina superior 2000s */
     .marquee-bar {
       width: 100%;
-      max-width: 820px;
+      max-width: 860px;
       background: #000;
-      color: #0f0;
+      color: var(--text-main);
       border: 2px inset #fff;
       padding: 6px 0;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       font-family: var(--font-mono);
       font-weight: bold;
       font-size: 14px;
@@ -132,7 +72,7 @@
     .marquee-content {
       display: inline-block;
       padding-left: 100%;
-      animation: marquee 22s linear infinite;
+      animation: marquee 24s linear infinite;
     }
 
     @keyframes marquee {
@@ -140,19 +80,21 @@
       100% { transform: translateX(-100%); }
     }
 
+    /* Ventana Retro Principal */
     .retro-window {
       width: 100%;
-      max-width: 820px;
+      max-width: 860px;
       background: var(--window-bg);
       border-top: 3px solid var(--window-border-light);
       border-left: 3px solid var(--window-border-light);
       border-right: 3px solid var(--window-border-dark);
       border-bottom: 3px solid var(--window-border-dark);
       box-shadow: var(--box-glow);
-      border-radius: 6px 6px 0 0;
+      border-radius: var(--win-radius) var(--win-radius) 0 0;
       margin-bottom: 20px;
       position: relative;
       z-index: 2;
+      transition: box-shadow 0.4s ease, background 0.4s ease;
     }
 
     .title-bar {
@@ -160,11 +102,11 @@
       color: var(--titlebar-text);
       padding: 6px 10px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius: 4px 4px 0 0;
+      border-radius: calc(var(--win-radius) - 2px) calc(var(--win-radius) - 2px) 0 0;
       text-shadow: 1px 1px 1px #000;
     }
 
@@ -191,10 +133,11 @@
 
     .win-btn.close { background: #e04343; color: #fff; }
 
+    /* Barra de herramientas */
     .menu-bar {
       background: #ece9d8;
       color: #000;
-      padding: 4px 10px;
+      padding: 5px 10px;
       font-size: 12px;
       border-bottom: 1px solid #808080;
       display: flex;
@@ -205,8 +148,7 @@
       font-family: Tahoma, sans-serif;
     }
 
-    .menu-items span { margin-right: 12px; text-decoration: underline; cursor: pointer; }
-    .theme-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+    .theme-controls { display: flex; gap: 5px; flex-wrap: wrap; }
 
     .retro-btn {
       background: #ece9d8;
@@ -229,17 +171,19 @@
       margin: 8px;
       background: var(--content-bg);
       border: 2px inset #808080;
-      padding: 20px;
+      padding: 18px;
+      transition: background 0.4s ease;
     }
 
+    /* Banner Cumpleaños */
     #birthday-banner {
       display: none;
       background: linear-gradient(45deg, #ff0055, #ffcc00, #00ffcc, #ff00ff);
       background-size: 300% 300%;
       animation: partyGradient 3s ease infinite;
       border: 4px dashed #ffffff;
-      padding: 18px;
-      margin-bottom: 20px;
+      padding: 16px;
+      margin-bottom: 18px;
       text-align: center;
       color: #000;
       box-shadow: 0 0 20px #ffff00;
@@ -253,7 +197,7 @@
 
     #birthday-banner h2 {
       margin: 0 0 8px 0;
-      font-size: 26px;
+      font-size: 25px;
       color: #fff;
       text-shadow: 2px 2px 0 #000, -2px -2px 0 #ff0055;
       animation: blinkText 0.8s infinite alternate;
@@ -262,8 +206,8 @@
     #birthday-banner p {
       margin: 6px 0;
       font-weight: bold;
-      font-size: 15px;
-      background: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.9);
       padding: 8px;
       border-radius: 4px;
       border: 2px solid #000;
@@ -271,13 +215,13 @@
 
     .ascii-cake {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.15;
       background: #000;
       color: #ffff00;
       padding: 10px;
       display: inline-block;
-      margin: 8px auto;
+      margin: 6px auto;
       border: 2px ridge #ff00ff;
       text-align: left;
       white-space: pre;
@@ -288,13 +232,14 @@
       to { transform: scale(1.04); }
     }
 
+    /* Layout Principal */
     .profile-grid {
       display: grid;
-      grid-template-columns: 230px 1fr;
-      gap: 18px;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 720px) {
       .profile-grid { grid-template-columns: 1fr; }
     }
 
@@ -306,17 +251,17 @@
     }
 
     .avatar-box {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       margin: 0 auto 10px;
       border: 4px ridge var(--text-secondary);
-      background: radial-gradient(circle, #ffcc00, #ff0066);
+      background: radial-gradient(circle, var(--text-secondary), var(--text-accent));
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 52px;
-      box-shadow: 0 0 10px var(--text-accent);
+      font-size: 46px;
+      box-shadow: 0 0 12px var(--text-accent);
       position: relative;
     }
 
@@ -324,7 +269,7 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.8);
       color: #0f0;
       font-size: 10px;
       font-family: var(--font-mono);
@@ -338,15 +283,15 @@
       background: var(--badge-bg);
       color: var(--badge-text);
       padding: 4px 10px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       border: 2px outset #fff;
       margin-bottom: 10px;
     }
 
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       background: #00ff00;
       border: 1px solid #000;
       border-radius: 50%;
@@ -355,100 +300,154 @@
 
     .profile-info {
       text-align: left;
-      font-size: 13px;
+      font-size: 12px;
       border-top: 1px dotted var(--text-secondary);
-      padding-top: 10px;
-      margin-top: 8px;
+      padding-top: 8px;
+      margin-top: 6px;
     }
 
-    .profile-info div { margin-bottom: 6px; }
+    .profile-info div { margin-bottom: 5px; }
 
+    /* =========================================================
+       WINAMP v2.91 CON AUDIO REAL (Web Audio Synth + Radio MP3)
+       ========================================================= */
     .winamp-box {
-      margin-top: 14px;
-      background: #191926;
-      border: 2px ridge #808080;
+      margin-top: 12px;
+      background: #1b1b29;
+      border: 2px ridge #a0a0a0;
       padding: 8px;
       color: #00ff00;
       font-family: var(--font-mono);
       font-size: 11px;
       text-align: left;
+      box-shadow: inset 0 0 6px #000;
     }
 
     .winamp-title {
-      background: #000044;
+      background: linear-gradient(90deg, #000044, #004488, #000044);
       color: #fff;
-      padding: 2px 5px;
+      padding: 3px 6px;
       font-weight: bold;
       margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
+      font-size: 10px;
     }
 
     .winamp-screen {
       background: #000;
-      border: 1px inset #555;
-      padding: 5px;
-      color: #00ff00;
+      border: 2px inset #444;
+      padding: 6px;
+      color: #00ff33;
       margin-bottom: 6px;
+    }
+
+    #song-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .winamp-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #ffff00;
+      margin-bottom: 4px;
     }
 
     .equalizer {
       display: flex;
       gap: 2px;
-      height: 16px;
+      height: 18px;
       align-items: flex-end;
-      margin-top: 4px;
+      background: #080808;
+      padding: 2px;
     }
 
     .eq-bar {
       flex: 1;
+      height: 15%;
       background: linear-gradient(to top, #00ff00, #ffff00, #ff0000);
-      animation: eqBounce 0.6s infinite alternate;
+      transition: height 0.1s ease;
     }
 
-    .eq-bar:nth-child(2n) { animation-duration: 0.4s; }
-    .eq-bar:nth-child(3n) { animation-duration: 0.75s; }
+    .playing .eq-bar {
+      animation: eqBounce 0.45s infinite alternate;
+    }
+    .playing .eq-bar:nth-child(2n) { animation-duration: 0.3s; }
+    .playing .eq-bar:nth-child(3n) { animation-duration: 0.6s; }
+    .playing .eq-bar:nth-child(5n) { animation-duration: 0.25s; }
 
     @keyframes eqBounce {
-      0% { height: 20%; }
+      0% { height: 15%; }
       100% { height: 100%; }
     }
 
-    .main-panel { display: flex; flex-direction: column; gap: 16px; }
+    .winamp-controls {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 5px;
+    }
+
+    .winamp-controls button {
+      flex: 1;
+      font-size: 10px;
+      padding: 3px 2px;
+    }
+
+    .volume-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: #ccc;
+    }
+
+    .volume-row input[type="range"] {
+      flex: 1;
+      height: 6px;
+      cursor: pointer;
+    }
+
+    /* Panel Derecho */
+    .main-panel { display: flex; flex-direction: column; gap: 14px; }
 
     .hero-counter-box {
       border: 3px double var(--text-secondary);
-      padding: 16px;
+      padding: 14px;
       text-align: center;
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.35);
     }
 
     .hero-label {
-      font-size: 14px;
+      font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-accent);
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .digital-counter {
       display: inline-flex;
       gap: 4px;
       background: #000;
-      padding: 8px 12px;
+      padding: 7px 12px;
       border: 3px inset #666;
       box-shadow: inset 0 0 8px #000;
-      margin: 6px 0;
+      margin: 4px 0;
     }
 
     .digit-cell {
       background: #111;
       color: #00ff33;
       font-family: var(--font-mono);
-      font-size: 32px;
+      font-size: 30px;
       font-weight: bold;
-      padding: 4px 8px;
+      padding: 3px 8px;
       border: 1px solid #004400;
       text-shadow: 0 0 8px #00ff33;
     }
@@ -457,7 +456,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     @media (max-width: 500px) {
@@ -467,23 +466,24 @@
     .stat-card {
       border: 2px outset var(--window-border-light);
       background: rgba(255, 255, 255, 0.06);
-      padding: 8px;
+      padding: 7px;
       text-align: center;
     }
 
     .stat-num {
       font-family: var(--font-mono);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       color: var(--text-accent);
     }
 
     .stat-label { font-size: 11px; opacity: 0.9; }
 
+    /* Caja de Frase con IA + Motor Infinito */
     .quote-box {
       border: 2px solid var(--text-accent);
       padding: 14px;
-      background: rgba(255, 0, 255, 0.05);
+      background: rgba(0, 0, 0, 0.3);
       position: relative;
     }
 
@@ -491,20 +491,36 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
       margin-bottom: 8px;
       border-bottom: 1px dashed var(--text-secondary);
       padding-bottom: 4px;
       font-weight: bold;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .ai-badge {
+      background: #00ffcc;
+      color: #000;
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: bold;
+      border: 1px solid #000;
     }
 
     .quote-text {
-      font-size: 16px;
+      font-size: 15px;
       font-style: italic;
-      line-height: 1.4;
+      line-height: 1.45;
       margin: 10px 0;
       text-align: center;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .quote-footer {
@@ -512,18 +528,19 @@
       justify-content: space-between;
       align-items: center;
       font-size: 11px;
-      opacity: 0.85;
+      opacity: 0.9;
       flex-wrap: wrap;
       gap: 8px;
     }
 
     .extra-stats {
       border: 2px groove var(--text-secondary);
-      padding: 12px;
-      font-size: 13px;
+      padding: 10px 12px;
+      font-size: 12px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      background: rgba(0, 0, 0, 0.2);
     }
 
     @media (max-width: 500px) {
@@ -531,13 +548,13 @@
     }
 
     .badges-footer {
-      margin-top: 18px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
       border-top: 2px dotted var(--text-secondary);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .micro-badge {
@@ -553,8 +570,8 @@
     }
 
     .micro-badge span {
-      background: #ff0066;
-      color: #fff;
+      background: var(--text-accent);
+      color: #000;
       padding: 1px 4px;
       margin-right: 4px;
     }
@@ -581,42 +598,41 @@
     }
   </style>
 </head>
-<body class="theme-0">
+<body>
 
+  <!-- Marquesina Clásica -->
   <div class="marquee-bar">
-    <div class="marquee-content">
-      ★·.·´¯`·.·★ BIENVENID@ A MI ESPACIO RETRO 2000s - 2010s ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ FIRMA MI LIBRO DE VISITAS Y DEJA +10 PUNTOS ★·.·´¯`·.·★
+    <div class="marquee-content" id="marquee-text">
+      ★·.·´¯`·.·★ ESPACIO RETRO CON IA EN VIVO + MÚSICA GENERATIVA INFINITA ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ DALE PLAY AL WINAMP PARA ESCUCHAR MÚSICA Y2K REAL ★·.·´¯`·.·★
     </div>
   </div>
 
   <div class="retro-window" id="main-window">
     <div class="title-bar">
-      <div>🌐 Internet_Explorer_6.exe - [Contador_De_Vida_15-10-2004.html]</div>
+      <div id="window-title">🌐 CyberLife_2004_AI.exe - [15-10-2004]</div>
       <div class="title-bar-controls">
         <div class="win-btn" title="Minimizar">_</div>
         <div class="win-btn" title="Maximizar">□</div>
-        <div class="win-btn close" title="Cerrar" onclick="sendNudge()">X</div>
+        <div class="win-btn close" title="Zumbido" onclick="sendNudge()">X</div>
       </div>
     </div>
 
+    <!-- Barra de herramientas interactiva -->
     <div class="menu-bar">
-      <div class="menu-items">
-        <span>Archivo</span>
-        <span>Edición</span>
-        <span>Ver</span>
-        <span>Favoritos</span>
-        <span id="current-slot-label" style="text-decoration:none; font-weight:bold; color:#0050ee;"></span>
+      <div>
+        <strong id="current-slot-label" style="color:#003399;">⏳ Cargando bloque...</strong>
       </div>
       <div class="theme-controls">
-        <button class="retro-btn" onclick="cycleThemeManual()">🎨 Cambiar Skin (2000s)</button>
-        <button class="retro-btn" onclick="randomizeQuoteManual()">💬 Otra Frase</button>
-        <button class="retro-btn" onclick="sendNudge()">📳 Enviar Zumbido</button>
+        <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo (Infinito)</button>
+        <button class="retro-btn" onclick="generateNewQuoteManual()">🤖 Nueva Frase IA</button>
+        <button class="retro-btn" onclick="sendNudge()">📳 Zumbido MSN</button>
         <button class="retro-btn" onclick="toggleBirthdayPreview()">🎂 Modo Cumple</button>
       </div>
     </div>
 
     <div class="window-body">
 
+      <!-- BANNER DE CUMPLEAÑOS (15 de Octubre) -->
       <div id="birthday-banner">
         <h2>🎉 ¡¡FELIZ CUMPLEAÑOS!! 🎂✨</h2>
         <div class="ascii-cake">
@@ -631,52 +647,65 @@
       </div>
 
       <div class="profile-grid">
+        <!-- Columna Izquierda: Perfil + Reproductor con Sonido Real -->
         <div class="sidebar">
-          <div class="avatar-box" id="avatar-emoji">
-            💿
-            <div class="avatar-tag">xX_2004_Xx</div>
+          <div class="avatar-box" id="avatar-box">
+            <span id="avatar-emoji">💿</span>
+            <div class="avatar-tag">xX_15_10_2004_Xx</div>
           </div>
 
           <div class="msn-status">
             <span class="status-dot"></span>
-            <span id="status-text">Conectado (MSN)</span>
+            <span id="status-text">Conectado (MSN Plus!)</span>
           </div>
 
           <div class="profile-info">
-            <div><strong>📅 Spawn Date:</strong> 15/10/2004</div>
+            <div><strong>📅 Fecha Spawn:</strong> 15/10/2004</div>
             <div><strong>🎂 Edad actual:</strong> <span id="exact-years">0</span> años</div>
             <div><strong>♈ Signo:</strong> Libra ♎</div>
-            <div><strong>🕹️ Generación:</strong> Era 2000s Kid</div>
-            <div><strong>🎨 Skin activa:</strong> <span id="skin-name">Cyber Y2K</span></div>
+            <div><strong>🎨 Skin ID:</strong> <span id="skin-name">#Y2K-001</span></div>
           </div>
 
-          <div class="winamp-box">
+          <!-- WINAMP CON SINTETIZADOR CHIPTUNE Y2K + STREAM DE RADIO -->
+          <div class="winamp-box" id="winamp-player">
             <div class="winamp-title">
-              <span>⚡ WINAMP v2.91</span>
-              <span>128kbps</span>
+              <span>⚡ WINAMP SYNTH + RADIO</span>
+              <span id="audio-status">STOPPED</span>
             </div>
             <div class="winamp-screen">
-              <div id="song-title">▶ 01. Linkin Park - In The End.mp3</div>
-              <div class="equalizer">
+              <div id="song-title">▶ Pulsa PLAY para activar el audio 🔊</div>
+              <div class="winamp-meta">
+                <span id="music-mode-label">Modo: Synth 2000s</span>
+                <span id="music-bpm-label">128 BPM</span>
+              </div>
+              <div class="equalizer" id="equalizer">
                 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
                 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
                 <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-                <div class="eq-bar"></div>
+                <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
               </div>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">⏮</button>
-              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">▶</button>
-              <button class="retro-btn" style="font-size:10px; padding:1px 5px;" onclick="nextSong()">⏭ Track</button>
+            <div class="winamp-controls">
+              <button class="retro-btn" onclick="togglePlayMusic()" id="play-btn">▶ PLAY</button>
+              <button class="retro-btn" onclick="nextProceduralTrack()">⏭ OTRA PISTA</button>
+              <button class="retro-btn" onclick="switchMusicMode()" id="mode-btn">📻 RADIO</button>
+            </div>
+            <div class="volume-row">
+              <span>🔊 Vol:</span>
+              <input type="range" id="volume-slider" min="0" max="100" value="45" oninput="changeVolume(this.value)">
             </div>
           </div>
+          <!-- Audio HTML5 oculto para modo Radio MP3 en vivo -->
+          <audio id="radio-audio" preload="none" crossorigin="anonymous"></audio>
         </div>
 
+        <!-- Columna Derecha: Contadores y Frases IA -->
         <div class="main-panel">
+
           <div class="hero-counter-box">
             <div class="hero-label">✨ CONTEO OFICIAL DE DÍAS DE VIDA EN LA TIERRA ✨</div>
             <div class="digital-counter" id="days-counter"></div>
-            <div style="font-size: 13px; margin-top: 4px;">
+            <div style="font-size: 12px; margin-top: 4px;">
               Días vividos desde el <strong>15 de Octubre de 2004</strong>
             </div>
 
@@ -687,11 +716,11 @@
               </div>
               <div class="stat-card">
                 <div class="stat-num" id="stat-hours">0</div>
-                <div class="stat-label">Horas Totales</div>
+                <div class="stat-label">Horas Vividas</div>
               </div>
               <div class="stat-card">
                 <div class="stat-num" id="stat-minutes">0</div>
-                <div class="stat-label">Minutos Totales</div>
+                <div class="stat-label">Minutos Vividos</div>
               </div>
               <div class="stat-card">
                 <div class="stat-num" id="stat-seconds">0</div>
@@ -700,21 +729,24 @@
             </div>
           </div>
 
+          <!-- Caja de Frase IA + Motor Combinatorio Infinito -->
           <div class="quote-box">
             <div class="quote-header">
-              <span>💬 ESTADO DE MSN / FRASE DEL MOMENTO</span>
-              <span id="rotation-countdown">Cambia en: --:--:--</span>
+              <span>💬 NICK DE MSN / PENSAMIENTO DEL DÍA</span>
+              <span class="ai-badge" id="ai-source-badge">🤖 IA Pollinations + Motor 2000s</span>
             </div>
-            <div class="quote-text" id="daily-quote"></div>
+            <div class="quote-text" id="daily-quote">
+              "Conectando con el servidor de IA de los años 2000..."
+            </div>
             <div class="quote-footer">
-              <span>🔄 Se actualiza sola cada 6 horas junto con el diseño</span>
+              <span id="rotation-countdown">Próxima mutación (6h): --:--:--</span>
               <span id="nudge-log" style="color:var(--text-accent); font-weight:bold;"></span>
             </div>
           </div>
 
           <div class="extra-stats">
             <div>
-              <strong>⏳ Edad exacta desglosada:</strong><br>
+              <strong>⏳ Edad exacta al día de hoy:</strong><br>
               <span id="detailed-age">-- años, -- meses y -- días</span>
             </div>
             <div>
@@ -722,62 +754,40 @@
               <span id="next-bday-countdown">Calculando...</span>
             </div>
           </div>
+
         </div>
       </div>
 
       <div class="badges-footer">
-        <div class="micro-badge"><span>Y2K</span>15-10-2004</div>
-        <div class="micro-badge"><span>MSN</span>PLUS! LIVE</div>
-        <div class="micro-badge"><span>HTML</span>100% RETRO</div>
-        <div class="micro-badge"><span>WIN</span>XP SP2 READY</div>
-        <div class="micro-badge"><span>METRO</span>FLOG GOLD</div>
+        <div class="micro-badge"><span>AI</span>LIVE GENERATOR</div>
+        <div class="micro-badge"><span>SYNTH</span>WEB AUDIO API</div>
+        <div class="micro-badge"><span>CSS</span>INFINITE SKINS</div>
+        <div class="micro-badge"><span>SPAWN</span>15-10-2004</div>
       </div>
 
     </div>
   </div>
 
   <script>
+    // =========================================================================
+    // 1. CONFIGURACIÓN DE NACIMIENTO (15-10-2004) Y SEMILLA CADA 6 HORAS
+    // =========================================================================
     const BIRTH_YEAR = 2004;
-    const BIRTH_MONTH = 9; // Octubre (0-indexado)
+    const BIRTH_MONTH = 9; // Octubre (0 = Enero)
     const BIRTH_DAY = 15;
 
-    const THEMES = [
-      { className: 'theme-0', name: 'Cyber Y2K / Geocities (2000)', emoji: '👽', status: 'Navegando a 56kbps' },
-      { className: 'theme-1', name: 'Windows XP / MSN Messenger (2004)', emoji: '🦋', status: 'Conectado (No molestar)' },
-      { className: 'theme-2', name: 'Metroflog / MySpace Era (2007)', emoji: '🎸', status: 'xX_Escuchando_Musica_Xx' },
-      { className: 'theme-3', name: 'Frutiger Aero / 2010s Vibe', emoji: '🫧', status: 'En línea desde mi PC' }
-    ];
-
-    const QUOTES = [
-      "~* No cuentes los días, haz que los días cuenten... y deja +10 en mi Metroflog *~",
-      "« Sobreviviendo desde el 15 de octubre de 2004 sin usar trucos del GTA San Andreas »",
-      "★ Si la vida te da limones, conéctate y desconéctate de MSN para llamar su atención ★",
-      "~ La edad es solo el nivel de experiencia acumulada en este servidor llamado Tierra ~",
-      "« Ayer eras un niño viendo Cartoon Network y hoy llevas miles de días haciendo historia »",
-      "✧ Cada bloque de 6 horas es un nuevo checkpoint guardado en la Memory Card de 8MB ✧",
-      "~* No soy más viejo, soy una edición limitada del 2004 que sube de valor cada día *~",
-      "« Recuerda tomar agua, respaldar tus MP3 en el Ares y disfrutar cada día de vida »",
-      "★ Más de dos décadas brillando más fuerte que un texto de WordArt con sombra 3D ★",
-      "~ Si pudimos esperar 3 horas para descargar una canción en el 2006, podemos con todo ~",
-      "« Hoy es un gran día para agradecer todos los días vividos y seguir subiendo de nivel »",
-      "~* Mi estado de MSN hoy: agradecido por cada día desde aquel 15-10-2004 *~"
-    ];
-
-    const SONGS = [
-      "▶ 01. Linkin Park - In The End.mp3",
-      "▶ 02. Gorillaz - Feel Good Inc.mp3",
-      "▶ 03. Evanescence - Bring Me To Life.mp3",
-      "▶ 04. Avril Lavigne - Complicated.mp3",
-      "▶ 05. Daddy Yankee - Gasolina (2004).mp3",
-      "▶ 06. Daft Punk - One More Time.mp3",
-      "▶ 07. Green Day - Boulevard of Broken Dreams.mp3",
-      "▶ 08. Kudai - Sin Despertar.mp3"
-    ];
-
-    let manualThemeIndex = null;
-    let manualQuoteIndex = null;
+    let currentStyleSeed = null;
+    let lastAppliedAutoSeed = null;
     let forceBirthdayPreview = false;
-    let currentSongIndex = 0;
+
+    function mulberry32(a) {
+      return function() {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
 
     function getSixHourSeed(now) {
       const slot = Math.floor(now.getHours() / 6);
@@ -789,7 +799,6 @@
       let years = now.getFullYear() - birthDate.getFullYear();
       let months = now.getMonth() - birthDate.getMonth();
       let days = now.getDate() - birthDate.getDate();
-
       if (days < 0) {
         months--;
         const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
@@ -806,30 +815,403 @@
       return (now.getMonth() === BIRTH_MONTH && now.getDate() === BIRTH_DAY) || forceBirthdayPreview;
     }
 
-    function applySixHourRotation(now) {
-      const { slot, seed } = getSixHourSeed(now);
-      const slotNames = [
-        "🌙 Bloque 1/4 (00h-06h)",
-        "☀️ Bloque 2/4 (06h-12h)",
-        "⚡ Bloque 3/4 (12h-18h)",
-        "🌌 Bloque 4/4 (18h-24h)"
-      ];
-      document.getElementById('current-slot-label').textContent = slotNames[slot];
+    // =========================================================================
+    // 2. GENERADOR PROCEDURAL DE ESTILOS INFINITOS (2000s - 2010s)
+    // =========================================================================
+    const FONTS_2000S = [
+      "'Comic Sans MS', cursive, sans-serif",
+      "'Trebuchet MS', sans-serif",
+      "'Tahoma', 'Verdana', sans-serif",
+      "'Courier New', monospace",
+      "'Impact', 'Arial Black', sans-serif",
+      "'Georgia', serif"
+    ];
 
-      const themeIdx = manualThemeIndex !== null ? manualThemeIndex : (seed % THEMES.length);
-      const activeTheme = THEMES[themeIdx];
+    const AVATAR_EMOJIS = ['💿', '👽', '🦋', '🎸', '🫧', '🕹️', '📟', '🛹', '🎧', '⚡', '👾', '🌐', '🔥', '💎'];
+    const MSN_STATUSES = [
+      'Conectado (MSN Plus!)',
+      'Ausente (Jugando GTA SA)',
+      'Ocupado (Descargando en Ares)',
+      'En línea (Firmando Metroflog)',
+      'Conectado (Escuchando Winamp)',
+      'No molestar (Subiendo de nivel)',
+      'Vuelvo enseguida (Cambiando CD)'
+    ];
+    const ERA_PREFIXES = ['CyberY2K', 'WinXP_Luna', 'Metroflog_Emo', 'FrutigerAero', 'MySpace_Glitter', 'Tuenti_2009', 'Matrix_2004', 'PixelPunks'];
 
-      document.body.className = activeTheme.className;
-      if (isBirthdayToday(now)) document.body.classList.add('birthday-mode');
+    function applyProceduralTheme(seedNumber) {
+      const rand = mulberry32(seedNumber);
+      const isDarkTheme = rand() > 0.28;
+      const hue1 = Math.floor(rand() * 360);
+      const hue2 = (hue1 + 90 + Math.floor(rand() * 150)) % 360;
+      const hue3 = (hue2 + 110) % 360;
 
-      document.getElementById('skin-name').textContent = activeTheme.name;
-      document.getElementById('avatar-emoji').childNodes[0].nodeValue = isBirthdayToday(now) ? '🎂' : activeTheme.emoji;
-      document.getElementById('status-text').textContent = isBirthdayToday(now) ? '🥳 ¡DE CUMPLEAÑOS HOY!' : activeTheme.status;
+      const root = document.documentElement;
+      const patternType = Math.floor(rand() * 5);
 
-      const quoteIdx = manualQuoteIndex !== null ? manualQuoteIndex : ((seed * 2654435761) >>> 0) % QUOTES.length;
-      document.getElementById('daily-quote').textContent = QUOTES[quoteIdx];
+      if (isDarkTheme) {
+        const bgDark1 = `hsl(${hue1}, 65%, 7%)`;
+        const bgDark2 = `hsl(${hue2}, 70%, 13%)`;
+        const neonMain = `hsl(${hue1}, 100%, 65%)`;
+        const neonAccent = `hsl(${hue2}, 100%, 62%)`;
+        const neonSec = `hsl(${hue3}, 100%, 68%)`;
+
+        if (patternType === 0) {
+          root.style.setProperty('--bg-pattern', `radial-gradient(${neonAccent} 1px, transparent 1px), radial-gradient(${neonMain} 1px, ${bgDark1} 1px)`);
+          root.style.setProperty('--bg-size', `${16 + Math.floor(rand() * 20)}px ${16 + Math.floor(rand() * 20)}px`);
+        } else if (patternType === 1) {
+          root.style.setProperty('--bg-pattern', `repeating-linear-gradient(${Math.floor(rand() * 180)}deg, ${bgDark1} 0px, ${bgDark1} 12px, ${bgDark2} 12px, ${bgDark2} 24px)`);
+          root.style.setProperty('--bg-size', 'auto');
+        } else if (patternType === 2) {
+          root.style.setProperty('--bg-pattern', `linear-gradient(135deg, ${bgDark1} 25%, transparent 25%), linear-gradient(225deg, ${bgDark1} 25%, transparent 25%), linear-gradient(45deg, ${bgDark2} 25%, ${bgDark1} 25%)`);
+          root.style.setProperty('--bg-size', '28px 28px');
+        } else {
+          root.style.setProperty('--bg-pattern', `radial-gradient(circle at 50% 20%, ${bgDark2}, ${bgDark1} 80%)`);
+          root.style.setProperty('--bg-size', '100% 100%');
+        }
+
+        root.style.setProperty('--window-bg', `hsl(${hue1}, 20%, 22%)`);
+        root.style.setProperty('--content-bg', `hsl(${hue1}, 50%, 6%)`);
+        root.style.setProperty('--text-main', neonMain);
+        root.style.setProperty('--text-accent', neonAccent);
+        root.style.setProperty('--text-secondary', neonSec);
+        root.style.setProperty('--box-glow', `0 0 ${12 + Math.floor(rand() * 16)}px ${neonAccent}`);
+        root.style.setProperty('--badge-bg', neonAccent);
+        root.style.setProperty('--badge-text', '#000000');
+      } else {
+        const sky1 = `hsl(${hue1}, 85%, 65%)`;
+        const sky2 = `hsl(${hue2}, 85%, 78%)`;
+        const deepText = `hsl(${hue1}, 85%, 20%)`;
+        const accentColor = `hsl(${hue2}, 90%, 38%)`;
+        const secColor = `hsl(${hue3}, 80%, 30%)`;
+
+        root.style.setProperty('--bg-pattern', `linear-gradient(${Math.floor(rand() * 360)}deg, ${sky1} 0%, ${sky2} 55%, hsl(${hue3}, 75%, 60%) 100%)`);
+        root.style.setProperty('--bg-size', '100% 100%');
+        root.style.setProperty('--window-bg', '#ece9d8');
+        root.style.setProperty('--content-bg', '#f7fbff');
+        root.style.setProperty('--text-main', deepText);
+        root.style.setProperty('--text-accent', accentColor);
+        root.style.setProperty('--text-secondary', secColor);
+        root.style.setProperty('--box-glow', `0 6px 22px rgba(0,0,0,0.35)`);
+        root.style.setProperty('--badge-bg', accentColor);
+        root.style.setProperty('--badge-text', '#ffffff');
+      }
+
+      root.style.setProperty('--titlebar-bg', `linear-gradient(90deg, hsl(${hue1}, 85%, 38%), hsl(${hue2}, 90%, 45%))`);
+      root.style.setProperty('--font-main', FONTS_2000S[Math.floor(rand() * FONTS_2000S.length)]);
+      root.style.setProperty('--win-radius', `${Math.floor(rand() * 12)}px`);
+
+      const prefix = ERA_PREFIXES[Math.floor(rand() * ERA_PREFIXES.length)];
+      const hexCode = Math.floor(rand() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+      document.getElementById('skin-name').textContent = `${prefix}_#${hexCode}`;
+
+      const now = new Date();
+      document.getElementById('avatar-emoji').textContent = isBirthdayToday(now)
+        ? '🎂'
+        : AVATAR_EMOJIS[Math.floor(rand() * AVATAR_EMOJIS.length)];
+      document.getElementById('status-text').textContent = isBirthdayToday(now)
+        ? '🥳 ¡DE CUMPLEAÑOS HOY!'
+        : MSN_STATUSES[Math.floor(rand() * MSN_STATUSES.length)];
     }
 
+    function generateInfiniteStyleManual() {
+      currentStyleSeed = Math.floor(Math.random() * 999999999);
+      applyProceduralTheme(currentStyleSeed);
+    }
+
+    // =========================================================================
+    // 3. EXTENSIÓN DE IA EN VIVO + MOTOR GRAMATICAL INFINITO DE RESPALDO
+    // =========================================================================
+    function generateCombinatorial2000sQuote(seedNumber, totalDays, years) {
+      const rand = mulberry32(seedNumber);
+      const decoLeft = ['~* ', '« ', '★ ', 'xX_ ', '·.¸¸.·♩♪♫ ', '✧ ', '[MSN] '];
+      const decoRight = [' *~', ' »', ' ★', ' _Xx', ' ♫♪♩·.¸¸.·', ' ✧', ' [zumbido]'];
+
+      const openings = [
+        `Llevas ${totalDays.toLocaleString('es-ES')} días respirando magia desde el 15-10-2004`,
+        `Nivel ${years} desbloqueado con ${totalDays.toLocaleString('es-ES')} días de experiencia en este servidor`,
+        `Desde aquel viernes 15 de octubre de 2004 has sobrevivido a ${totalDays.toLocaleString('es-ES')} amaneceres`,
+        `Tu partida empezó en 2004 y hoy sumas ${totalDays.toLocaleString('es-ES')} días épicos sin usar GameShark`,
+        `Más de ${years} años brillando con más estilo que un WordArt arcoíris de Windows XP`,
+        `Ya van ${totalDays.toLocaleString('es-ES')} días desde que llegaste al mundo en plena era del Messenger`,
+        `Con ${totalDays.toLocaleString('es-ES')} días en tu Memory Card desde el 2004, hoy es un gran día para triunfar`
+      ];
+
+      const middles = [
+        'mientras el Winamp sigue sonando en el corazón',
+        'demostrando que la generación 2004 está hecha de otra pasta',
+        'con la misma paciencia con la que bajábamos música en el Ares',
+        'guardando cada buen recuerdo como foto dorada de Metroflog',
+        'superando pantallas difíciles como en la PlayStation 2',
+        'sin perder nunca esa chispa retro de los años 2000',
+        'acumulando más historias que un disco duro lleno de MP3'
+      ];
+
+      const endings = [
+        '¡así que deja +10 puntos a este día y rómpela toda!',
+        '¡hoy toca brillar más fuerte que pantalla CRT a medianoche!',
+        '¡sigue subiendo de nivel que lo mejor de tu playlist apenas empieza!',
+        '¡disfruta cada segundo como cuando salías temprano del cole!',
+        '¡nadie te quita todo lo vivido ni lo increíble que se viene!',
+        '¡mándale un zumbido a la rutina y haz que hoy valga la pena!'
+      ];
+
+      const dIdx = Math.floor(rand() * decoLeft.length);
+      const o = openings[Math.floor(rand() * openings.length)];
+      const m = middles[Math.floor(rand() * middles.length)];
+      const e = endings[Math.floor(rand() * endings.length)];
+
+      return `${decoLeft[dIdx]}${o}, ${m}; ${e}${decoRight[dIdx]}`;
+    }
+
+    async function fetchLiveAIQuote(seedNumber) {
+      const now = new Date();
+      const birthDate = new Date(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
+      const totalDays = Math.floor((now - birthDate) / (1000 * 60 * 60 * 24));
+      const { years } = getDetailedAge(birthDate, now);
+      const isBday = isBirthdayToday(now);
+
+      const quoteEl = document.getElementById('daily-quote');
+      const badgeEl = document.getElementById('ai-source-badge');
+
+      const fallbackQuote = generateCombinatorial2000sQuote(seedNumber, totalDays, years);
+      quoteEl.textContent = fallbackQuote;
+      badgeEl.textContent = '⚡ Generando con IA en vivo...';
+
+      try {
+        const prompt = isBday
+          ? `Escribe una felicitación de cumpleaños corta, super creativa y nostálgica de los años 2000 (estilo MSN Messenger, Winamp, Metroflog, PS2) para alguien que nació el 15-10-2004 y hoy cumple ${years} años (${totalDays} días de vida). Máximo 28 palabras. Sin comillas.`
+          : `Escribe una frase motivadora, divertida y nostálgica estilo nick de MSN Messenger / años 2000-2010 para alguien nacido el 15-10-2004 que hoy lleva ${totalDays} días de vida (${years} años). Usa referencias sutiles de los 2000s. Semilla creativa: ${seedNumber}. Máximo 26 palabras. Sin comillas.`;
+
+        const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?seed=${seedNumber}&model=openai`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error de red IA');
+        const aiText = (await response.text()).trim();
+        if (aiText && aiText.length > 10 && aiText.length < 320) {
+          quoteEl.textContent = `~* ${aiText} *~`;
+          badgeEl.textContent = '🤖 Creada por IA en Vivo';
+          return;
+        }
+      } catch (err) {
+        // Si falla la red queda la frase combinatoria infinita
+      }
+      badgeEl.textContent = '♾️ Motor Procedural 2000s';
+    }
+
+    function generateNewQuoteManual() {
+      const randomSeed = Math.floor(Math.random() * 999999999);
+      fetchLiveAIQuote(randomSeed);
+    }
+
+    // =========================================================================
+    // 4. MOTOR DE MÚSICA INFINITA (Web Audio API Chiptune Y2K + Radio Stream)
+    // =========================================================================
+    let audioCtx = null;
+    let isPlaying = false;
+    let musicMode = 'synth';
+    let synthInterval = null;
+    let masterVolume = 0.45;
+    let currentTrackSeed = 20041015;
+    let stepIndex = 0;
+
+    const RADIO_STATIONS = [
+      { name: "📻 SomaFM: PopTron (Electropop / Indie 2000s)", url: "https://ice1.somafm.com/poptron-128-mp3" },
+      { name: "📻 Nightride FM (Synthwave / Cyber Retro)", url: "https://stream.nightride.fm/nightride.m4a" },
+      { name: "📻 Chillsynth FM (Retro Chiptune & Synth)", url: "https://stream.nightride.fm/chillsynth.m4a" },
+      { name: "📻 SomaFM: DEF CON Radio (Hacker Y2K Beats)", url: "https://ice1.somafm.com/defcon-128-mp3" }
+    ];
+    let radioIndex = 0;
+
+    const SCALES = [
+      { name: "Eurodance 2004", notes: [0, 3, 5, 7, 10, 12, 15, 17], baseFreq: 220, bpm: 136 },
+      { name: "Keygen Chiptune XP", notes: [0, 2, 4, 7, 9, 12, 14, 16], baseFreq: 261.63, bpm: 142 },
+      { name: "Metroflog SynthPop", notes: [0, 4, 7, 11, 12, 16, 19], baseFreq: 196, bpm: 124 },
+      { name: "Frutiger Aero Dream", notes: [0, 2, 5, 7, 9, 12, 14, 17], baseFreq: 246.94, bpm: 118 },
+      { name: "PS2 Menu Ambient", notes: [0, 3, 7, 8, 12, 15, 19], baseFreq: 174.61, bpm: 110 }
+    ];
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSynthNote(freq, duration, type = 'square', volMultiplier = 0.18) {
+      if (!audioCtx || !isPlaying) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      const peakGain = Math.max(0.0001, masterVolume * volMultiplier);
+      gain.gain.setValueAtTime(peakGain, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+    }
+
+    function playDrumKick() {
+      if (!audioCtx || !isPlaying) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(130, now);
+      osc.frequency.exponentialRampToValueAtTime(35, now + 0.12);
+
+      gain.gain.setValueAtTime(masterVolume * 0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.13);
+    }
+
+    function startProceduralSynth() {
+      stopAllAudio();
+      initAudioContext();
+      isPlaying = true;
+
+      const rand = mulberry32(currentTrackSeed);
+      const scaleObj = SCALES[Math.floor(rand() * SCALES.length)];
+      const bpm = scaleObj.bpm + Math.floor(rand() * 16) - 8;
+      const stepTimeMs = (60 / bpm / 2) * 1000;
+      const waveTypes = ['square', 'sawtooth', 'triangle'];
+      const leadWave = waveTypes[Math.floor(rand() * waveTypes.length)];
+
+      const pattern = [];
+      for (let i = 0; i < 16; i++) {
+        if (rand() > 0.2) {
+          const semitone = scaleObj.notes[Math.floor(rand() * scaleObj.notes.length)];
+          pattern.push(scaleObj.baseFreq * Math.pow(2, semitone / 12));
+        } else {
+          pattern.push(null);
+        }
+      }
+
+      const trackCode = (currentTrackSeed % 9999).toString().padStart(4, '0');
+      document.getElementById('song-title').textContent = `🎵 ${scaleObj.name} #${trackCode}.xm`;
+      document.getElementById('music-mode-label').textContent = `Synth: ${leadWave.toUpperCase()}`;
+      document.getElementById('music-bpm-label').textContent = `${bpm} BPM`;
+      updatePlayerUI(true);
+
+      stepIndex = 0;
+      synthInterval = setInterval(() => {
+        if (!isPlaying) return;
+        const s = stepIndex % 16;
+
+        if (s % 4 === 0) playDrumKick();
+        if (s % 2 === 0 && pattern[0]) {
+          playSynthNote(scaleObj.baseFreq / 2, stepTimeMs / 1000 * 0.8, 'triangle', 0.22);
+        }
+
+        const noteFreq = pattern[s];
+        if (noteFreq) {
+          playSynthNote(noteFreq, stepTimeMs / 1000 * 0.85, leadWave, 0.14);
+        }
+
+        stepIndex++;
+      }, stepTimeMs);
+    }
+
+    function startRadioStream() {
+      stopAllAudio();
+      isPlaying = true;
+      const radioEl = document.getElementById('radio-audio');
+      const station = RADIO_STATIONS[radioIndex % RADIO_STATIONS.length];
+
+      radioEl.src = station.url;
+      radioEl.volume = masterVolume;
+      document.getElementById('song-title').textContent = station.name;
+      document.getElementById('music-mode-label').textContent = 'Modo: Radio Stream';
+      document.getElementById('music-bpm-label').textContent = 'LIVE MP3';
+      updatePlayerUI(true);
+
+      radioEl.play().catch(() => {
+        musicMode = 'synth';
+        startProceduralSynth();
+      });
+    }
+
+    function stopAllAudio() {
+      isPlaying = false;
+      if (synthInterval) {
+        clearInterval(synthInterval);
+        synthInterval = null;
+      }
+      const radioEl = document.getElementById('radio-audio');
+      radioEl.pause();
+      updatePlayerUI(false);
+    }
+
+    function updatePlayerUI(playing) {
+      const playerBox = document.getElementById('winamp-player');
+      const playBtn = document.getElementById('play-btn');
+      const statusText = document.getElementById('audio-status');
+
+      if (playing) {
+        playerBox.classList.add('playing');
+        playBtn.textContent = '⏹ STOP';
+        statusText.textContent = 'PLAYING 🔊';
+      } else {
+        playerBox.classList.remove('playing');
+        playBtn.textContent = '▶ PLAY';
+        statusText.textContent = 'STOPPED';
+      }
+    }
+
+    function togglePlayMusic() {
+      if (isPlaying) {
+        stopAllAudio();
+      } else {
+        if (musicMode === 'synth') startProceduralSynth();
+        else startRadioStream();
+      }
+    }
+
+    function nextProceduralTrack() {
+      if (musicMode === 'synth') {
+        currentTrackSeed = Math.floor(Math.random() * 99999999);
+        startProceduralSynth();
+      } else {
+        radioIndex = (radioIndex + 1) % RADIO_STATIONS.length;
+        startRadioStream();
+      }
+    }
+
+    function switchMusicMode() {
+      const modeBtn = document.getElementById('mode-btn');
+      if (musicMode === 'synth') {
+        musicMode = 'radio';
+        modeBtn.textContent = '🎹 SYNTH';
+        startRadioStream();
+      } else {
+        musicMode = 'synth';
+        modeBtn.textContent = '📻 RADIO';
+        startProceduralSynth();
+      }
+    }
+
+    function changeVolume(val) {
+      masterVolume = Number(val) / 100;
+      const radioEl = document.getElementById('radio-audio');
+      radioEl.volume = masterVolume;
+    }
+
+    // =========================================================================
+    // 5. CONTADOR EN TIEMPO REAL Y ROTACIÓN CADA 6 HORAS
+    // =========================================================================
     function updateCounters() {
       const now = new Date();
       const birthDate = new Date(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
@@ -856,44 +1238,51 @@
       document.getElementById('stat-hours').textContent = totalHours.toLocaleString('es-ES');
       document.getElementById('stat-minutes').textContent = totalMinutes.toLocaleString('es-ES');
       document.getElementById('stat-seconds').textContent = totalSeconds.toLocaleString('es-ES');
-      document.getElementById('detailed-age').textContent = `${detailed.years} años, ${detailed.months} meses y ${detailed.days} días`;
+      document.getElementById('detailed-age').textContent =
+        `${detailed.years} años, ${detailed.months} meses y ${detailed.days} días`;
 
-      const nextSlotHour = (Math.floor(now.getHours() / 6) + 1) * 6;
+      const { slot, seed } = getSixHourSeed(now);
+      const slotNames = [
+        "🌙 Bloque 1/4 (00h-06h)",
+        "☀️ Bloque 2/4 (06h-12h)",
+        "⚡ Bloque 3/4 (12h-18h)",
+        "🌌 Bloque 4/4 (18h-24h)"
+      ];
+      document.getElementById('current-slot-label').textContent = slotNames[slot];
+
+      const nextSlotHour = (slot + 1) * 6;
       const nextRotation = new Date(now.getFullYear(), now.getMonth(), now.getDate(), nextSlotHour, 0, 0);
       const rotDiff = Math.max(0, Math.floor((nextRotation - now) / 1000));
       const rH = String(Math.floor(rotDiff / 3600)).padStart(2, '0');
       const rM = String(Math.floor((rotDiff % 3600) / 60)).padStart(2, '0');
       const rS = String(rotDiff % 60).padStart(2, '0');
-      document.getElementById('rotation-countdown').textContent = `Nuevo estilo/frase en: ${rH}:${rM}:${rS}`;
+      document.getElementById('rotation-countdown').textContent = `Próxima mutación (6h): ${rH}:${rM}:${rS}`;
 
       const bdayBanner = document.getElementById('birthday-banner');
       if (isBirthdayToday(now)) {
+        document.body.classList.add('birthday-mode');
         bdayBanner.style.display = 'block';
         document.getElementById('birthday-message').innerHTML =
-          `¡FELICES <strong>${detailed.years} AÑOS</strong>! Hoy 15 de Octubre celebramos tus <strong>${totalDays.toLocaleString('es-ES')} días</strong> de vida desde aquel épico 15-10-2004. ¡Que este nuevo nivel venga lleno de éxitos, salud y buena vibra! 🎂🎈💿`;
-        document.getElementById('next-bday-countdown').innerHTML = `<strong style="color:#ff00ff;">🎉 ¡¡ES HOY, ES HOY!! 🎉</strong>`;
+          `¡FELICES <strong>${detailed.years} AÑOS</strong>! Hoy 15 de Octubre celebramos tus <strong>${totalDays.toLocaleString('es-ES')} días</strong> de vida desde aquel épico 15-10-2004. ¡Dale PLAY al Winamp y a festejar! 🎂🎈💿`;
+        document.getElementById('next-bday-countdown').innerHTML =
+          `<strong style="color:var(--text-accent);">🎉 ¡¡ES HOY, FELIZ CUMPLE!! 🎉</strong>`;
       } else {
+        document.body.classList.remove('birthday-mode');
         bdayBanner.style.display = 'none';
         let nextBday = new Date(now.getFullYear(), BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
         if (now > nextBday) nextBday = new Date(now.getFullYear() + 1, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
         const daysToBday = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('next-bday-countdown').textContent = `Faltan ${daysToBday} días para cumplir ${detailed.years + 1} años`;
+        document.getElementById('next-bday-countdown').textContent =
+          `Faltan ${daysToBday} días para cumplir ${detailed.years + 1} años`;
       }
 
-      applySixHourRotation(now);
-    }
-
-    function cycleThemeManual() {
-      const { seed } = getSixHourSeed(new Date());
-      const current = manualThemeIndex !== null ? manualThemeIndex : (seed % THEMES.length);
-      manualThemeIndex = (current + 1) % THEMES.length;
-      updateCounters();
-    }
-
-    function randomizeQuoteManual() {
-      const current = manualQuoteIndex !== null ? manualQuoteIndex : 0;
-      manualQuoteIndex = (current + 1) % QUOTES.length;
-      updateCounters();
+      if (lastAppliedAutoSeed !== seed) {
+        lastAppliedAutoSeed = seed;
+        currentStyleSeed = seed;
+        currentTrackSeed = seed;
+        applyProceduralTheme(seed);
+        fetchLiveAIQuote(seed);
+      }
     }
 
     function sendNudge() {
@@ -901,13 +1290,22 @@
       win.classList.remove('nudge-active');
       void win.offsetWidth;
       win.classList.add('nudge-active');
-      document.getElementById('nudge-log').textContent = '📳 ¡Has enviado un Zumbido de MSN!';
+      document.getElementById('nudge-log').textContent = '📳 ¡Zumbido enviado!';
+      initAudioContext();
+      if (audioCtx) {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(90, audioCtx.currentTime + 0.25);
+        g.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      }
       setTimeout(() => { document.getElementById('nudge-log').textContent = ''; }, 3000);
-    }
-
-    function nextSong() {
-      currentSongIndex = (currentSongIndex + 1) % SONGS.length;
-      document.getElementById('song-title').textContent = SONGS[currentSongIndex];
     }
 
     function spawnRetroConfetti() {
@@ -925,6 +1323,7 @@
 
     function toggleBirthdayPreview() {
       forceBirthdayPreview = !forceBirthdayPreview;
+      lastAppliedAutoSeed = null;
       updateCounters();
       if (isBirthdayToday(new Date())) spawnRetroConfetti();
     }
