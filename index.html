@@ -1308,7 +1308,7 @@
 
   <!-- =========================================================================
        VENTANA EMERGENTE MODAL RETRO: JUEGO DE VESTIR MUÑECAS (DOLLZ 2004)
-       ========================================================= -->
+       ========================================================================= -->
   <div class="doll-modal-overlay" id="doll-modal-overlay" onclick="handleDollOverlayClick(event)">
     <div class="doll-window" id="doll-window">
       
@@ -3116,7 +3116,7 @@
       playRetroDollSound('sparkle');
     }
 
-    // Copiar Ficha de Look al portapapeles
+    // Copiar Ficha de Look al portapapeles sin caracteres conflictivos
     function copyDollOutfitSummary() {
       const getLabel = (cat, id) => {
         if (!id) return 'Ninguno';
@@ -3124,22 +3124,27 @@
         return item ? item.name : 'Personalizado';
       };
 
-      const summaryText =
-`★·.·´¯`·.·★ LOOK DOLLZ 2004 ★·.·´¯`·.·★
-💇 Cabello: ${getLabel('hair', currentDollState.equipped.hair)}
-👚 Top: ${getLabel('tops', currentDollState.equipped.tops)}
-👖 Abajo: ${getLabel('bottoms', currentDollState.equipped.bottoms)}
-👟 Calzado: ${getLabel('shoes', currentDollState.equipped.shoes)}
-🎀 Accesorio: ${getLabel('accessories', currentDollState.equipped.accessories)}
-💬 Opinión: ${document.getElementById('doll-speech').textContent}
-★ Nacimiento: 15/10/2004 | 100% Flow Colombo-Venezolano ★`;
+      const summaryText = [
+        "★~*~ LOOK DOLLZ 2004 ~*~★",
+        "💇 Cabello: " + getLabel("hair", currentDollState.equipped.hair),
+        "👚 Top: " + getLabel("tops", currentDollState.equipped.tops),
+        "👖 Abajo: " + getLabel("bottoms", currentDollState.equipped.bottoms),
+        "👟 Calzado: " + getLabel("shoes", currentDollState.equipped.shoes),
+        "🎀 Accesorio: " + getLabel("accessories", currentDollState.equipped.accessories),
+        "💬 Opinión: " + document.getElementById("doll-speech").textContent,
+        "★ Nacimiento: 15/10/2004 | 100% Flow Colombo-Venezolano ★"
+      ].join("\n");
 
-      navigator.clipboard.writeText(summaryText).then(() => {
-        showDollToast('📸 ¡Ficha copiada al portapapeles!');
-        playRetroDollSound('sparkle');
-      }).catch(() => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(summaryText).then(() => {
+          showDollToast('📸 ¡Ficha copiada al portapapeles!');
+          playRetroDollSound('sparkle');
+        }).catch(() => {
+          showDollToast('📸 ¡Look generado con éxito!');
+        });
+      } else {
         showDollToast('📸 ¡Look generado con éxito!');
-      });
+      }
     }
 
     function showDollToast(msg) {
