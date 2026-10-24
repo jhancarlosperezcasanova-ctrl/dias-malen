@@ -108,6 +108,7 @@
       align-items: center;
       border-radius: calc(var(--win-radius) - 2px) calc(var(--win-radius) - 2px) 0 0;
       text-shadow: 1px 1px 1px #000;
+      user-select: none;
     }
 
     .title-bar-controls { display: flex; gap: 4px; }
@@ -129,6 +130,13 @@
       justify-content: center;
       cursor: pointer;
       user-select: none;
+    }
+
+    .win-btn:active {
+      border-top: 2px solid #404040;
+      border-left: 2px solid #404040;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
     }
 
     .win-btn.close { background: #e04343; color: #fff; }
@@ -162,10 +170,31 @@
       font-weight: bold;
       cursor: pointer;
       color: #000;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .retro-btn:hover { background: #ffffcc; }
-    .retro-btn:active { border-style: inset; }
+    .retro-btn:active {
+      border-top: 2px solid #404040;
+      border-left: 2px solid #404040;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+    }
+
+    .btn-dollz-highlight {
+      background: linear-gradient(180deg, #ff66cc, #ff0099);
+      color: #fff !important;
+      border-color: #ffccff #660033 #660033 #ffccff;
+      animation: pulseDollz 1.8s infinite alternate;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    @keyframes pulseDollz {
+      0% { box-shadow: 0 0 3px #ff00ff; }
+      100% { box-shadow: 0 0 12px #ffff00, 0 0 18px #ff00aa; }
+    }
 
     .window-body {
       margin: 8px;
@@ -530,12 +559,15 @@
 
     .stat-label { font-size: 11px; opacity: 0.9; }
 
-    /* Caja de Frase con IA + Motor Infinito */
+    /* =========================================================
+       CAJA DE FRASES CON IA CREATIVA + JERGA COLOMBO-VENEZOLANA
+       ========================================================= */
     .quote-box {
       border: 2px solid var(--text-accent);
       padding: 14px;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.38);
       position: relative;
+      box-shadow: 0 0 14px rgba(255, 0, 204, 0.25);
     }
 
     .quote-header {
@@ -546,32 +578,47 @@
       color: var(--text-secondary);
       margin-bottom: 8px;
       border-bottom: 1px dashed var(--text-secondary);
-      padding-bottom: 4px;
+      padding-bottom: 6px;
       font-weight: bold;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
     }
 
     .ai-badge {
       background: #00ffcc;
       color: #000;
-      padding: 1px 6px;
+      padding: 2px 8px;
       font-family: var(--font-mono);
       font-size: 10px;
       font-weight: bold;
       border: 1px solid #000;
+      box-shadow: 1px 1px 0 #fff;
+    }
+
+    .ai-archetype-tag {
+      font-size: 10px;
+      color: #ff99ff;
+      font-style: normal;
+      background: rgba(0,0,0,0.6);
+      padding: 1px 6px;
+      border: 1px dotted #ff00ff;
     }
 
     .quote-text {
       font-size: 15px;
       font-style: italic;
-      line-height: 1.45;
-      margin: 10px 0;
+      line-height: 1.5;
+      margin: 12px 0;
       text-align: center;
-      min-height: 44px;
+      min-height: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 3px solid var(--text-accent);
+      border-right: 3px solid var(--text-accent);
+      text-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
     }
 
     .quote-footer {
@@ -579,9 +626,14 @@
       justify-content: space-between;
       align-items: center;
       font-size: 11px;
-      opacity: 0.9;
+      opacity: 0.95;
       flex-wrap: wrap;
       gap: 8px;
+    }
+
+    .quote-actions {
+      display: flex;
+      gap: 5px;
     }
 
     .extra-stats {
@@ -647,6 +699,402 @@
     @keyframes fallDown {
       to { transform: translateY(105vh) rotate(360deg); }
     }
+
+    /* =====================================================================
+       VENTANA EMERGENTE: JUEGO DE VESTIR MUÑECAS (DOLLZ STUDIO 2004)
+       ===================================================================== */
+    .doll-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 0, 20, 0.72);
+      backdrop-filter: blur(3px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .doll-modal-overlay.active {
+      display: flex;
+    }
+
+    .doll-window {
+      width: 100%;
+      max-width: 820px;
+      height: 92vh;
+      max-height: 640px;
+      background: #d4d0c8;
+      border-top: 3px solid #ffffff;
+      border-left: 3px solid #ffffff;
+      border-right: 3px solid #404040;
+      border-bottom: 3px solid #404040;
+      box-shadow: 0 0 35px #ff00ff, 0 14px 28px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      user-select: none;
+      font-family: Tahoma, sans-serif;
+    }
+
+    .doll-titlebar {
+      background: linear-gradient(90deg, #ff007f, #800080, #000080);
+      color: #ffffff;
+      padding: 6px 10px;
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .doll-titlebar span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .doll-menubar {
+      background: #ece9d8;
+      padding: 5px 8px;
+      border-bottom: 1px solid #999;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .doll-actions-left {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .doll-body-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      overflow: hidden;
+      background: #250338;
+      position: relative;
+    }
+
+    @media (max-width: 680px) {
+      .doll-body-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 290px 1fr;
+      }
+    }
+
+    /* Escenario de la Muñeca (Izquierda) */
+    .doll-stage {
+      background: radial-gradient(circle at 50% 40%, #501166 0%, #150220 85%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-right: 2px inset #fff;
+      overflow: hidden;
+    }
+
+    /* Bocadillo de la muñeca (Diálogo con jerga Colombo-Venezolana) */
+    .doll-speech {
+      background: #ffffcc;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: bold;
+      max-width: 270px;
+      line-height: 1.25;
+      text-align: center;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+      position: relative;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .doll-speech::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: #ffffcc transparent;
+      display: block;
+      width: 0;
+    }
+
+    /* Lienzo de la Muñeca SVG */
+    .doll-canvas-wrapper {
+      position: relative;
+      width: 170px;
+      height: 330px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .doll-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8));
+    }
+
+    /* Efecto de purpurina/glitter 2000s */
+    .glitter-particle {
+      position: absolute;
+      pointer-events: none;
+      animation: sparkleAnim 1.6s infinite ease-in-out;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    @keyframes sparkleAnim {
+      0% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+      100% { opacity: 0; transform: scale(0.4) rotate(360deg); }
+    }
+
+    /* Selector de Piel debajo de la muñeca */
+    .doll-stage-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.65);
+      padding: 4px 8px;
+      border: 1px solid #ff00ff;
+      border-radius: 4px;
+      font-size: 10px;
+      color: #fff;
+      z-index: 5;
+    }
+
+    .skin-palette {
+      display: flex;
+      gap: 4px;
+    }
+
+    .skin-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #fff;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .skin-swatch:hover, .skin-swatch.active {
+      transform: scale(1.25);
+      border: 2px solid #ffff00;
+      box-shadow: 0 0 5px #ff00ff;
+    }
+
+    /* Clóset / Guardarropa (Derecha) */
+    .doll-wardrobe {
+      background: #1a082b;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    /* Pestañas de categorías */
+    .wardrobe-tabs {
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #ff00ff;
+    }
+
+    .wardrobe-tab {
+      background: #331048;
+      color: #ff99ff;
+      border-top: 2px solid #ff99ff;
+      border-left: 2px solid #ff99ff;
+      border-right: 2px solid #1a082b;
+      border-bottom: none;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: Tahoma, sans-serif;
+    }
+
+    .wardrobe-tab:hover {
+      background: #4d166d;
+      color: #fff;
+    }
+
+    .wardrobe-tab.active {
+      background: #ff00cc;
+      color: #ffffff;
+      border-color: #ffffff #550044 #ff00cc #ffffff;
+      text-shadow: 1px 1px 1px #000;
+    }
+
+    /* Rejilla de prendas */
+    .wardrobe-items-grid {
+      flex: 1;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      padding: 10px 4px;
+    }
+
+    .wardrobe-item-card {
+      background: #2c0f44;
+      border: 2px outset #ff66cc;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .wardrobe-item-card:hover {
+      background: #46166e;
+      transform: translateY(-2px);
+      box-shadow: 0 0 8px #ff00ff;
+    }
+
+    .wardrobe-item-card.equipped {
+      background: #5c117e;
+      border: 2px inset #00ffcc;
+      box-shadow: inset 0 0 8px rgba(0, 255, 204, 0.4), 0 0 6px #00ffcc;
+    }
+
+    .item-preview-box {
+      width: 48px;
+      height: 48px;
+      background: #110220;
+      border: 1px inset #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .item-card-name {
+      font-size: 10px;
+      font-weight: bold;
+      color: #00ffcc;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .item-card-tag {
+      font-size: 9px;
+      color: #ffcc00;
+      font-family: var(--font-mono);
+    }
+
+    .equipped-badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: #00ffcc;
+      color: #000;
+      font-size: 8px;
+      font-weight: bold;
+      padding: 1px 3px;
+      border-radius: 2px;
+      display: none;
+    }
+
+    .wardrobe-item-card.equipped .equipped-badge {
+      display: block;
+    }
+
+    .doll-statusbar {
+      background: #ece9d8;
+      border-top: 1px solid #808080;
+      padding: 3px 8px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      color: #000;
+    }
+
+    /* Botón flotante para invocar el juego de vestir */
+    .floating-doll-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff0099, #6600cc);
+      color: #ffffff;
+      border: 3px outset #ffffff;
+      box-shadow: 0 0 15px #ff00ff, 0 4px 10px rgba(0,0,0,0.6);
+      padding: 8px 14px;
+      font-family: Tahoma, sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 8px;
+      text-shadow: 1px 1px 2px #000;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .floating-doll-btn:hover {
+      transform: scale(1.08) rotate(-2deg);
+      box-shadow: 0 0 25px #00ffff, 0 6px 16px rgba(0,0,0,0.8);
+      background: linear-gradient(135deg, #ff00bb, #0099ff);
+    }
+
+    /* Notificación Toast */
+    .doll-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #00ffcc;
+      border: 2px solid #ff00ff;
+      padding: 8px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 0 16px #ff00ff;
+      z-index: 100000;
+      pointer-events: none;
+      display: none;
+      animation: fadeInToast 0.3s ease;
+    }
+
+    @keyframes fadeInToast {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
   </style>
 </head>
 <body>
@@ -654,7 +1102,7 @@
   <!-- Marquesina Clásica -->
   <div class="marquee-bar">
     <div class="marquee-content" id="marquee-text">
-      ★·.·´¯`·.·★ ESPACIO RETRO CON CANCIONES REALES DE LOS 2000s + IA EN VIVO ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ BUSCA CUALQUIER ARTISTA O DALE PLAY AL WINAMP ★·.·´¯`·.·★
+      ★·.·´¯`·.·★ ESPACIO RETRO CON CANCIONES REALES DE LOS 2000s + IA CRIOLLA COLOMBO-VENEZOLANA ★·.·´¯`·.·★ NACIMIENTO: 15-10-2004 ★·.·´¯`·.·★ JUEGO DE VESTIR MUÑECAS DOLLZ 2004 EN VIVO ★·.·´¯`·.·★
     </div>
   </div>
 
@@ -674,7 +1122,8 @@
         <strong id="current-slot-label" style="color:#003399;">⏳ Cargando bloque...</strong>
       </div>
       <div class="theme-controls">
-        <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo (Infinito)</button>
+        <button class="retro-btn btn-dollz-highlight" onclick="openDollGame()">👗 Juego de Vestir Muñeca (Dollz 2004)</button>
+        <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo</button>
         <button class="retro-btn" onclick="generateNewQuoteManual()">🤖 Nueva Frase IA</button>
         <button class="retro-btn" onclick="sendNudge()">📳 Zumbido MSN</button>
         <button class="retro-btn" onclick="toggleBirthdayPreview()">🎂 Modo Cumple</button>
@@ -800,17 +1249,25 @@
             </div>
           </div>
 
-          <!-- Caja de Frase IA + Motor Combinatorio Infinito -->
+          <!-- =========================================================
+               CAJA DE FRASES CON IA CREATIVA + JERGA COLOMBO-VENEZOLANA
+               ========================================================= -->
           <div class="quote-box">
             <div class="quote-header">
               <span>💬 NICK DE MSN / PENSAMIENTO DEL DÍA</span>
-              <span class="ai-badge" id="ai-source-badge">🤖 IA Pollinations + Motor 2000s</span>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span class="ai-archetype-tag" id="ai-persona-tag">🇨🇴🇻🇪 Modo Colombo-Venezolano</span>
+                <span class="ai-badge" id="ai-source-badge">🤖 IA Pollinations + Motor Criollo</span>
+              </div>
             </div>
             <div class="quote-text" id="daily-quote">
               "Conectando con el servidor de IA de los años 2000..."
             </div>
             <div class="quote-footer">
               <span id="rotation-countdown">Próxima mutación (6h): --:--:--</span>
+              <div class="quote-actions">
+                <button class="retro-btn" onclick="generateNewQuoteManual()" style="font-size:10px; padding:2px 6px;">⚡ Otra Frase</button>
+              </div>
               <span id="nudge-log" style="color:var(--text-accent); font-weight:bold;"></span>
             </div>
           </div>
@@ -832,9 +1289,217 @@
       <div class="badges-footer">
         <div class="micro-badge"><span>MP3</span>REAL 2000s HITS</div>
         <div class="micro-badge"><span>ARES</span>SEARCH ENGINE</div>
-        <div class="micro-badge"><span>AI</span>LIVE QUOTES</div>
-        <div class="micro-badge"><span>CSS</span>INFINITE SKINS</div>
+        <div class="micro-badge"><span>IA</span>COLOMBO-VENEZOLANA</div>
+        <div class="micro-badge"><span>DOLLZ</span>JUEGO DE VESTIR</div>
         <div class="micro-badge"><span>SPAWN</span>15-10-2004</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Botón flotante siempre visible para abrir el juego de vestir -->
+  <div class="floating-doll-btn" onclick="openDollGame()" title="Abrir Taller de Muñecas 2004">
+    <span>🎀</span>
+    <span>Vestir Muñeca (Dollz)</span>
+  </div>
+
+  <!-- Notificación Toast -->
+  <div class="doll-toast" id="doll-toast">✨ ¡Look copiado al portapapeles!</div>
+
+  <!-- =========================================================================
+       VENTANA EMERGENTE MODAL RETRO: JUEGO DE VESTIR MUÑECAS (DOLLZ 2004)
+       ========================================================= -->
+  <div class="doll-modal-overlay" id="doll-modal-overlay" onclick="handleDollOverlayClick(event)">
+    <div class="doll-window" id="doll-window">
+      
+      <!-- Barra de título Windows XP / 2000 arrastrable -->
+      <div class="doll-titlebar" id="doll-drag-handle">
+        <span>
+          <span style="font-size:14px;">🎀</span>
+          <span>Dollz_Maker_2004_v2.0_Pro_Edition.exe - [Vestidor Y2K]</span>
+        </span>
+        <div class="title-bar-controls">
+          <div class="win-btn" onclick="randomizeDollLook()" title="🎲 Look Aleatorio">🎲</div>
+          <div class="win-btn" onclick="toggleGlitterEffect()" title="✨ Brillos Metroflog" id="btn-glitter-toggle">✨</div>
+          <div class="win-btn close" onclick="closeDollGame()" title="Cerrar Ventana">X</div>
+        </div>
+      </div>
+
+      <!-- Barra de herramientas del juego -->
+      <div class="doll-menubar">
+        <div class="doll-actions-left">
+          <button class="retro-btn" onclick="randomizeDollLook()">🎲 Look Aleatorio</button>
+          <button class="retro-btn" onclick="makeDollSpeakManual()">💬 ¿Qué opina la muñeca?</button>
+          <button class="retro-btn" onclick="toggleGlitterEffect()">✨ Brillos Metroflog</button>
+          <button class="retro-btn" onclick="copyDollOutfitSummary()">📸 Copiar Ficha de Look</button>
+          <button class="retro-btn" onclick="resetDollWardrobe()">🗑️ Desvestir</button>
+        </div>
+        <div style="font-size:10px; color:#660066; font-weight:bold;">
+          ★ Creado al estilo Stardoll & Dollz 2004 ★
+        </div>
+      </div>
+
+      <!-- Contenedor Principal: Escenario (Izq) + Clóset (Der) -->
+      <div class="doll-body-container">
+
+        <!-- Escenario de la Muñeca -->
+        <div class="doll-stage" id="doll-stage">
+          <!-- Bocadillo con la reacción de la muñeca en jerga Colombo-Venezolana -->
+          <div class="doll-speech" id="doll-speech">
+            "¡Uff parce, qué chimba de pinta! Con este flow dosmilero quedo lista pal Metroflog."
+          </div>
+
+          <!-- Contenedor SVG de la Muñeca y sus Prendas -->
+          <div class="doll-canvas-wrapper" id="doll-canvas-wrapper">
+            <svg class="doll-svg" id="doll-svg-element" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Filtros y Sombras -->
+                <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <linearGradient id="cyberWingGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#ff00ff" stop-opacity="0.85"/>
+                  <stop offset="50%" stop-color="#00ffff" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#ffff00" stop-opacity="0.75"/>
+                </linearGradient>
+                <linearGradient id="denimGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#3b6998"/>
+                  <stop offset="100%" stop-color="#1d3557"/>
+                </linearGradient>
+              </defs>
+
+              <!-- CAPA 0: Alas y Fondo de Cabello -->
+              <g id="layer-wings" style="display:none;"></g>
+              <g id="layer-hair-back"></g>
+
+              <!-- CAPA 1: Cuerpo Base del Maniquí -->
+              <g id="layer-body">
+                <!-- Cabeza y Orejas -->
+                <ellipse cx="76" cy="50" rx="3.5" ry="5.5" class="doll-skin-fill" fill="#f2ba88"/>
+                <ellipse cx="124" cy="50" rx="3.5" ry="5.5" class="doll-skin-fill" fill="#f2ba88"/>
+                <!-- Cuello -->
+                <path d="M94 70 L94 85 L106 85 L106 70 Z" class="doll-skin-fill" fill="#f2ba88"/>
+                <!-- Cabeza Ovalada Chibi Y2K -->
+                <ellipse cx="100" cy="48" rx="24" ry="27" class="doll-skin-fill" fill="#f2ba88"/>
+
+                <!-- Torso, Cintura y Caderas -->
+                <path d="M78 85 Q73 105 88 122 Q100 126 112 122 Q127 105 122 85 Q100 88 78 85 Z" class="doll-skin-fill" fill="#f2ba88"/>
+                <path d="M88 122 Q82 140 80 152 Q100 156 120 152 Q118 140 112 122 Z" class="doll-skin-fill" fill="#f2ba88"/>
+
+                <!-- Piernas y Pies -->
+                <!-- Pierna Izquierda -->
+                <path d="M82 152 Q82 200 84 240 Q85 280 84 320 L79 335 L91 335 L92 320 Q94 280 94 240 Q95 200 97 154 Z" class="doll-skin-fill" fill="#f2ba88"/>
+                <!-- Pierna Derecha -->
+                <path d="M103 154 Q105 200 106 240 Q106 280 108 320 L109 335 L121 335 L116 320 Q115 280 116 240 Q118 200 118 152 Z" class="doll-skin-fill" fill="#f2ba88"/>
+
+                <!-- Brazos y Manos -->
+                <!-- Brazo Izquierdo (Recto relajado) -->
+                <path d="M78 85 Q67 115 65 145 Q64 165 62 180 L68 180 Q71 165 73 145 Q75 115 84 88 Z" class="doll-skin-fill" fill="#f2ba88"/>
+                <ellipse cx="65" cy="184" rx="4" ry="6" class="doll-skin-fill" fill="#f2ba88"/>
+                <!-- Brazo Derecho (Mano en la cadera / celular) -->
+                <path d="M122 85 Q136 108 138 132 Q132 144 122 145 L122 138 Q130 134 128 116 Q125 100 116 88 Z" class="doll-skin-fill" fill="#f2ba88"/>
+                <ellipse cx="122" cy="143" rx="4.5" ry="5.5" class="doll-skin-fill" fill="#f2ba88"/>
+
+                <!-- Ombligo -->
+                <circle cx="100" cy="136" r="1.2" fill="#aa6644" opacity="0.6"/>
+
+                <!-- Ropa Interior Base (Top y Shorts negros) -->
+                <g id="base-underwear">
+                  <path d="M85 92 Q100 96 115 92 L113 112 Q100 116 87 112 Z" fill="#222" stroke="#ff00cc" stroke-width="0.8"/>
+                  <path d="M85 140 Q100 144 115 140 L117 156 Q100 160 83 156 Z" fill="#222" stroke="#ff00cc" stroke-width="0.8"/>
+                </g>
+
+                <!-- Rostro Detallado Chibi Y2K -->
+                <!-- Sonrojo en mejillas -->
+                <ellipse cx="86" cy="55" rx="5" ry="2.5" fill="#ff3388" opacity="0.38"/>
+                <ellipse cx="114" cy="55" rx="5" ry="2.5" fill="#ff3388" opacity="0.38"/>
+                <!-- Naricita delicada -->
+                <path d="M100 52 L99 55 L101 55" stroke="#995533" stroke-width="0.8" fill="none"/>
+                <!-- Labios con brillo rosado -->
+                <ellipse cx="100" cy="62" rx="4.5" ry="2" fill="#ff2288"/>
+                <circle cx="101" cy="61.5" r="0.8" fill="#ffffff"/>
+                <!-- Cejas -->
+                <path d="M83 40 Q89 38 95 41" stroke="#331100" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <path d="M105 41 Q111 38 117 40" stroke="#331100" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <!-- Ojo Izquierdo -->
+                <ellipse cx="89" cy="46" rx="5.5" ry="6" fill="#110022"/>
+                <circle cx="89" cy="46" r="4.5" fill="#6600cc"/>
+                <circle cx="89" cy="46" r="2.8" fill="#000000"/>
+                <circle cx="87.5" cy="44" r="1.8" fill="#ffffff"/>
+                <circle cx="91" cy="48" r="0.8" fill="#ffffff"/>
+                <path d="M83 43 Q89 39 95 43" stroke="#000" stroke-width="1.5" fill="none"/>
+                <!-- Pestañas Izq -->
+                <path d="M94 42 L97 40" stroke="#000" stroke-width="1.2"/>
+                <path d="M84 43 L81 41" stroke="#000" stroke-width="1.2"/>
+                <!-- Ojo Derecho -->
+                <ellipse cx="111" cy="46" rx="5.5" ry="6" fill="#110022"/>
+                <circle cx="111" cy="46" r="4.5" fill="#6600cc"/>
+                <circle cx="111" cy="46" r="2.8" fill="#000000"/>
+                <circle cx="109.5" cy="44" r="1.8" fill="#ffffff"/>
+                <circle cx="113" cy="48" r="0.8" fill="#ffffff"/>
+                <path d="M105 43 Q111 39 117 43" stroke="#000" stroke-width="1.5" fill="none"/>
+                <!-- Pestañas Der -->
+                <path d="M116 43 L119 41" stroke="#000" stroke-width="1.2"/>
+                <path d="M106 42 L103 40" stroke="#000" stroke-width="1.2"/>
+              </g>
+
+              <!-- CAPA 2: Calzado / Zapatos -->
+              <g id="layer-shoes"></g>
+
+              <!-- CAPA 3: Pantalones / Faldas (Abajo) -->
+              <g id="layer-bottoms"></g>
+
+              <!-- CAPA 4: Tops / Chaquetas / Camisas -->
+              <g id="layer-tops"></g>
+
+              <!-- CAPA 5: Cabello Frontal / Flequillos -->
+              <g id="layer-hair-front"></g>
+
+              <!-- CAPA 6: Accesorios (Lentes, Choker, Celular Razr, Gorro) -->
+              <g id="layer-accessories"></g>
+            </svg>
+
+            <!-- Capa de partículas de brillantina animada -->
+            <div id="glitter-container"></div>
+          </div>
+
+          <!-- Selector de color de piel -->
+          <div class="doll-stage-footer">
+            <span>🎨 Tono de Piel:</span>
+            <div class="skin-palette">
+              <div class="skin-swatch" style="background:#ffe0d0;" onclick="setDollSkinTone('#ffe0d0', 0)" title="Porcelana Y2K"></div>
+              <div class="skin-swatch active" style="background:#f2ba88;" onclick="setDollSkinTone('#f2ba88', 1)" title="Caramelo Latino"></div>
+              <div class="skin-swatch" style="background:#d99564;" onclick="setDollSkinTone('#d99564', 2)" title="Trigueña Criolla"></div>
+              <div class="skin-swatch" style="background:#8d5534;" onclick="setDollSkinTone('#8d5534', 3)" title="Morena Radiante"></div>
+              <div class="skin-swatch" style="background:#d8b4fe;" onclick="setDollSkinTone('#d8b4fe', 4)" title="Cyber Neón Lila"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clóset / Guardarropa de Prendas -->
+        <div class="doll-wardrobe">
+          <!-- Pestañas -->
+          <div class="wardrobe-tabs">
+            <button class="wardrobe-tab active" onclick="switchWardrobeTab('hair', this)">💇 Pelos</button>
+            <button class="wardrobe-tab" onclick="switchWardrobeTab('tops', this)">👚 Tops</button>
+            <button class="wardrobe-tab" onclick="switchWardrobeTab('bottoms', this)">👖 Abajo</button>
+            <button class="wardrobe-tab" onclick="switchWardrobeTab('shoes', this)">👟 Calzado</button>
+            <button class="wardrobe-tab" onclick="switchWardrobeTab('accessories', this)">🎀 Accesorios</button>
+          </div>
+
+          <!-- Rejilla con las prendas de la categoría actual -->
+          <div class="wardrobe-items-grid" id="wardrobe-items-grid">
+            <!-- Inyectado dinámicamente por JavaScript -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Barra de Estado Inferior -->
+      <div class="doll-statusbar">
+        <span id="doll-status-left">Listo para armar tu outfit de los años 2000.</span>
+        <span id="doll-status-counter">Prendas equipadas: 0 / 5</span>
       </div>
 
     </div>
@@ -899,15 +1564,15 @@
       "'Georgia', serif"
     ];
 
-    const AVATAR_EMOJIS = ['💿', '👽', '🦋', '🎸', '🫧', '🕹️', '📟', '🛹', '🎧', '⚡', '👾', '🌐', '🔥', '💎'];
+    const AVATAR_EMOJIS = ['💿', '👽', '🦋', '🎸', '🫧', '🕹️', '📟', '🛹', '🎧', '⚡', '👾', '🌐', '🔥', '💎', '🎀'];
     const MSN_STATUSES = [
       'Conectado (MSN Plus!)',
-      'Ausente (Jugando GTA SA)',
-      'Ocupado (Descargando en Ares)',
-      'En línea (Firmando Metroflog)',
-      'Conectado (Escuchando Winamp)',
-      'No molestar (Subiendo de nivel)',
-      'Vuelvo enseguida (Cambiando CD)'
+      'Ausente (Comiendo empanada con ají)',
+      'Ocupado (Bajando reggaeton en Ares)',
+      'En línea (Firmando Metroflog con amor)',
+      'Conectado (Winamp a todo taco)',
+      'No molestar (Jugando CS 1.6 en el ciber)',
+      'Vuelvo enseguida (Cambiando el CD de salsa)'
     ];
     const ERA_PREFIXES = ['CyberY2K', 'WinXP_Luna', 'Metroflog_Emo', 'FrutigerAero', 'MySpace_Glitter', 'Tuenti_2009', 'Matrix_2004', 'PixelPunks'];
 
@@ -992,40 +1657,91 @@
     }
 
     // =========================================================================
-    // 3. EXTENSIÓN DE IA EN VIVO + MOTOR GRAMATICAL INFINITO DE RESPALDO
+    // 3. FRASES CON IA CREATIVA + MOTOR PROCEDURAL CRIOLLO (COLOMBO-VENEZOLANO)
     // =========================================================================
-    function generateCombinatorial2000sQuote(seedNumber, totalDays, years) {
+
+    // Generador Combinatorio Criollo de Respaldo (Riquísimo en jerga auténtica y cultura 2000s)
+    function generateCombinatorial2000sQuote(seedNumber, totalDays, years, isBday = false) {
       const rand = mulberry32(seedNumber);
-      const decoLeft = ['~* ', '« ', '★ ', 'xX_ ', '·.¸¸.·♩♪♫ ', '✧ ', '[MSN] '];
-      const decoRight = [' *~', ' »', ' ★', ' _Xx', ' ♫♪♩·.¸¸.·', ' ✧', ' [zumbido]'];
+      const decoLeft = ['~* ', '«· ', '★ ', 'xX_ ', '·.¸¸.·♩♪♫ ', '✧ ', '[MSN Plus!] ', '⚡ ', '«« '];
+      const decoRight = [' *~', ' ·»', ' ★', ' _Xx', ' ♫♪♩·.¸¸.·', ' ✧', ' [zumbido]', ' ⚡', ' »»'];
+
+      if (isBday) {
+        const bdayOpenings = [
+          `¡¡Feliz cumpleaños mi vale!! Llegó el nivel ${years} con ${totalDays.toLocaleString('es-ES')} días coronando la vida`,
+          `¡¡Na'guara pana, qué molleja de fiesta!! Hoy 15 de Octubre cumples ${years} años rompiéndola`,
+          `¡¡Qué chimba de cumpleaños mor!! Son ${years} vueltas al sol y ${totalDays.toLocaleString('es-ES')} días dándole chola a la vida`,
+          `¡¡Pilas pues mi chamo, hoy se bebe y se farrea!! Festejando tus ${years} años desde aquel 15-10-2004`,
+          `¡¡La re buena pa'l mero papá de los helados!! Nivel ${years} desbloqueado con más flow que Don Omar en el 2005`
+        ];
+        const bdayMiddles = [
+          'con la pista encendida a punta de vallenato, reggaeton del viejito y salsa baúl',
+          'brillando más duro que pantalla CRT de cibercafé a medianoche',
+          'comiendo tequeños calientes con empanadas bien resueltas y malta bien fría',
+          'dejando claro que los nacidos el 15/10/2004 son los más berracos de la cuadra',
+          'celebrando como en los mejores tiempos del Messenger cuando no existía el estrés'
+        ];
+        const bdayEndings = [
+          '¡así que a zumbarle a la rutina y gozar hasta que el cuerpo aguante!',
+          '¡de pana que te mereces el cielo y la gloria entera, salud mi pana!',
+          '¡póngale la firma que este año viene coronado con pura bendición y plata!',
+          '¡y al que le dé envidia que se tome un vasito de agua fría, felicidades mor!'
+        ];
+        const d = Math.floor(rand() * decoLeft.length);
+        return `${decoLeft[d]}${bdayOpenings[Math.floor(rand() * bdayOpenings.length)]}, ${bdayMiddles[Math.floor(rand() * bdayMiddles.length)]}; ${bdayEndings[Math.floor(rand() * bdayEndings.length)]}${decoRight[d]}`;
+      }
 
       const openings = [
-        `Llevas ${totalDays.toLocaleString('es-ES')} días respirando magia desde el 15-10-2004`,
-        `Nivel ${years} desbloqueado con ${totalDays.toLocaleString('es-ES')} días de experiencia en este servidor`,
-        `Desde aquel viernes 15 de octubre de 2004 has sobrevivido a ${totalDays.toLocaleString('es-ES')} amaneceres`,
-        `Tu partida empezó en 2004 y hoy sumas ${totalDays.toLocaleString('es-ES')} días épicos sin usar GameShark`,
-        `Más de ${years} años brillando con más estilo que un WordArt arcoíris de Windows XP`,
-        `Ya van ${totalDays.toLocaleString('es-ES')} días desde que llegaste al mundo en plena era del Messenger`,
-        `Con ${totalDays.toLocaleString('es-ES')} días en tu Memory Card desde el 2004, hoy es un gran día para triunfar`
+        `¡Quieto ahí parce! Ya van ${totalDays.toLocaleString('es-ES')} días en la jugada desde aquel 15-10-2004`,
+        `¡De pana chamo, qué nivel! Te gastaste ${totalDays.toLocaleString('es-ES')} días en este servidor sin pedir cacao`,
+        `¡Oigan a este man! Nivel ${years} desbloqueado con ${totalDays.toLocaleString('es-ES')} días respirando pura candela`,
+        `¡Na'guara pana, qué beta tan criminal! Desde el viernes 15 de octubre de 2004 andas dando lidia`,
+        `¡Sisas mi so! ${totalDays.toLocaleString('es-ES')} amaneceres coronados más firme que empanada de quinientos con ají`,
+        `¡Qué chimba de viaje mor! Ya son ${years} vueltas al sol y ${totalDays.toLocaleString('es-ES')} días de puro aguante berraco`,
+        `¡Pilas pues mi chamo, no se me duerma! Llevas ${totalDays.toLocaleString('es-ES')} días dándole chola a la vida`,
+        `¡Severo parche este mundo desde el 2004! ${totalDays.toLocaleString('es-ES')} días esquivando la mala vibra`,
+        `¡Qué molleja mi pana! Te lanzaste ${totalDays.toLocaleString('es-ES')} días con más flow que reggaeton de marquesina`,
+        `¡La re buena pa' ti mi pez! Desde el 15-10-2004 sumando ${totalDays.toLocaleString('es-ES')} días sin perder el tumbao`,
+        `¡Uy mor, qué boleta llegar tan lejos! Son ${totalDays.toLocaleString('es-ES')} días brillando más que pantalla de cibercafé`,
+        `¡Si va el mío! ${years} años repartiendo sazón y ${totalDays.toLocaleString('es-ES')} días de pura gozadera criolla`,
+        `¡Mire chamo, usted es arrecho! ${totalDays.toLocaleString('es-ES')} días sobreviviendo con pura berraquera`,
+        `¡Péguele al perro parce! Más de ${years} años coronando vueltas desde que spawneste en el 2004`,
+        `¡Aja mi vale! ${totalDays.toLocaleString('es-ES')} días en el asfalto y todavía no hay quien le baje los humos`,
+        `¡Qué nota tan bacana mi gente! Desde el 15/10/2004 llevas ${totalDays.toLocaleString('es-ES')} días marcando territorio`
       ];
 
       const middles = [
-        'mientras el Winamp sigue sonando en el corazón',
-        'demostrando que la generación 2004 está hecha de otra pasta',
-        'con la misma paciencia con la que bajábamos música en el Ares',
-        'guardando cada buen recuerdo como foto dorada de Metroflog',
-        'superando pantallas difíciles como en la PlayStation 2',
-        'sin perder nunca esa chispa retro de los años 2000',
-        'acumulando más historias que un disco duro lleno de MP3'
+        'aguantando la pela como quien descargaba un mp3 en Ares a 12 kbps mientras sonaba Kudai',
+        'con más maña que pa quemar un CD en Nero Burning ROM sin que saliera posavasos',
+        'más prendido que equipo de sonido en farra de barrio con salsa baúl y vallenato al piso',
+        'haciéndole frente a la vida como cuando la doña del ciber te gritaba que te quedaban cinco minuticos',
+        'mandando zumbidos a los problemas y comiéndose una arepa con queso bien resuelta',
+        'dejando a todo el mundo con la jeta abierta como intro de Dragon Ball Z en tele de tubo',
+        'firme en la raya como parcero cuidando la máquina pal torneo de Counter Strike 1.6',
+        'con el flequillo emo intacto y la tarjeta prepago lista pa zumbarle al Messenger',
+        'echándole pichón de sol a sol sin aflojar ni un milímetro, bien berraco y sin agüero',
+        'más sabroso que un jugo de lulo con tequeños calientes un domingo en la tarde',
+        'sobreviviendo a los apagones, a los troyanos del Ares y a los chancletazos de la mamá',
+        'con la playlist de Don Omar, Shakira y Los Inquietos retumbando en el Winamp del corazón',
+        'gastando los vueltos del pan en una hora de internet pa revisar si te firmaron el Metroflog',
+        'pasando pantallas peludas sin pedir trucos ni gastar el GameShark del PlayStation 2',
+        'más cotizado que celular con infrarrojo y cámara VGA de 1.3 megapíxeles en el recreo',
+        'tirando pasos prohibidos en la pista como si no hubiera examen de álgebra el lunes'
       ];
 
       const endings = [
-        '¡así que deja +10 puntos a este día y rómpela toda!',
-        '¡hoy toca brillar más fuerte que pantalla CRT a medianoche!',
-        '¡sigue subiendo de nivel que lo mejor de tu playlist apenas empieza!',
-        '¡disfruta cada segundo como cuando salías temprano del cole!',
-        '¡nadie te quita todo lo vivido ni lo increíble que se viene!',
-        '¡mándale un zumbido a la rutina y haz que hoy valga la pena!'
+        '¡así que hágale con toda la moral del mundo y póngale la firma que hoy se corona!',
+        '¡de pana que eres el mero papá de los helados y nadie te baja de ese pedestal!',
+        '¡párele bolas a su grandeza y que los envidiosos se tomen un vasito de agua bien fría!',
+        '¡a tirar paso fino, mi chamo, que lo que viene es pura bendición y farra corrida!',
+        '¡siga guerreando con berraquera que usted nació pa cosas gigantescas, la buena!',
+        '¡zumbido pal que dude de tu flow, que tú estás es pero volando mi rey!',
+        '¡así que nada de achicopalarse ni andar con guayabo, dele chola hasta el fondo!',
+        '¡y al que le pique que se rasque, porque esta partida la estás ganando por goleada!',
+        '¡péguele al perro y celebre, que gente con ese caché no se encuentra ni en Google!',
+        '¡brille con fuerza mor, que usted tiene más chispa que fósforo en paja seca!',
+        '¡deje el drama emo pa los nicks de MSN y cójale ventaja a este día tan áspero!',
+        '¡si va mi hermano, camine con la frente en alto que usted es pura candela criolla!'
       ];
 
       const dIdx = Math.floor(rand() * decoLeft.length);
@@ -1036,6 +1752,38 @@
       return `${decoLeft[dIdx]}${o}, ${m}; ${e}${decoRight[dIdx]}`;
     }
 
+    // Arquetipos dinámicos para darle variedad total a la IA
+    const AI_ARCHETYPES = [
+      {
+        name: "🇨🇴 Parcero en el Ciber 2005",
+        role: "Eres un parcero colombiano de Medellín o Bogotá en el 2005 sentado en una cabina de cibercafé chateando por MSN Messenger mientras come empanada con ají."
+      },
+      {
+        name: "🇻🇪 Pana Rumbero con Ares",
+        role: "Eres un pana venezolano del 2005 descargando reggaeton viejito en Ares y comiendo tequeños con malta Polar mientras escucha salsa baúl."
+      },
+      {
+        name: "🇨🇴🇻🇪 Hermandad Colombo-Venezolana",
+        role: "Eres una mezcla explosiva colombo-venezolana en el 2004 mandando un zumbido de Messenger. Combina jergas callejeras de ambos países."
+      },
+      {
+        name: "🖤 Emo Criollo del Metroflog",
+        role: "Eres un emo dosmilero colombo-venezolano con flequillo planchado dedicando un post con drama y slang de barrio."
+      },
+      {
+        name: "✨ Sabio de la Cuadra & Pura Moral",
+        role: "Eres el pana y parcero sabio de la cuadra en el 2005 tirando la buena vibra, diciendo que nada de agüeros ni achicopalarse."
+      },
+      {
+        name: "🎮 Viciado al Counter-Strike 1.6",
+        role: "Eres un chamo gamer en un ciber del 2005 gritando victoria entre partidas de CS 1.6 y Half-Life con jerga criolla."
+      },
+      {
+        name: "💿 Poeta Callejero del Winamp",
+        role: "Escribe un nick lírico dosmilero mezclando vallenato clásico, reggaeton de Don Omar y jerga colombo-venezolana."
+      }
+    ];
+
     async function fetchLiveAIQuote(seedNumber) {
       const now = new Date();
       const birthDate = new Date(BIRTH_YEAR, BIRTH_MONTH, BIRTH_DAY, 0, 0, 0);
@@ -1045,29 +1793,50 @@
 
       const quoteEl = document.getElementById('daily-quote');
       const badgeEl = document.getElementById('ai-source-badge');
+      const personaTag = document.getElementById('ai-persona-tag');
 
-      const fallbackQuote = generateCombinatorial2000sQuote(seedNumber, totalDays, years);
+      // Seleccionar un arquetipo aleatorio para que cada consulta sea fresca y distinta
+      const archetype = AI_ARCHETYPES[Math.floor(Math.random() * AI_ARCHETYPES.length)];
+      if (personaTag) personaTag.textContent = archetype.name;
+
+      // Generar respaldo procedural de inmediato
+      const fallbackQuote = generateCombinatorial2000sQuote(seedNumber, totalDays, years, isBday);
       quoteEl.textContent = fallbackQuote;
-      badgeEl.textContent = '⚡ Generando con IA en vivo...';
+      badgeEl.textContent = '⚡ Consultando IA (Modo Colombo-Venezolano)...';
+
+      // Instrucción estricta para Pollinations AI
+      const promptText = isBday
+        ? `${archetype.role} Escribe una felicitación de cumpleaños CORTA, divertida y con mucha jerga COLOMBIANA y VENEZOLANA (usa expresiones naturales como: qué chimba, parce, mor, berraco, la buena, pana, chamo, brutal, arrecho, de pana, si va, gozar). Celebra sus ${years} años y ${totalDays} días desde el 15/10/2004 con vibra nostálgica de los años 2000 (MSN, Winamp, cibercafé). Máximo 22 palabras. Sin comillas ni explicaciones.`
+        : `${archetype.role} Escribe un estado o nick de MSN Messenger ultra creativo, cómico y nostálgico con jerga auténtica COLOMBIANA y VENEZOLANA (ej: parce, chimba, mor, gonorrea, berraco, qué boleta, sisas, la buena, pana, chamo, brutal, arrecho, de pana, naguevoná, qué beta, si va, el mío). Debe mencionar con orgullo sus ${totalDays} días de vida o sus ${years} años desde el 15/10/2004 y referencias dosmileras (Ares, Winamp, ciber, zumbidos). Máximo 22 palabras. Sin comillas ni notas.`;
+
+      // Controlador de tiempo límite para no dejar al usuario esperando si la red o la IA tardan
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5500);
 
       try {
-        const prompt = isBday
-          ? `Escribe una felicitación de cumpleaños corta, super creativa y nostálgica de los años 2000 (estilo MSN Messenger, Winamp, Metroflog, PS2) para alguien que nació el 15-10-2004 y hoy cumple ${years} años (${totalDays} días de vida). Máximo 28 palabras. Sin comillas.`
-          : `Escribe una frase motivadora, divertida y nostálgica estilo nick de MSN Messenger / años 2000-2010 para alguien nacido el 15-10-2004 que hoy lleva ${totalDays} días de vida (${years} años). Usa referencias sutiles de los 2000s. Semilla creativa: ${seedNumber}. Máximo 26 palabras. Sin comillas.`;
+        // Semilla aleatoria + timestamp para evitar cualquier caché en el servidor de Pollinations
+        const cacheBuster = Date.now() + Math.floor(Math.random() * 99999);
+        const url = `https://text.pollinations.ai/${encodeURIComponent(promptText)}?seed=${cacheBuster}&model=openai`;
 
-        const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?seed=${seedNumber}&model=openai`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Error de red IA');
-        const aiText = (await response.text()).trim();
-        if (aiText && aiText.length > 10 && aiText.length < 320) {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) throw new Error('Error en API IA');
+        let aiText = (await response.text()).trim();
+
+        // Limpiar comillas innecesarias o saltos de línea
+        aiText = aiText.replace(/^["'«~*\s]+|["'»~*\s]+$/g, '');
+
+        if (aiText && aiText.length > 12 && aiText.length < 320) {
           quoteEl.textContent = `~* ${aiText} *~`;
-          badgeEl.textContent = '🤖 Creada por IA en Vivo';
+          badgeEl.textContent = '🤖 IA Pollinations (Sazón Criollo)';
           return;
         }
       } catch (err) {
-        // Si falla la red queda la frase combinatoria infinita
+        // Si hay timeout o error de conexión, el respaldo combinatorio criollo ya está en pantalla
+        clearTimeout(timeoutId);
       }
-      badgeEl.textContent = '♾️ Motor Procedural 2000s';
+      badgeEl.textContent = '♾️ Motor Criollo 2000s';
     }
 
     function generateNewQuoteManual() {
@@ -1526,9 +2295,9 @@
         document.body.classList.add('birthday-mode');
         bdayBanner.style.display = 'block';
         document.getElementById('birthday-message').innerHTML =
-          `¡FELICES <strong>${detailed.years} AÑOS</strong>! Hoy 15 de Octubre celebramos tus <strong>${totalDays.toLocaleString('es-ES')} días</strong> de vida desde aquel épico 15-10-2004. ¡Dale PLAY al Winamp y a festejar! 🎂🎈💿`;
+          `¡FELICES <strong>${detailed.years} AÑOS</strong>! Hoy 15 de Octubre celebramos tus <strong>${totalDays.toLocaleString('es-ES')} días</strong> de vida desde aquel épico 15-10-2004. ¡Qué chimba de fecha mi pana, dale PLAY al Winamp y a festejar con toda! 🎂🎈💿`;
         document.getElementById('next-bday-countdown').innerHTML =
-          `<strong style="color:var(--text-accent);">🎉 ¡¡ES HOY, FELIZ CUMPLE!! 🎉</strong>`;
+          `<strong style="color:var(--text-accent);">🎉 ¡¡ES HOY, FELIZ CUMPLE MI VALE!! 🎉</strong>`;
       } else {
         document.body.classList.remove('birthday-mode');
         bdayBanner.style.display = 'none';
@@ -1572,7 +2341,7 @@
     }
 
     function spawnRetroConfetti() {
-      const icons = ['🎂', '🎉', '✨', '💿', '🎈', '⭐', '🕹️'];
+      const icons = ['🎂', '🎉', '✨', '💿', '🎈', '⭐', '🕹️', '🎀'];
       for (let i = 0; i < 28; i++) {
         const el = document.createElement('div');
         el.className = 'confetti-piece';
@@ -1591,6 +2360,897 @@
       if (isBirthdayToday(new Date())) spawnRetroConfetti();
     }
 
+    // =========================================================================
+    // 6. MOTOR DEL JUEGO DE VESTIR MUÑECAS (DOLLZ STUDIO 2004)
+    // =========================================================================
+
+    // Catálogo riguroso de prendas dosmileras vectorizadas
+    const WARDROBE_DATABASE = {
+      hair: [
+        {
+          id: 'hair_emo',
+          name: 'Emo Scene Flequillo Neón',
+          category: 'hair',
+          tag: 'Rock/Metroflog',
+          icon: '💇‍♀️',
+          renderBack: () => `
+            <path d="M72 45 C65 60 60 95 62 135 C64 100 70 65 74 50 Z" fill="#111111"/>
+            <path d="M128 45 C135 60 140 95 138 135 C136 100 130 65 126 50 Z" fill="#ff007f"/>
+          `,
+          renderFront: () => `
+            <!-- Casquete y Flequillo Emo hacia un lado -->
+            <path d="M73 45 Q70 20 100 18 Q130 20 127 45 Q125 30 100 28 Q75 30 73 45 Z" fill="#111111"/>
+            <!-- Mechón Neón Rosa -->
+            <path d="M102 22 Q125 25 124 45 Q120 32 104 26 Z" fill="#ff0099"/>
+            <!-- Flequillazo cruzado tapando un ojo -->
+            <path d="M74 38 Q90 32 118 52 Q100 46 80 44 Z" fill="#1a1a1a"/>
+            <path d="M72 40 Q95 38 120 58 Q98 50 74 44 Z" fill="#ff007f"/>
+          `
+        },
+        {
+          id: 'hair_lacio',
+          name: 'Lacio 2000s con Rayita al Medio',
+          category: 'hair',
+          tag: 'Pop/Glamour',
+          icon: '👱‍♀️',
+          renderBack: () => `
+            <path d="M72 45 C62 70 58 120 60 165 C68 120 74 75 75 48 Z" fill="#cda869"/>
+            <path d="M128 45 C138 70 142 120 140 165 C132 120 126 75 125 48 Z" fill="#deb887"/>
+            <path d="M85 24 Q100 20 115 24 L118 160 Q100 168 82 160 Z" fill="#9c7a3c"/>
+          `,
+          renderFront: () => `
+            <!-- Raya al medio y mechones lacios delanteros -->
+            <path d="M74 44 Q85 24 100 24 Q115 24 126 44 Q116 30 100 30 Q84 30 74 44 Z" fill="#edd69e"/>
+            <path d="M74 42 Q78 70 76 100 Q74 70 71 45 Z" fill="#cda869"/>
+            <path d="M126 42 Q122 70 124 100 Q126 70 129 45 Z" fill="#edd69e"/>
+          `
+        },
+        {
+          id: 'hair_coletas',
+          name: 'Coletas Altas Popstar Britney',
+          category: 'hair',
+          tag: 'Y2K MTV',
+          icon: '👧',
+          renderBack: () => `
+            <!-- Coleta Izquierda con Scrunchie -->
+            <ellipse cx="62" cy="38" rx="5" ry="5" fill="#ff00cc"/>
+            <path d="M62 38 Q45 60 48 95 Q58 65 65 42 Z" fill="#e6c280"/>
+            <!-- Coleta Derecha con Scrunchie -->
+            <ellipse cx="138" cy="38" rx="5" ry="5" fill="#ff00cc"/>
+            <path d="M138 38 Q155 60 152 95 Q142 65 135 42 Z" fill="#e6c280"/>
+          `,
+          renderFront: () => `
+            <!-- Moño Superior y Mechones Delgados en la Cara -->
+            <path d="M74 44 Q85 22 100 22 Q115 22 126 44 Q114 28 100 28 Q86 28 74 44 Z" fill="#e6c280"/>
+            <!-- Mechoncitos icónicos frente a los ojos -->
+            <path d="M92 34 Q88 56 86 68 Q90 56 93 36 Z" fill="#ffd993"/>
+            <path d="M108 34 Q112 56 114 68 Q110 56 107 36 Z" fill="#ffd993"/>
+          `
+        },
+        {
+          id: 'hair_spacebuns',
+          name: 'Space Buns Cyber Raver',
+          category: 'hair',
+          tag: 'Cyberpunk',
+          icon: '🛸',
+          renderBack: () => `
+            <!-- Dos rodetes redondos con reflejos neón -->
+            <circle cx="68" cy="22" r="14" fill="#6600cc"/>
+            <circle cx="68" cy="22" r="9" fill="#00ffff" opacity="0.6"/>
+            <circle cx="132" cy="22" r="14" fill="#6600cc"/>
+            <circle cx="132" cy="22" r="9" fill="#ff00ff" opacity="0.6"/>
+          `,
+          renderFront: () => `
+            <path d="M76 40 Q88 24 100 24 Q112 24 124 40 Q112 30 100 30 Q88 30 76 40 Z" fill="#4d0099"/>
+            <!-- Dos antenitas frontales -->
+            <path d="M86 32 Q80 50 78 72" stroke="#00ffff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M114 32 Q120 50 122 72" stroke="#ff00ff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          `
+        },
+        {
+          id: 'hair_ondulado',
+          name: 'Ondulado Castaño con Mechones',
+          category: 'hair',
+          tag: 'Novela 2004',
+          icon: '💃',
+          renderBack: () => `
+            <path d="M72 44 Q56 80 62 110 Q54 135 60 160 Q70 120 74 50 Z" fill="#592f15"/>
+            <path d="M128 44 Q144 80 138 110 Q146 135 140 160 Q130 120 126 50 Z" fill="#7a4320"/>
+          `,
+          renderFront: () => `
+            <path d="M73 42 Q86 22 100 22 Q114 22 127 42 Q116 28 100 28 Q84 28 73 42 Z" fill="#8b4d24"/>
+            <path d="M74 42 Q82 65 78 88 Q72 65 72 45 Z" fill="#d4974e"/>
+            <path d="M126 42 Q118 65 122 88 Q128 65 128 45 Z" fill="#d4974e"/>
+          `
+        }
+      ],
+
+      tops: [
+        {
+          id: 'top_babytee',
+          name: 'Baby Tee "BABY GIRL" Rosa',
+          category: 'tops',
+          tag: 'Y2K Clásica',
+          icon: '👚',
+          render: () => `
+            <!-- Remerita corta rosa chicle con borde blanco -->
+            <path d="M77 84 L64 96 L71 104 L78 96 L79 116 Q100 120 121 116 L122 96 L129 104 L136 96 L123 84 Q100 89 77 84 Z" fill="#ff44aa" stroke="#ffffff" stroke-width="1"/>
+            <!-- Estampado glitter BABY GIRL -->
+            <rect x="88" y="96" width="24" height="7" rx="2" fill="#ffffff" opacity="0.9"/>
+            <text x="100" y="101.5" font-size="4.2" font-family="Arial Black, sans-serif" fill="#ff007f" text-anchor="middle" font-weight="bold">BABY</text>
+          `
+        },
+        {
+          id: 'top_emo_stripes',
+          name: 'Camisa Emo Rayas Blanco & Negro',
+          category: 'tops',
+          tag: 'Punk / Kudai',
+          icon: '🦓',
+          render: () => `
+            <!-- Manga larga a rayas horizontales con mitones -->
+            <path d="M77 84 L58 118 L64 122 L79 98 L79 122 Q100 124 121 122 L121 98 L136 122 L142 118 L123 84 Q100 88 77 84 Z" fill="#151515"/>
+            <!-- Rayas blancas -->
+            <path d="M80 90 Q100 93 120 90" stroke="#fff" stroke-width="2.5" fill="none"/>
+            <path d="M80 98 Q100 101 120 98" stroke="#fff" stroke-width="2.5" fill="none"/>
+            <path d="M80 106 Q100 109 120 106" stroke="#fff" stroke-width="2.5" fill="none"/>
+            <path d="M80 114 Q100 117 120 114" stroke="#fff" stroke-width="2.5" fill="none"/>
+            <!-- Rayas en mangas -->
+            <path d="M72 96 L65 100" stroke="#fff" stroke-width="2.5"/>
+            <path d="M68 106 L61 110" stroke="#fff" stroke-width="2.5"/>
+            <path d="M128 96 L135 100" stroke="#fff" stroke-width="2.5"/>
+            <path d="M132 106 L139 110" stroke="#fff" stroke-width="2.5"/>
+          `
+        },
+        {
+          id: 'top_mariposa',
+          name: 'Top Mariposa Holográfico',
+          category: 'tops',
+          tag: 'Cyber Diva',
+          icon: '🦋',
+          render: () => `
+            <!-- Top de tirantes con forma de mariposa brillante -->
+            <path d="M88 84 L93 94 L100 91 L107 94 L112 84" stroke="#ff00ff" stroke-width="1.2" fill="none"/>
+            <path d="M92 93 Q75 90 76 106 Q85 116 100 118 Q115 116 124 106 Q125 90 108 93 Q100 98 92 93 Z" fill="url(#cyberWingGrad)" stroke="#ffffff" stroke-width="1"/>
+            <!-- Detalle centro de mariposa -->
+            <circle cx="100" cy="103" r="2.5" fill="#ffffff"/>
+            <circle cx="100" cy="110" r="1.8" fill="#ffff00"/>
+          `
+        },
+        {
+          id: 'top_chandal',
+          name: 'Chaqueta Chándal Terciopelo 2004',
+          category: 'tops',
+          tag: 'Juicy Style',
+          icon: '🧥',
+          render: () => `
+            <!-- Chaqueta con cremallera abierta y capucha -->
+            <path d="M76 83 L63 115 L70 118 L80 96 L80 120 Q100 124 120 120 L120 96 L130 118 L137 115 L124 83 Q100 86 76 83 Z" fill="#990066"/>
+            <!-- Cremallera metálica dorada al medio -->
+            <line x1="100" y1="92" x2="100" y2="122" stroke="#ffcc00" stroke-width="1.5"/>
+            <!-- Cuello y puños -->
+            <path d="M88 88 L100 98 L112 88" stroke="#ff66cc" stroke-width="2" fill="none"/>
+          `
+        },
+        {
+          id: 'top_corset',
+          name: 'Corset Bustier Gótico',
+          category: 'tops',
+          tag: 'Evanescence',
+          icon: '🖤',
+          render: () => `
+            <!-- Corset negro ajustado con cordones rojos -->
+            <path d="M82 90 Q100 95 118 90 L115 120 Q100 126 85 120 Z" fill="#0d0d15" stroke="#ff0055" stroke-width="1.2"/>
+            <!-- Encaje y cordones frontales cruzados -->
+            <path d="M96 95 L104 103 M104 95 L96 103" stroke="#ff0055" stroke-width="1"/>
+            <path d="M96 103 L104 111 M104 103 L96 111" stroke="#ff0055" stroke-width="1"/>
+            <path d="M96 111 L104 118 M104 111 L96 118" stroke="#ff0055" stroke-width="1"/>
+          `
+        }
+      ],
+
+      bottoms: [
+        {
+          id: 'bottom_bell_bottoms',
+          name: 'Jeans Tiro Bajo Bota Campana',
+          category: 'bottoms',
+          tag: 'Denim 2004',
+          icon: '👖',
+          render: () => `
+            <!-- Jeans tiro super bajo con campana ancha -->
+            <path d="M80 138 Q100 142 120 138 L122 156 Q118 200 112 250 Q108 290 124 332 L106 332 Q103 290 102 245 L98 245 Q97 290 94 332 L76 332 Q92 290 88 250 Q82 200 78 156 Z" fill="url(#denimGrad)" stroke="#1a2e40" stroke-width="1"/>
+            <!-- Cinturón con hebilla grande plateada y taches -->
+            <path d="M79 140 Q100 144 121 140" stroke="#ffffff" stroke-width="3" fill="none"/>
+            <rect x="96" y="139" width="8" height="5" rx="1" fill="#c0c0c0" stroke="#000" stroke-width="0.8"/>
+            <!-- Cadena metálica colgando en la cadera -->
+            <path d="M84 142 Q88 156 98 150" stroke="#e0e0e0" stroke-width="1.2" fill="none"/>
+          `
+        },
+        {
+          id: 'bottom_pleated_skirt',
+          name: 'Minifalda Plisada Cuadros Emo',
+          category: 'bottoms',
+          tag: 'Avril Lavigne',
+          icon: '👗',
+          render: () => `
+            <!-- Falda plisada roja y negra con alfiler de gancho -->
+            <path d="M80 138 Q100 142 120 138 L126 168 Q100 174 74 168 Z" fill="#b3003b" stroke="#000" stroke-width="1.2"/>
+            <!-- Pliegues y cuadros negros -->
+            <path d="M85 140 L82 168 M94 141 L92 170 M106 141 L108 170 M115 140 L118 168" stroke="#111" stroke-width="2"/>
+            <path d="M76 154 Q100 158 124 154" stroke="#111" stroke-width="2" fill="none"/>
+            <!-- Alfiler de gancho plateado gigante -->
+            <line x1="82" y1="148" x2="88" y2="162" stroke="#ffffff" stroke-width="1.5"/>
+          `
+        },
+        {
+          id: 'bottom_cargo',
+          name: 'Pantalón Cargo Militar con Cintas',
+          category: 'bottoms',
+          tag: 'Streetwear 2000s',
+          icon: '🪖',
+          render: () => `
+            <!-- Pantalón holgado verde militar con bolsillos a los lados -->
+            <path d="M80 137 Q100 141 120 137 L124 160 Q122 210 120 260 Q118 300 120 332 L106 332 Q103 290 102 240 L98 240 Q97 290 94 332 L80 332 Q82 300 80 260 Q78 210 76 160 Z" fill="#3d4f36" stroke="#263322" stroke-width="1"/>
+            <!-- Bolsillos grandes con solapa y cintas naranjas neón -->
+            <rect x="74" y="210" width="8" height="12" rx="1" fill="#2d3a28"/>
+            <rect x="118" y="210" width="8" height="12" rx="1" fill="#2d3a28"/>
+            <!-- Cintas colgando -->
+            <path d="M78 220 Q74 235 76 250" stroke="#ff6600" stroke-width="1.5" fill="none"/>
+            <path d="M122 220 Q126 235 124 250" stroke="#ff6600" stroke-width="1.5" fill="none"/>
+          `
+        },
+        {
+          id: 'bottom_cyber_skirt',
+          name: 'Microfalda Cyber Glitter Plata',
+          category: 'bottoms',
+          tag: 'Futurista 2000s',
+          icon: '🪩',
+          render: () => `
+            <!-- Falda metálica plateada ultracorta -->
+            <path d="M80 138 Q100 142 120 138 L124 160 Q100 166 76 160 Z" fill="#e6e6fa" stroke="#00ffff" stroke-width="1.2"/>
+            <!-- Tajo lateral sexy -->
+            <line x1="86" y1="148" x2="86" y2="161" stroke="#000" stroke-width="1"/>
+            <circle cx="86" cy="147" r="1.5" fill="#00ffff"/>
+          `
+        },
+        {
+          id: 'bottom_denim_shorts',
+          name: 'Shorts Desflecados con Medias Red',
+          category: 'bottoms',
+          tag: 'Pop Rock',
+          icon: '🩳',
+          render: () => `
+            <!-- Medias de red en las piernas -->
+            <g opacity="0.45">
+              <path d="M82 160 L92 315 M86 160 L96 315 M90 160 L80 315 M94 160 L84 315" stroke="#000" stroke-width="0.8"/>
+              <path d="M108 160 L118 315 M112 160 L122 315 M116 160 L106 315 M120 160 L110 315" stroke="#000" stroke-width="0.8"/>
+            </g>
+            <!-- Shorts de mezclilla desgastados con flecos -->
+            <path d="M80 138 Q100 142 120 138 L122 154 Q100 159 78 154 Z" fill="#2d527c"/>
+            <path d="M78 153 Q100 157 122 153" stroke="#fff" stroke-width="1.2" stroke-dasharray="2,2"/>
+          `
+        }
+      ],
+
+      shoes: [
+        {
+          id: 'shoes_emo_boots',
+          name: 'Botas Plataforma Emo con Hebillas',
+          category: 'shoes',
+          tag: 'Goth / Emo',
+          icon: '👢',
+          render: () => `
+            <!-- Bota Izquierda con plataforma gruesa y 3 hebillas -->
+            <path d="M78 300 L93 300 L93 336 L74 336 L74 322 Z" fill="#0a0a0a"/>
+            <rect x="73" y="334" width="22" height="6" rx="1" fill="#222" stroke="#555" stroke-width="0.8"/>
+            <line x1="77" y1="308" x2="89" y2="308" stroke="#ff00cc" stroke-width="1.5"/>
+            <line x1="76" y1="316" x2="90" y2="316" stroke="#ff00cc" stroke-width="1.5"/>
+            <line x1="75" y1="324" x2="91" y2="324" stroke="#ff00cc" stroke-width="1.5"/>
+
+            <!-- Bota Derecha con plataforma gruesa -->
+            <path d="M107 300 L122 300 L126 322 L126 336 L107 336 Z" fill="#0a0a0a"/>
+            <rect x="105" y="334" width="23" height="6" rx="1" fill="#222" stroke="#555" stroke-width="0.8"/>
+            <line x1="111" y1="308" x2="123" y2="308" stroke="#ff00cc" stroke-width="1.5"/>
+            <line x1="110" y1="316" x2="124" y2="316" stroke="#ff00cc" stroke-width="1.5"/>
+            <line x1="109" y1="324" x2="125" y2="324" stroke="#ff00cc" stroke-width="1.5"/>
+          `
+        },
+        {
+          id: 'shoes_skate',
+          name: 'Zapatillas Skate Chunky Osiris/DC',
+          category: 'shoes',
+          tag: 'Skater 2004',
+          icon: '👟',
+          render: () => `
+            <!-- Zapatillas anchas acolchadas con cordones fucsia -->
+            <path d="M74 320 Q85 315 94 322 L94 338 L72 338 Z" fill="#1c1c24" stroke="#ffffff" stroke-width="1"/>
+            <rect x="71" y="335" width="25" height="4" fill="#ffffff"/>
+            <line x1="78" y1="324" x2="88" y2="324" stroke="#ff0099" stroke-width="2"/>
+
+            <path d="M106 322 Q115 315 126 320 L128 338 L106 338 Z" fill="#1c1c24" stroke="#ffffff" stroke-width="1"/>
+            <rect x="104" y="335" width="26" height="4" fill="#ffffff"/>
+            <line x1="112" y1="324" x2="122" y2="324" stroke="#ff0099" stroke-width="2"/>
+          `
+        },
+        {
+          id: 'shoes_pink_heels',
+          name: 'Tacones Aguja Y2K Rosa Neón',
+          category: 'shoes',
+          tag: 'Mean Girls 2004',
+          icon: '👠',
+          render: () => `
+            <!-- Tacón fino con tira cruzada en el tobillo -->
+            <path d="M78 322 L92 322 L86 338 L80 338 Z" fill="#ff007f"/>
+            <line x1="77" y1="330" x2="77" y2="340" stroke="#000" stroke-width="1.8"/>
+            <path d="M78 320 Q85 316 92 320" stroke="#ff99dd" stroke-width="2" fill="none"/>
+
+            <path d="M108 322 L122 322 L120 338 L114 338 Z" fill="#ff007f"/>
+            <line x1="123" y1="330" x2="123" y2="340" stroke="#000" stroke-width="1.8"/>
+            <path d="M108 320 Q115 316 122 320" stroke="#ff99dd" stroke-width="2" fill="none"/>
+          `
+        },
+        {
+          id: 'shoes_fur_boots',
+          name: 'Botitas de Peluche Invierno 2004',
+          category: 'shoes',
+          tag: 'Comfy Y2K',
+          icon: '🥾',
+          render: () => `
+            <!-- Botas color camello con borde de corderito blanco -->
+            <path d="M74 312 L93 312 L94 338 L72 338 Z" fill="#b07d4b"/>
+            <ellipse cx="83.5" cy="312" rx="10" ry="3.5" fill="#ffffff"/>
+
+            <path d="M107 312 L126 312 L128 338 L106 338 Z" fill="#b07d4b"/>
+            <ellipse cx="116.5" cy="312" rx="10" ry="3.5" fill="#ffffff"/>
+          `
+        },
+        {
+          id: 'shoes_converse',
+          name: 'Tenis Converse Punk con Estrella',
+          category: 'shoes',
+          tag: 'Rock Clásico',
+          icon: '👟',
+          render: () => `
+            <path d="M75 320 L92 320 L93 338 L72 338 Z" fill="#b30000"/>
+            <path d="M86 330 L93 334 L93 338 L86 338 Z" fill="#ffffff"/>
+            <circle cx="82" cy="328" r="3" fill="#ffffff"/>
+            <text x="82" y="330" font-size="3" fill="#b30000" text-anchor="middle">★</text>
+
+            <path d="M108 320 L125 320 L128 338 L107 338 Z" fill="#b30000"/>
+            <path d="M107 334 L114 330 L114 338 L107 338 Z" fill="#ffffff"/>
+            <circle cx="118" cy="328" r="3" fill="#ffffff"/>
+            <text x="118" y="330" font-size="3" fill="#b30000" text-anchor="middle">★</text>
+          `
+        }
+      ],
+
+      accessories: [
+        {
+          id: 'acc_razr',
+          name: 'Motorola Razr V3 Rosa en Mano',
+          category: 'accessories',
+          tag: 'Gadget 2004',
+          icon: '📱',
+          render: () => `
+            <!-- Celular con tapita abierta sostenido en la mano derecha -->
+            <g transform="translate(118, 134) rotate(-15)">
+              <rect x="0" y="0" width="10" height="15" rx="1.5" fill="#ff007f" stroke="#ffffff" stroke-width="0.8"/>
+              <rect x="0" y="-13" width="10" height="14" rx="1.5" fill="#ff0099" stroke="#ffffff" stroke-width="0.8"/>
+              <rect x="1.5" y="-11" width="7" height="9" fill="#00ffcc"/>
+              <!-- Antenita y colgante de estrella -->
+              <line x1="8" y1="-13" x2="8" y2="-17" stroke="#999" stroke-width="1"/>
+              <line x1="5" y1="15" x2="7" y2="23" stroke="#ffff00" stroke-width="0.8"/>
+              <text x="7" y="27" font-size="5" fill="#ffff00" text-anchor="middle">★</text>
+            </g>
+          `
+        },
+        {
+          id: 'acc_headphones',
+          name: 'Audífonos Retro Conectados a Winamp',
+          category: 'accessories',
+          tag: 'Audio Y2K',
+          icon: '🎧',
+          render: () => `
+            <!-- Diadema plateada y almohadillas en las orejas -->
+            <path d="M72 48 Q100 12 128 48" stroke="#00ffff" stroke-width="3" fill="none"/>
+            <rect x="68" y="44" width="7" height="12" rx="3" fill="#ff00cc"/>
+            <rect x="125" y="44" width="7" height="12" rx="3" fill="#ff00cc"/>
+            <!-- Cable colgando hacia el reproductor -->
+            <path d="M72 56 Q70 85 85 105" stroke="#000" stroke-width="0.8" fill="none"/>
+          `
+        },
+        {
+          id: 'acc_shades',
+          name: 'Gafas de Sol Y2K Sin Montura',
+          category: 'accessories',
+          tag: 'Matriz / Estilo',
+          icon: '🕶️',
+          render: () => `
+            <!-- Lentes ovalados con degradado fucsia/naranja -->
+            <ellipse cx="89" cy="46" rx="8" ry="4.5" fill="#ff007f" opacity="0.65" stroke="#ffffff" stroke-width="0.7"/>
+            <ellipse cx="111" cy="46" rx="8" ry="4.5" fill="#ff007f" opacity="0.65" stroke="#ffffff" stroke-width="0.7"/>
+            <line x1="97" y1="46" x2="103" y2="46" stroke="#ffffff" stroke-width="1"/>
+          `
+        },
+        {
+          id: 'acc_wings',
+          name: 'Alas Cyber de Hada Glitter',
+          category: 'accessories',
+          tag: 'Fantasía 2000s',
+          icon: '🧚‍♀️',
+          renderBack: () => `
+            <!-- Alas transparentes con purpurina detrás del cuerpo -->
+            <path d="M96 90 Q30 30 25 75 Q20 120 95 105 Z" fill="url(#cyberWingGrad)" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+            <path d="M104 90 Q170 30 175 75 Q180 120 105 105 Z" fill="url(#cyberWingGrad)" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+            <path d="M96 102 Q40 120 45 150 Q75 160 98 115 Z" fill="url(#cyberWingGrad)" stroke="#ffffff" stroke-width="0.8" opacity="0.75"/>
+            <path d="M104 102 Q160 120 155 150 Q125 160 102 115 Z" fill="url(#cyberWingGrad)" stroke="#ffffff" stroke-width="0.8" opacity="0.75"/>
+          `
+        },
+        {
+          id: 'acc_choker_set',
+          name: 'Choker Corazón + Manillas con Taches',
+          category: 'accessories',
+          tag: 'Emo Punk',
+          icon: '🖤',
+          render: () => `
+            <!-- Choker de terciopelo con candadito -->
+            <rect x="94" y="74" width="12" height="2.5" fill="#111"/>
+            <circle cx="100" cy="77" r="1.8" fill="#c0c0c0"/>
+            <!-- Manilla de púas en la muñeca izquierda -->
+            <rect x="62" y="174" width="6" height="3" fill="#111" stroke="#fff" stroke-width="0.5"/>
+            <circle cx="65" cy="175.5" r="0.8" fill="#fff"/>
+          `
+        },
+        {
+          id: 'acc_beanie',
+          name: 'Gorro Beanie Emo con Calavera',
+          category: 'accessories',
+          tag: 'Skater 2004',
+          icon: '🧢',
+          render: () => `
+            <!-- Gorro slouchy caído hacia atrás -->
+            <path d="M72 38 Q100 8 130 36 Q135 15 110 8 Q85 5 72 38 Z" fill="#1c1c24" stroke="#ff00cc" stroke-width="0.8"/>
+            <rect x="74" y="32" width="52" height="7" rx="2" fill="#2d2d38"/>
+            <!-- Parche calaverita blanca -->
+            <circle cx="100" cy="35" r="2.2" fill="#ffffff"/>
+            <circle cx="99" cy="34.5" r="0.6" fill="#000"/>
+            <circle cx="101" cy="34.5" r="0.6" fill="#000"/>
+          `
+        }
+      ]
+    };
+
+    // Estado actual de la muñeca
+    const currentDollState = {
+      skinColor: '#f2ba88',
+      skinIndex: 1,
+      equipped: {
+        hair: 'hair_emo',
+        tops: 'top_babytee',
+        bottoms: 'bottom_bell_bottoms',
+        shoes: 'shoes_emo_boots',
+        accessories: 'acc_razr'
+      },
+      glitterActive: true
+    };
+
+    const DOLL_REACTIONS = [
+      "¡Uff parce, qué chimba de pinta! Con este flow dosmilero quedo lista pal Metroflog.",
+      "¡Na'guara chamo! Este outfit está criminal, de pana que sí.",
+      "¡Mor, con este pantalón tiro bajo y las plataformas me voy a firmar todos los libros de visitas!",
+      "¡Papi, severo flow dosmilero! Ni Britney en los VMAs de MTV tenía tanta actitud.",
+      "¡Qué beta mi pana, mírame este Motorola Razr, la más pupi de la cuadra!",
+      "¡Uy quieto, quedé más producida que carátula de CD quemado con Nero en el centro!",
+      "¡Sisas mi vale, la re buena pa los que sí sabemos de moda dosmilera!",
+      "¡De pana parce, qué pinta tan áspera! Ahora sí póngame a Don Omar en el Winamp.",
+      "¡Mire mi chamo, con este flequillo emo y las tachuelas no me para nadie!",
+      "¡Qué boleta salir sin flow! Con esta facha me voy directo pal ciber a chatear por MSN.",
+      "¡Brutal mi pana! Más de 20 años después y este estilo sigue siendo pura candela.",
+      "¡Hágale con moral parce! Este look tiene más aguante que una batería de Nokia 1100."
+    ];
+
+    function openDollGame() {
+      const modal = document.getElementById('doll-modal-overlay');
+      modal.classList.add('active');
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+      playRetroDollSound('fanfare');
+      if (currentDollState.glitterActive) startGlitterAnimation();
+    }
+
+    function closeDollGame() {
+      const modal = document.getElementById('doll-modal-overlay');
+      modal.classList.remove('active');
+      stopGlitterAnimation();
+    }
+
+    function handleDollOverlayClick(e) {
+      if (e.target.id === 'doll-modal-overlay') {
+        closeDollGame();
+      }
+    }
+
+    let currentWardrobeTabKey = 'hair';
+
+    function switchWardrobeTab(tabKey, tabEl) {
+      currentWardrobeTabKey = tabKey;
+      document.querySelectorAll('.wardrobe-tab').forEach(el => el.classList.remove('active'));
+      if (tabEl) tabEl.classList.add('active');
+      renderCurrentDollWardrobeTab();
+      playRetroDollSound('click');
+    }
+
+    function renderCurrentDollWardrobeTab() {
+      const grid = document.getElementById('wardrobe-items-grid');
+      grid.innerHTML = '';
+
+      const items = WARDROBE_DATABASE[currentWardrobeTabKey] || [];
+      const equippedId = currentDollState.equipped[currentWardrobeTabKey];
+
+      // Opción de Desequipar / Ninguno (para accesorios, zapatos, tops, etc.)
+      const noneCard = document.createElement('div');
+      noneCard.className = `wardrobe-item-card ${!equippedId ? 'equipped' : ''}`;
+      noneCard.onclick = () => unequipCategory(currentWardrobeTabKey);
+      noneCard.innerHTML = `
+        <div class="item-preview-box">🚫</div>
+        <div class="item-card-name">Desvestir / Quitar</div>
+        <div class="item-card-tag">[Vacío]</div>
+        <span class="equipped-badge">ACTIVO</span>
+      `;
+      grid.appendChild(noneCard);
+
+      items.forEach(item => {
+        const isEquipped = (equippedId === item.id);
+        const card = document.createElement('div');
+        card.className = `wardrobe-item-card ${isEquipped ? 'equipped' : ''}`;
+        card.onclick = () => equipItem(currentWardrobeTabKey, item.id);
+
+        card.innerHTML = `
+          <div class="item-preview-box">${item.icon}</div>
+          <div class="item-card-name">${item.name}</div>
+          <div class="item-card-tag">${item.tag}</div>
+          <span class="equipped-badge">EQUIPADO</span>
+        `;
+        grid.appendChild(card);
+      });
+
+      updateDollStatusCounters();
+    }
+
+    function equipItem(category, itemId) {
+      if (currentDollState.equipped[category] === itemId) {
+        // Si hace click en la misma prenda, desequipar (toggle)
+        currentDollState.equipped[category] = null;
+      } else {
+        currentDollState.equipped[category] = itemId;
+      }
+      playRetroDollSound('pop');
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+      makeDollSpeakRandom();
+    }
+
+    function unequipCategory(category) {
+      currentDollState.equipped[category] = null;
+      playRetroDollSound('pop');
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+    }
+
+    function setDollSkinTone(hexColor, swatchIndex) {
+      currentDollState.skinColor = hexColor;
+      currentDollState.skinIndex = swatchIndex;
+
+      document.querySelectorAll('.skin-swatch').forEach((el, idx) => {
+        el.classList.toggle('active', idx === swatchIndex);
+      });
+
+      document.querySelectorAll('.doll-skin-fill').forEach(el => {
+        el.setAttribute('fill', hexColor);
+      });
+
+      playRetroDollSound('sparkle');
+    }
+
+    function renderDollSVG() {
+      // 1. Capa Pelo Trasero
+      const hairBackLayer = document.getElementById('layer-hair-back');
+      hairBackLayer.innerHTML = '';
+      const hairItem = WARDROBE_DATABASE.hair.find(h => h.id === currentDollState.equipped.hair);
+      if (hairItem && hairItem.renderBack) {
+        hairBackLayer.innerHTML = hairItem.renderBack();
+      }
+
+      // 2. Capa Alas (Si tiene acc_wings)
+      const wingsLayer = document.getElementById('layer-wings');
+      wingsLayer.innerHTML = '';
+      if (currentDollState.equipped.accessories === 'acc_wings') {
+        const wingAcc = WARDROBE_DATABASE.accessories.find(a => a.id === 'acc_wings');
+        if (wingAcc && wingAcc.renderBack) {
+          wingsLayer.innerHTML = wingAcc.renderBack();
+          wingsLayer.style.display = 'block';
+        }
+      } else {
+        wingsLayer.style.display = 'none';
+      }
+
+      // 3. Capa Zapatos
+      const shoesLayer = document.getElementById('layer-shoes');
+      shoesLayer.innerHTML = '';
+      const shoesItem = WARDROBE_DATABASE.shoes.find(s => s.id === currentDollState.equipped.shoes);
+      if (shoesItem) shoesLayer.innerHTML = shoesItem.render();
+
+      // 4. Capa Abajo (Pantalón / Falda)
+      const bottomsLayer = document.getElementById('layer-bottoms');
+      bottomsLayer.innerHTML = '';
+      const bottomItem = WARDROBE_DATABASE.bottoms.find(b => b.id === currentDollState.equipped.bottoms);
+      if (bottomItem) bottomsLayer.innerHTML = bottomItem.render();
+
+      // 5. Capa Tops (Camisas / Chaquetas)
+      const topsLayer = document.getElementById('layer-tops');
+      topsLayer.innerHTML = '';
+      const topItem = WARDROBE_DATABASE.tops.find(t => t.id === currentDollState.equipped.tops);
+      if (topItem) topsLayer.innerHTML = topItem.render();
+
+      // 6. Capa Pelo Delantero (Flequillos / Mechas)
+      const hairFrontLayer = document.getElementById('layer-hair-front');
+      hairFrontLayer.innerHTML = '';
+      if (hairItem && hairItem.renderFront) {
+        hairFrontLayer.innerHTML = hairItem.renderFront();
+      }
+
+      // 7. Capa Accesorios Frontales
+      const accLayer = document.getElementById('layer-accessories');
+      accLayer.innerHTML = '';
+      const accItem = WARDROBE_DATABASE.accessories.find(a => a.id === currentDollState.equipped.accessories);
+      if (accItem && accItem.render) {
+        accLayer.innerHTML = accItem.render();
+      }
+
+      // Ocultar la ropa interior base si tiene ropa puesta
+      const underwear = document.getElementById('base-underwear');
+      if (underwear) {
+        underwear.style.display = (topItem && bottomItem) ? 'none' : 'block';
+      }
+
+      // Aplicar color de piel
+      document.querySelectorAll('.doll-skin-fill').forEach(el => {
+        el.setAttribute('fill', currentDollState.skinColor);
+      });
+    }
+
+    function randomizeDollLook() {
+      const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)].id;
+
+      currentDollState.equipped.hair = pickRandom(WARDROBE_DATABASE.hair);
+      currentDollState.equipped.tops = pickRandom(WARDROBE_DATABASE.tops);
+      currentDollState.equipped.bottoms = pickRandom(WARDROBE_DATABASE.bottoms);
+      currentDollState.equipped.shoes = pickRandom(WARDROBE_DATABASE.shoes);
+      currentDollState.equipped.accessories = pickRandom(WARDROBE_DATABASE.accessories);
+
+      // Tono de piel aleatorio
+      const skins = ['#ffe0d0', '#f2ba88', '#d99564', '#8d5534', '#d8b4fe'];
+      const skinIdx = Math.floor(Math.random() * skins.length);
+      setDollSkinTone(skins[skinIdx], skinIdx);
+
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+      playRetroDollSound('fanfare');
+      makeDollSpeakRandom();
+      showDollToast('🎲 ¡Look Aleatorio Generado!');
+    }
+
+    function resetDollWardrobe() {
+      currentDollState.equipped = {
+        hair: null,
+        tops: null,
+        bottoms: null,
+        shoes: null,
+        accessories: null
+      };
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+      playRetroDollSound('pop');
+      document.getElementById('doll-speech').textContent =
+        '"¡Uy parce, me dejaste sin ropa! Póngame algo bien chimba de los 2000s, no sea boleta."';
+      showDollToast('🗑️ Guardarropa reiniciado');
+    }
+
+    function makeDollSpeakRandom() {
+      const bubble = document.getElementById('doll-speech');
+      const randomLine = DOLL_REACTIONS[Math.floor(Math.random() * DOLL_REACTIONS.length)];
+      bubble.textContent = `"${randomLine}"`;
+    }
+
+    function makeDollSpeakManual() {
+      makeDollSpeakRandom();
+      playRetroDollSound('sparkle');
+    }
+
+    function updateDollStatusCounters() {
+      let count = 0;
+      Object.values(currentDollState.equipped).forEach(val => { if (val) count++; });
+      document.getElementById('doll-status-counter').textContent = `Prendas equipadas: ${count} / 5`;
+    }
+
+    // Purpurina / Glitter animado estilo Metroflog
+    let glitterInterval = null;
+
+    function startGlitterAnimation() {
+      stopGlitterAnimation();
+      const container = document.getElementById('glitter-container');
+      const sparkles = ['✨', '★', '💖', '⭐', '🫧'];
+
+      glitterInterval = setInterval(() => {
+        if (!document.getElementById('doll-modal-overlay').classList.contains('active')) return;
+        const p = document.createElement('div');
+        p.className = 'glitter-particle';
+        p.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+        p.style.left = (15 + Math.random() * 70) + '%';
+        p.style.top = (15 + Math.random() * 75) + '%';
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 1600);
+      }, 350);
+    }
+
+    function stopGlitterAnimation() {
+      if (glitterInterval) {
+        clearInterval(glitterInterval);
+        glitterInterval = null;
+      }
+      const container = document.getElementById('glitter-container');
+      if (container) container.innerHTML = '';
+    }
+
+    function toggleGlitterEffect() {
+      currentDollState.glitterActive = !currentDollState.glitterActive;
+      const btn = document.getElementById('btn-glitter-toggle');
+      if (currentDollState.glitterActive) {
+        startGlitterAnimation();
+        showDollToast('✨ Brillos Metroflog Activados');
+        if (btn) btn.style.background = '#ffff00';
+      } else {
+        stopGlitterAnimation();
+        showDollToast('❌ Brillos desactivados');
+        if (btn) btn.style.background = '';
+      }
+      playRetroDollSound('sparkle');
+    }
+
+    // Copiar Ficha de Look al portapapeles
+    function copyDollOutfitSummary() {
+      const getLabel = (cat, id) => {
+        if (!id) return 'Ninguno';
+        const item = (WARDROBE_DATABASE[cat] || []).find(x => x.id === id);
+        return item ? item.name : 'Personalizado';
+      };
+
+      const summaryText =
+`★·.·´¯`·.·★ LOOK DOLLZ 2004 ★·.·´¯`·.·★
+💇 Cabello: ${getLabel('hair', currentDollState.equipped.hair)}
+👚 Top: ${getLabel('tops', currentDollState.equipped.tops)}
+👖 Abajo: ${getLabel('bottoms', currentDollState.equipped.bottoms)}
+👟 Calzado: ${getLabel('shoes', currentDollState.equipped.shoes)}
+🎀 Accesorio: ${getLabel('accessories', currentDollState.equipped.accessories)}
+💬 Opinión: ${document.getElementById('doll-speech').textContent}
+★ Nacimiento: 15/10/2004 | 100% Flow Colombo-Venezolano ★`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        showDollToast('📸 ¡Ficha copiada al portapapeles!');
+        playRetroDollSound('sparkle');
+      }).catch(() => {
+        showDollToast('📸 ¡Look generado con éxito!');
+      });
+    }
+
+    function showDollToast(msg) {
+      const toast = document.getElementById('doll-toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2400);
+    }
+
+    // Sonidos retro sintetizados con Web Audio API para el juego de vestir
+    function playRetroDollSound(type) {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'click') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } else if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.exponentialRampToValueAtTime(650, now + 0.12);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === 'sparkle') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.setValueAtTime(1174, now + 0.06);
+        osc.frequency.setValueAtTime(1480, now + 0.12);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      } else if (type === 'fanfare') {
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(freq, now + idx * 0.07);
+          g.gain.setValueAtTime(0.1, now + idx * 0.07);
+          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.14);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now + idx * 0.07);
+          o.stop(now + idx * 0.07 + 0.14);
+        });
+      }
+    }
+
+    // =========================================================================
+    // 7. COMPORTAMIENTO ARRASTRABLE (DRAGGABLE) PARA LA VENTANA DE LA MUÑECA
+    // =========================================================================
+    (function makeDollWindowDraggable() {
+      const windowEl = document.getElementById('doll-window');
+      const handle = document.getElementById('doll-drag-handle');
+      let isDragging = false;
+      let startX, startY, initialX, initialY;
+
+      handle.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('win-btn')) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const rect = windowEl.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+
+        windowEl.style.position = 'fixed';
+        windowEl.style.left = initialX + 'px';
+        windowEl.style.top = initialY + 'px';
+        windowEl.style.margin = '0';
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+
+      function onMouseMove(e) {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const newX = Math.max(10, Math.min(window.innerWidth - windowEl.offsetWidth - 10, initialX + dx));
+        const newY = Math.max(10, Math.min(window.innerHeight - windowEl.offsetHeight - 10, initialY + dy));
+
+        windowEl.style.left = newX + 'px';
+        windowEl.style.top = newY + 'px';
+      }
+
+      function onMouseUp() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+    })();
+
+    // =========================================================================
+    // 8. ARRANQUE DEL SISTEMA
+    // =========================================================================
     updateCounters();
     loadRandomArtistFromCurrentGenre(false);
     if (isBirthdayToday(new Date())) spawnRetroConfetti();
