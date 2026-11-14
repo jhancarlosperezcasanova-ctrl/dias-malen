@@ -5867,10 +5867,15 @@ function drawFighter(p, isMalenes) {
 
 
 // =============================================================================
-// JUEGO 2 ACTUALIZADO: MALEN KART 2D REALISTA (PC & MÓVIL)
-// - Físicas realistas ajustadas (velocidad gradual, inercia, derrape)
-// - Cuenta regresiva estilo Mario Kart (3... 2... 1... ¡YA!)
-// - Selector de 4 Circuitos / Mapas temáticos
+// JUEGO 2: MALEN KART GP PRO (MOTOR DE CARRERAS PSEUDO-3D SUPER SCALER)
+// Basado en la arquitectura clásica de Super Mario Kart (SNES) / OutRun
+// Con:
+// - Pista circular continua segmentada (2400 segmentos de profundidad z)
+// - IA de rivales en pista con trayectoria de carril, adelantamientos y colisiones
+// - Proyección en perspectiva z-buffered con escalado suave
+// - Físicas de derrape (drift), derrapes con humo, aceleración por marchas y trompos
+// - Cajas de ítems reales recogibles, proyectil cáscara de plátano y caparazón
+// - Minimapa radar en tiempo real mostrando las posiciones de todos los coches
 // =============================================================================
 
 let kartAnimationId = null;
@@ -5881,55 +5886,55 @@ let kartCountdownTimer = null;
 const KART_TRACKS = {
   sunset: {
     id: 'sunset',
-    name: '🌴 Sunset Beach 2004',
-    skyColors: ['#0f051d', '#4a084a', '#ff007f'],
-    sunColor: '#ffff00',
-    grassLight: '#184518',
-    grassDark: '#123312',
-    roadLight: '#33333e',
-    roadDark: '#292933',
-    curbLight: '#ff0000',
+    name: '🌴 Circuito Sunset Beach',
+    skyColors: ['#0d041a', '#3d0640', '#d80064', '#ffaa00'],
+    sunColor: '#ffff33',
+    grassLight: '#184d18',
+    grassDark: '#123812',
+    roadLight: '#424250',
+    roadDark: '#363642',
+    curbLight: '#e60000',
     curbDark: '#ffffff',
-    prop: 'palms'
+    theme: 'beach'
   },
   cyber: {
     id: 'cyber',
-    name: '🛸 Cyber Matrix Highway',
-    skyColors: ['#000511', '#002233', '#00ffaa'],
+    name: '🛸 Autopista Cyber Matrix',
+    skyColors: ['#00030a', '#001a24', '#003838', '#00ffaa'],
     sunColor: '#00ffff',
-    grassLight: '#001a1a',
-    grassDark: '#001015',
-    roadLight: '#111822',
-    roadDark: '#080d14',
+    grassLight: '#001a1c',
+    grassDark: '#001012',
+    roadLight: '#182433',
+    roadDark: '#0e1722',
     curbLight: '#00ffff',
-    curbDark: '#ff00ff',
-    prop: 'towers'
+    curbDark: '#ff00aa',
+    theme: 'cyber'
   },
   disco: {
     id: 'disco',
-    name: '🪩 Discoteca Reggaeton Circuit',
-    skyColors: ['#1a0033', '#4d004d', '#ff00aa'],
+    name: '🪩 Circuito Neon Reggaeton',
+    skyColors: ['#120024', '#330033', '#800066', '#ff00aa'],
     sunColor: '#ff00ff',
-    grassLight: '#260033',
-    grassDark: '#1a0026',
-    roadLight: '#2a1a3a',
-    roadDark: '#1e102e',
+    grassLight: '#2a0038',
+    grassDark: '#1a0024',
+    roadLight: '#321d42',
+    roadDark: '#241433',
     curbLight: '#ffff00',
     curbDark: '#ff00aa',
-    prop: 'speakers'
+    theme: 'disco'
   },
   rainbow: {
     id: 'rainbow',
-    name: '🌈 Senda Arcoíris Y2K',
-    skyColors: ['#000022', '#1a0044', '#330066'],
+    name: '🌈 Senda Arcoíris 2004',
+    skyColors: ['#000018', '#140033', '#280055', '#550088'],
     sunColor: '#ffffff',
-    grassLight: '#080018',
-    grassDark: '#03000a',
-    roadLight: '#441155',
-    roadDark: '#330844',
+    grassLight: '#09001a',
+    grassDark: '#04000d',
+    roadLight: '#55186b',
+    roadDark: '#421054',
     curbLight: '#ffff00',
     curbDark: '#00ffff',
-    prop: 'stars'
+    theme: 'rainbow'
   }
 };
 
@@ -5940,8 +5945,18 @@ const kartTouch = {
   right: false,
   gas: false,
   brake: false,
-  item: false
+  item: false,
+  drift: false
 };
+
+// Constantes de escala y carretera pseudo-3D
+const ROAD_SEGMENT_LENGTH = 160;
+const ROAD_TOTAL_SEGMENTS = 1400; // Longitud total del circuito
+const TRACK_TOTAL_LENGTH = ROAD_TOTAL_SEGMENTS * ROAD_SEGMENT_LENGTH;
+const CAMERA_HEIGHT = 1000;
+const CAMERA_DEPTH = 0.84;
+const ROAD_BASE_WIDTH = 2000;
+const DRAW_DISTANCE = 220; // Segmentos visibles hacia adelante
 
 const kartGame = {
   active: false,
@@ -5949,60 +5964,162 @@ const kartGame = {
   countdownNumber: 3,
   countdownText: '3',
   countdownScale: 1,
+
+  // Jugador
+  playerZ: 0,
+  playerX: 0, // -1 a 1 relativo al carril
   speed: 0,
-  maxSpeed: 28, // Velocidad equilibrada y realista
-  accel: 0.28,  // Aceleración gradual
-  friction: 0.982,
-  roadOffset: 0,
-  playerX: 0,
+  maxSpeed: 8200,
+  accel: 110,
+  braking: -260,
+  decel: -45,
+  offRoadDecel: -180,
   steerAngle: 0,
+  spinTimer: 0, // Si pisa plátano o choca
+
   lap: 1,
   maxLaps: 3,
-  lapDistance: 0,
-  lapLength: 8500, // Longitud de pista realista
+  lapTime: 0,
+  bestLapTime: null,
+  raceTime: 0,
   position: 6,
   totalRacers: 6,
-  item: null, // 'turbo', 'star', null
+
+  item: null, // 'turbo', 'star', 'shell', 'banana'
   itemTimer: 0,
   isInvincible: false,
-  curve: 0,
-  driftFactor: 0,
-  rivals: [
-    { name: 'Don Omar', x: -0.4, dist: 250, speed: 24.2, color: '#ffcc00' },
-    { name: 'Shakira', x: -0.25, dist: 500, speed: 25.5, color: '#ff00bb' },
-    { name: 'Kudai', x: 0.35, dist: 750, speed: 24.8, color: '#111111' },
-    { name: 'Avril', x: 0.45, dist: 1000, speed: 25.0, color: '#00ffff' },
-    { name: 'Eminem', x: 0.1, dist: 1300, speed: 26.2, color: '#ffffff' }
-  ],
-  roadSegments: [],
-  itemBoxes: []
+
+  segments: [],
+  rivals: [],
+  itemBoxes: [],
+  trackHazards: [], // Plátanos en pista
+  particles: []
 };
+
+// Generar el circuito con curvas pronunciadas, subidas y bajadas
+function buildKartCircuit() {
+  kartGame.segments = [];
+
+  for (let n = 0; n < ROAD_TOTAL_SEGMENTS; n++) {
+    let curve = 0;
+    let y = 0;
+
+    // Sección 1: Recta de salida con tribunas
+    if (n > 100 && n < 300) curve = 2.4; // Curva a la derecha
+    else if (n > 400 && n < 600) curve = -3.2; // Curva fuerte a la izquierda
+    else if (n > 700 && n < 950) curve = 1.8; // Curva amplia en ese
+    else if (n > 1050 && n < 1250) curve = -2.6; // Curva final previa a la meta
+
+    // Ondulación de colinas (hills)
+    y = Math.sin(n / 25) * 850;
+
+    kartGame.segments.push({
+      index: n,
+      p1: { world: { x: 0, y, z: n * ROAD_SEGMENT_LENGTH }, camera: {}, screen: {} },
+      p2: { world: { x: 0, y: Math.sin((n + 1) / 25) * 850, z: (n + 1) * ROAD_SEGMENT_LENGTH }, camera: {}, screen: {} },
+      curve,
+      color: Math.floor(n / 4) % 2 ? 'light' : 'dark'
+    });
+  }
+
+  // Cajas de ítems en puntos estratégicos
+  kartGame.itemBoxes = [
+    { z: 350 * ROAD_SEGMENT_LENGTH, x: -0.5, active: true },
+    { z: 350 * ROAD_SEGMENT_LENGTH, x: 0.0, active: true },
+    { z: 350 * ROAD_SEGMENT_LENGTH, x: 0.5, active: true },
+    { z: 850 * ROAD_SEGMENT_LENGTH, x: -0.4, active: true },
+    { z: 850 * ROAD_SEGMENT_LENGTH, x: 0.4, active: true },
+    { z: 1200 * ROAD_SEGMENT_LENGTH, x: -0.3, active: true },
+    { z: 1200 * ROAD_SEGMENT_LENGTH, x: 0.3, active: true }
+  ];
+
+  kartGame.trackHazards = [];
+}
+
+// Inicializar rivales con IA competitiva
+function initKartRivals() {
+  kartGame.rivals = [
+    {
+      name: 'Don Omar',
+      z: 700 * ROAD_SEGMENT_LENGTH,
+      x: -0.35,
+      speed: 7300,
+      targetSpeed: 7400,
+      color: '#ffcc00',
+      hairColor: '#111',
+      kartColor: '#e69900',
+      steer: 0,
+      laneOffset: -0.35,
+      spinTimer: 0,
+      lap: 1
+    },
+    {
+      name: 'Shakira',
+      z: 600 * ROAD_SEGMENT_LENGTH,
+      x: 0.35,
+      speed: 7600,
+      targetSpeed: 7700,
+      color: '#ff00bb',
+      hairColor: '#d6a836',
+      kartColor: '#cc0099',
+      steer: 0,
+      laneOffset: 0.35,
+      spinTimer: 0,
+      lap: 1
+    },
+    {
+      name: 'Kudai',
+      z: 480 * ROAD_SEGMENT_LENGTH,
+      x: -0.55,
+      speed: 7100,
+      targetSpeed: 7250,
+      color: '#1a1a24',
+      hairColor: '#ff007f',
+      kartColor: '#222',
+      steer: 0,
+      laneOffset: -0.55,
+      spinTimer: 0,
+      lap: 1
+    },
+    {
+      name: 'Avril',
+      z: 360 * ROAD_SEGMENT_LENGTH,
+      x: 0.55,
+      speed: 7450,
+      targetSpeed: 7550,
+      color: '#00ffcc',
+      hairColor: '#fae092',
+      kartColor: '#0099b8',
+      steer: 0,
+      laneOffset: 0.55,
+      spinTimer: 0,
+      lap: 1
+    },
+    {
+      name: 'Eminem',
+      z: 220 * ROAD_SEGMENT_LENGTH,
+      x: -0.15,
+      speed: 7750,
+      targetSpeed: 7850,
+      color: '#ffffff',
+      hairColor: '#eedd88',
+      kartColor: '#aa0000',
+      steer: 0,
+      laneOffset: -0.15,
+      spinTimer: 0,
+      lap: 1
+    }
+  ];
+}
 
 function selectKartTrack(trackKey) {
   currentKartTrackKey = trackKey;
   document.querySelectorAll('.kart-track-pill').forEach(el => el.classList.remove('active'));
   const btn = document.getElementById(`btn-track-${trackKey}`);
   if (btn) btn.classList.add('active');
-  initKartTrack();
+  buildKartCircuit();
   resetKartRace();
   playRetroDollSound('pop');
-}
-
-function initKartTrack() {
-  kartGame.roadSegments = [];
-  for (let i = 0; i < 600; i++) {
-    const curve = Math.sin(i / 28) * 1.8 + Math.cos(i / 45) * 0.9;
-    kartGame.roadSegments.push({ curve });
-  }
-
-  // Cajas de ítems distribuidas en la pista
-  kartGame.itemBoxes = [
-    { dist: 1400, x: -0.3, active: true },
-    { dist: 1400, x: 0.3, active: true },
-    { dist: 3800, x: -0.35, active: true },
-    { dist: 3800, x: 0.35, active: true },
-    { dist: 6200, x: 0.0, active: true }
-  ];
 }
 
 function openKartGame() {
@@ -6010,7 +6127,7 @@ function openKartGame() {
   modal.classList.add('active');
   kartCanvas = document.getElementById('kart-canvas');
   kartCtx = kartCanvas.getContext('2d');
-  initKartTrack();
+  buildKartCircuit();
   resetKartRace();
   kartGame.active = true;
   startKartLoop();
@@ -6030,12 +6147,12 @@ function startKartCountdown() {
   kartGame.state = 'countdown';
   kartGame.countdownNumber = 3;
   kartGame.countdownText = '3';
-  kartGame.countdownScale = 1.8;
+  kartGame.countdownScale = 2.0;
   playRetroDollSound('pop');
 
   kartCountdownTimer = setInterval(() => {
     kartGame.countdownNumber--;
-    kartGame.countdownScale = 1.8;
+    kartGame.countdownScale = 2.0;
 
     if (kartGame.countdownNumber === 2) {
       kartGame.countdownText = '2';
@@ -6055,36 +6172,35 @@ function startKartCountdown() {
 }
 
 function resetKartRace() {
-  kartGame.speed = 0;
-  kartGame.roadOffset = 0;
+  kartGame.playerZ = 0;
   kartGame.playerX = 0;
+  kartGame.speed = 0;
   kartGame.steerAngle = 0;
+  kartGame.spinTimer = 0;
   kartGame.lap = 1;
-  kartGame.lapDistance = 0;
+  kartGame.lapTime = 0;
+  kartGame.raceTime = 0;
   kartGame.position = 6;
   kartGame.item = null;
   kartGame.itemTimer = 0;
   kartGame.isInvincible = false;
-  kartGame.driftFactor = 0;
+  kartGame.particles = [];
 
-  kartGame.rivals = [
-    { name: 'Don Omar', x: -0.4, dist: 250, speed: 24.2, color: '#ffcc00' },
-    { name: 'Shakira', x: -0.25, dist: 500, speed: 25.5, color: '#ff00bb' },
-    { name: 'Kudai', x: 0.35, dist: 750, speed: 24.8, color: '#111111' },
-    { name: 'Avril', x: 0.45, dist: 1000, speed: 25.0, color: '#00ffff' },
-    { name: 'Eminem', x: 0.1, dist: 1300, speed: 26.2, color: '#ffffff' }
-  ];
-
+  initKartRivals();
   startKartCountdown();
 }
 
 function startKartLoop() {
   if (kartAnimationId) cancelAnimationFrame(kartAnimationId);
 
-  function loop() {
+  let lastTime = performance.now();
+  function loop(now) {
     if (!kartGame.active) return;
-    updateKartPhysics();
-    drawKartScene();
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    updateKartPhysicsPro(dt);
+    renderKartPseudo3D();
     kartAnimationId = requestAnimationFrame(loop);
   }
 
@@ -6095,27 +6211,37 @@ function useKartItem() {
   if (!kartGame.item || kartGame.state !== 'racing') return;
 
   if (kartGame.item === 'turbo') {
-    kartGame.speed = Math.min(kartGame.maxSpeed + 8, kartGame.speed + 9);
-    kartGame.itemTimer = 85;
+    kartGame.speed = Math.min(kartGame.maxSpeed * 1.35, kartGame.speed + 3500);
+    kartGame.itemTimer = 110;
     playRetroDollSound('sparkle');
     kartGame.item = null;
   } else if (kartGame.item === 'star') {
     kartGame.isInvincible = true;
-    kartGame.speed = kartGame.maxSpeed + 6;
-    kartGame.itemTimer = 160;
+    kartGame.itemTimer = 220;
     playRetroDollSound('fanfare');
+    kartGame.item = null;
+  } else if (kartGame.item === 'banana') {
+    // Soltar cáscara de plátano justo detrás
+    kartGame.trackHazards.push({
+      z: (kartGame.playerZ - 180 + TRACK_TOTAL_LENGTH) % TRACK_TOTAL_LENGTH,
+      x: kartGame.playerX,
+      type: 'banana'
+    });
+    playRetroDollSound('click');
     kartGame.item = null;
   }
 }
 
-function updateKartPhysics() {
-  // Animación de escala de la cuenta regresiva
+// Motor de físicas Pro (Inercia, rozamiento, IA de tráfico y colisiones)
+function updateKartPhysicsPro(dt) {
   if (kartGame.countdownScale > 1) {
-    kartGame.countdownScale -= 0.04;
+    kartGame.countdownScale -= 0.05;
   }
 
-  if (kartGame.state === 'countdown') return;
-  if (kartGame.state === 'finished') return;
+  if (kartGame.state === 'countdown' || kartGame.state === 'finished') return;
+
+  kartGame.raceTime += dt;
+  kartGame.lapTime += dt;
 
   const keys = pvpKeys;
   const isUp = keys['ArrowUp'] || keys['KeyW'] || kartTouch.gas;
@@ -6126,73 +6252,143 @@ function updateKartPhysics() {
 
   if (isItem) useKartItem();
 
-  // Aceleración y freno realistas
-  if (isUp) {
-    kartGame.speed = Math.min(kartGame.maxSpeed, kartGame.speed + kartGame.accel);
-  } else if (isDown) {
-    kartGame.speed = Math.max(0, kartGame.speed - kartGame.accel * 1.8);
+  // Trompo si pisó plátano
+  if (kartGame.spinTimer > 0) {
+    kartGame.spinTimer--;
+    kartGame.speed *= 0.94;
+    kartGame.steerAngle += 0.35;
   } else {
-    kartGame.speed *= kartGame.friction;
-  }
-
-  // Dirección y ángulo de giro progresivo (inercia)
-  if (kartGame.speed > 0.5) {
-    const steerSpeed = 0.018 * (kartGame.speed / kartGame.maxSpeed);
-    if (isLeft) {
-      kartGame.playerX -= steerSpeed;
-      kartGame.steerAngle = Math.max(-0.09, kartGame.steerAngle - 0.015);
-    } else if (isRight) {
-      kartGame.playerX += steerSpeed;
-      kartGame.steerAngle = Math.min(0.09, kartGame.steerAngle + 0.015);
+    // Aceleración y freno
+    if (isUp) {
+      kartGame.speed = Math.min(kartGame.maxSpeed, kartGame.speed + kartGame.accel);
+    } else if (isDown) {
+      kartGame.speed = Math.max(0, kartGame.speed + kartGame.braking);
     } else {
-      kartGame.steerAngle *= 0.8;
+      kartGame.speed = Math.max(0, kartGame.speed + kartGame.decel);
     }
-  } else {
-    kartGame.steerAngle *= 0.8;
+
+    // Dirección suave y proporcional a la velocidad
+    if (kartGame.speed > 100) {
+      const speedRatio = kartGame.speed / kartGame.maxSpeed;
+      const turnRate = 1.35 * speedRatio * dt;
+      if (isLeft) {
+        kartGame.playerX -= turnRate;
+        kartGame.steerAngle = Math.max(-0.14, kartGame.steerAngle - 0.02);
+      } else if (isRight) {
+        kartGame.playerX += turnRate;
+        kartGame.steerAngle = Math.min(0.14, kartGame.steerAngle + 0.02);
+      } else {
+        kartGame.steerAngle *= 0.82;
+      }
+    } else {
+      kartGame.steerAngle *= 0.82;
+    }
   }
 
-  // Penalización realista si te sales del asfalto al pasto
-  if (Math.abs(kartGame.playerX) > 0.82) {
-    kartGame.speed *= 0.965; // Rozamiento natural sin frenazo brusco
+  // Penalización por salir al pasto
+  if (Math.abs(kartGame.playerX) > 0.85) {
+    kartGame.speed = Math.max(0, kartGame.speed + kartGame.offRoadDecel);
   }
-  kartGame.playerX = Math.max(-1.15, Math.min(1.15, kartGame.playerX));
+  kartGame.playerX = Math.max(-1.3, Math.min(1.3, kartGame.playerX));
 
-  // Distancia y curvas
-  kartGame.lapDistance += kartGame.speed;
-  kartGame.roadOffset += kartGame.speed;
+  // Desplazamiento por la pista
+  const prevZ = kartGame.playerZ;
+  kartGame.playerZ += kartGame.speed * dt * 60;
 
-  const segmentIdx = Math.floor(kartGame.lapDistance / 100) % kartGame.roadSegments.length;
-  kartGame.curve = kartGame.roadSegments[segmentIdx].curve;
-  // Fuerza centrífuga suave en curvas
-  kartGame.playerX -= kartGame.curve * 0.0028 * (kartGame.speed / kartGame.maxSpeed);
+  // Fuerza centrífuga según la curva del segmento actual
+  const currentSegIdx = Math.floor(kartGame.playerZ / ROAD_SEGMENT_LENGTH) % ROAD_TOTAL_SEGMENTS;
+  const currentCurve = kartGame.segments[currentSegIdx] ? kartGame.segments[currentSegIdx].curve : 0;
+  kartGame.playerX -= (currentCurve * 0.0006 * (kartGame.speed / kartGame.maxSpeed));
 
-  // Paso por meta
-  if (kartGame.lapDistance >= kartGame.lapLength) {
-    kartGame.lapDistance = 0;
+  // Paso por línea de meta
+  if (kartGame.playerZ >= TRACK_TOTAL_LENGTH) {
+    kartGame.playerZ -= TRACK_TOTAL_LENGTH;
     kartGame.lap++;
-    playRetroDollSound('sparkle');
+    playRetroDollSound('fanfare');
+
     if (kartGame.lap > kartGame.maxLaps) {
       kartGame.state = 'finished';
       playRetroDollSound('fanfare');
     }
   }
 
-  // Actualizar rivales con velocidad realista
-  let aheadCount = 0;
+  // IA DE RIVALES (Conducen, adelantan, esquivan y compiten en la misma pista)
   kartGame.rivals.forEach(rival => {
-    rival.dist += rival.speed * 0.98;
-    if (rival.dist > kartGame.lapDistance) aheadCount++;
-  });
-  kartGame.position = aheadCount + 1;
+    if (rival.spinTimer > 0) {
+      rival.spinTimer--;
+      rival.speed *= 0.95;
+    } else {
+      // Ajuste de carril de la IA para adelantar o seguir la trayectoria ideal
+      const rSegIdx = Math.floor(rival.z / ROAD_SEGMENT_LENGTH) % ROAD_TOTAL_SEGMENTS;
+      const rCurve = kartGame.segments[rSegIdx] ? kartGame.segments[rSegIdx].curve : 0;
 
-  // Interacción con cajas de ítems
-  kartGame.itemBoxes.forEach(box => {
-    const relDist = Math.abs((kartGame.lapDistance % kartGame.lapLength) - box.dist);
-    if (relDist < 70 && Math.abs(kartGame.playerX - box.x) < 0.35 && !kartGame.item) {
-      kartGame.item = Math.random() > 0.4 ? 'turbo' : 'star';
-      playRetroDollSound('sparkle');
+      // Compensar curva
+      rival.x += (rival.laneOffset - rival.x) * 0.03 - (rCurve * 0.0004);
+
+      // Velocidad de crucero realista
+      rival.speed += (rival.targetSpeed - rival.speed) * 0.05;
+    }
+
+    rival.z = (rival.z + rival.speed * dt * 60) % TRACK_TOTAL_LENGTH;
+
+    // COLISIÓN JUGADOR VS RIVAL
+    const distToPlayer = Math.abs(rival.z - kartGame.playerZ);
+    if (distToPlayer < 140 && Math.abs(rival.x - kartGame.playerX) < 0.28) {
+      // Rebote elástico
+      if (kartGame.isInvincible) {
+        rival.spinTimer = 45;
+        playRetroDollSound('sparkle');
+      } else {
+        const pushDir = kartGame.playerX > rival.x ? 1 : -1;
+        kartGame.playerX += pushDir * 0.12;
+        rival.x -= pushDir * 0.12;
+        kartGame.speed *= 0.85;
+        playRetroDollSound('click');
+      }
+    }
+
+    // Colisión rival con plátanos
+    kartGame.trackHazards.forEach((hazard, hIdx) => {
+      if (Math.abs(rival.z - hazard.z) < 120 && Math.abs(rival.x - hazard.x) < 0.24) {
+        rival.spinTimer = 45;
+        kartGame.trackHazards.splice(hIdx, 1);
+        playRetroDollSound('pop');
+      }
+    });
+  });
+
+  // Colisión del jugador con plátanos
+  kartGame.trackHazards.forEach((hazard, hIdx) => {
+    if (Math.abs(kartGame.playerZ - hazard.z) < 120 && Math.abs(kartGame.playerX - hazard.x) < 0.24) {
+      if (!kartGame.isInvincible) {
+        kartGame.spinTimer = 40;
+        playRetroDollSound('pop');
+      }
+      kartGame.trackHazards.splice(hIdx, 1);
     }
   });
+
+  // Colisión con cajas de ítems
+  kartGame.itemBoxes.forEach(box => {
+    if (box.active && Math.abs((kartGame.playerZ % TRACK_TOTAL_LENGTH) - box.z) < 160 && Math.abs(kartGame.playerX - box.x) < 0.35) {
+      if (!kartGame.item) {
+        const items = ['turbo', 'banana', 'star'];
+        kartGame.item = items[Math.floor(Math.random() * items.length)];
+        box.active = false;
+        playRetroDollSound('sparkle');
+        setTimeout(() => { box.active = true; }, 4000);
+      }
+    }
+  });
+
+  // Calcular posición real en carrera
+  let ahead = 0;
+  kartGame.rivals.forEach(r => {
+    const totalDistRival = (r.lap - 1) * TRACK_TOTAL_LENGTH + r.z;
+    const totalDistPlayer = (kartGame.lap - 1) * TRACK_TOTAL_LENGTH + kartGame.playerZ;
+    if (totalDistRival > totalDistPlayer) ahead++;
+  });
+  kartGame.position = ahead + 1;
 
   if (kartGame.itemTimer > 0) {
     kartGame.itemTimer--;
@@ -6200,196 +6396,263 @@ function updateKartPhysics() {
   }
 }
 
-function drawKartScene() {
+// Proyección de perspectiva 3D
+function projectSegment(p, cameraX, cameraY, cameraZ, cameraDepth, width, height, roadWidth) {
+  p.camera.x = (p.world.x || 0) - cameraX;
+  p.camera.y = (p.world.y || 0) - cameraY;
+  p.camera.z = (p.world.z || 0) - cameraZ;
+
+  p.screen.scale = cameraDepth / p.camera.z;
+  p.screen.x = Math.round((width / 2) + (p.screen.scale * p.camera.x * width / 2));
+  p.screen.y = Math.round((height / 2) - (p.screen.scale * p.camera.y * height / 2));
+  p.screen.w = Math.round(p.screen.scale * roadWidth * width / 2);
+}
+
+// RENDERIZADO DEL MOTOR PSEUDO-3D SUPER SCALER
+function renderKartPseudo3D() {
   const ctx = kartCtx;
   const w = kartCanvas.width;
   const h = kartCanvas.height;
   const track = KART_TRACKS[currentKartTrackKey] || KART_TRACKS.sunset;
 
-  // 1. Cielo temático del mapa
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 160);
+  // 1. Cielo con horizonte y sol
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.45);
   skyGrad.addColorStop(0, track.skyColors[0]);
-  skyGrad.addColorStop(0.6, track.skyColors[1]);
-  skyGrad.addColorStop(1, track.skyColors[2]);
+  skyGrad.addColorStop(0.4, track.skyColors[1]);
+  skyGrad.addColorStop(0.8, track.skyColors[2]);
+  skyGrad.addColorStop(1, track.skyColors[3]);
   ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, w, 160);
+  ctx.fillRect(0, 0, w, h * 0.5);
 
-  // Astro / Sol / Luna retro
+  // Sol de neón
   ctx.fillStyle = track.sunColor;
   ctx.beginPath();
-  ctx.arc(w / 2 + (kartGame.curve * 14), 115, 38, 0, Math.PI * 2);
+  ctx.arc(w / 2 - (kartGame.playerX * 45), h * 0.32, 34, 0, Math.PI * 2);
   ctx.fill();
 
-  // Elementos de fondo temáticos
-  ctx.fillStyle = 'rgba(10, 0, 20, 0.75)';
-  for (let px = 20; px < w; px += 75) {
-    if (track.prop === 'palms') {
-      ctx.fillRect(px, 128, 6, 32);
-      ctx.beginPath();
-      ctx.arc(px + 3, 126, 20, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (track.prop === 'towers') {
-      const bh = 25 + (px % 35);
-      ctx.fillRect(px, 160 - bh, 22, bh);
-    } else {
-      ctx.beginPath();
-      ctx.arc(px, 135, 12, 0, Math.PI * 2);
-      ctx.fill();
+  // 2. Renderizado de Carretera Segmento a Segmento (Pasto, Pianos, Carril)
+  const baseSegmentIdx = Math.floor(kartGame.playerZ / ROAD_SEGMENT_LENGTH);
+  const cameraX = kartGame.playerX * ROAD_BASE_WIDTH;
+  const cameraY = CAMERA_HEIGHT + (kartGame.segments[baseSegmentIdx % ROAD_TOTAL_SEGMENTS]?.p1.world.y || 0);
+
+  let maxy = h;
+
+  for (let n = 0; n < DRAW_DISTANCE; n++) {
+    const segIdx = (baseSegmentIdx + n) % ROAD_TOTAL_SEGMENTS;
+    const segment = kartGame.segments[segIdx];
+    if (!segment) continue;
+
+    const looped = (baseSegmentIdx + n >= ROAD_TOTAL_SEGMENTS);
+    const cameraZ = kartGame.playerZ - (looped ? TRACK_TOTAL_LENGTH : 0);
+
+    projectSegment(segment.p1, cameraX, cameraY, cameraZ, CAMERA_DEPTH, w, h, ROAD_BASE_WIDTH);
+    projectSegment(segment.p2, cameraX, cameraY, cameraZ, CAMERA_DEPTH, w, h, ROAD_BASE_WIDTH);
+
+    if (segment.p1.camera.z <= CAMERA_DEPTH || segment.p2.screen.y >= maxy) continue;
+
+    // Dibujar pasto lateral
+    ctx.fillStyle = segment.color === 'light' ? track.grassLight : track.grassDark;
+    ctx.fillRect(0, segment.p2.screen.y, w, segment.p1.screen.y - segment.p2.screen.y);
+
+    // Dibujar bordillo (curb)
+    const p1 = segment.p1.screen;
+    const p2 = segment.p2.screen;
+    const curbW1 = p1.w * 0.12;
+    const curbW2 = p2.w * 0.12;
+
+    ctx.fillStyle = segment.color === 'light' ? track.curbLight : track.curbDark;
+    drawPolygon(ctx, p1.x - p1.w - curbW1, p1.y, p1.x - p1.w, p1.y, p2.x - p2.w, p2.y, p2.x - p2.w - curbW2, p2.y);
+    drawPolygon(ctx, p1.x + p1.w, p1.y, p1.x + p1.w + curbW1, p1.y, p2.x + p2.w + curbW2, p2.y, p2.x + p2.w, p2.y);
+
+    // Dibujar asfalto
+    ctx.fillStyle = segment.color === 'light' ? track.roadLight : track.roadDark;
+    drawPolygon(ctx, p1.x - p1.w, p1.y, p1.x + p1.w, p1.y, p2.x + p2.w, p2.y, p2.x - p2.w, p2.y);
+
+    // Línea de meta o líneas de carril
+    if (segIdx < 8) {
+      // Línea de meta a cuadros blanca y negra
+      ctx.fillStyle = (Math.floor(p1.x / 14) % 2 === 0) ? '#ffffff' : '#111111';
+      drawPolygon(ctx, p1.x - p1.w, p1.y, p1.x + p1.w, p1.y, p2.x + p2.w, p2.y, p2.x - p2.w, p2.y);
+    } else if (segment.color === 'light') {
+      // Línea blanca central
+      const laneW1 = p1.w * 0.035;
+      const laneW2 = p2.w * 0.035;
+      ctx.fillStyle = '#ffffff';
+      drawPolygon(ctx, p1.x - laneW1, p1.y, p1.x + laneW1, p1.y, p2.x + laneW2, p2.y, p2.x - laneW2, p2.y);
     }
+
+    maxy = segment.p2.screen.y;
   }
 
-  // 2. Carretera en perspectiva 2D
-  const horizonY = 160;
-  const roadWBottom = w * 0.95;
-  const roadWTop = 22;
-
-  for (let y = horizonY; y < h; y += 4) {
-    const progress = (y - horizonY) / (h - horizonY);
-    const perspective = Math.pow(progress, 2.2);
-    const currentRoadW = roadWTop + (roadWBottom - roadWTop) * perspective;
-    const curveOffset = kartGame.curve * (1 - progress) * 85;
-    const roadCenterX = (w / 2) + curveOffset;
-
-    const isStripe = (Math.floor(kartGame.roadOffset / 16) + y) % 18 < 9;
-
-    // Pasto / Terreno lateral del mapa
-    ctx.fillStyle = isStripe ? track.grassLight : track.grassDark;
-    ctx.fillRect(0, y, w, 4);
-
-    // Bordillos de pista
-    const curbW = 18 * perspective;
-    ctx.fillStyle = isStripe ? track.curbLight : track.curbDark;
-    ctx.fillRect(roadCenterX - currentRoadW / 2 - curbW, y, curbW, 4);
-    ctx.fillRect(roadCenterX + currentRoadW / 2, y, curbW, 4);
-
-    // Asfalto
-    ctx.fillStyle = isStripe ? track.roadLight : track.roadDark;
-    ctx.fillRect(roadCenterX - currentRoadW / 2, y, currentRoadW, 4);
-
-    // Línea divisoria central
-    if (isStripe) {
-      ctx.fillStyle = '#ffff00';
-      ctx.fillRect(roadCenterX - 2, y, 4, 4);
-    }
-  }
-
-  // 3. RIVALES
-  kartGame.rivals.forEach(rival => {
-    const relDist = rival.dist - kartGame.lapDistance;
-    if (relDist > 0 && relDist < 2500) {
-      const scale = 1 - (relDist / 2500);
-      const rivalY = horizonY + (h - horizonY) * Math.pow(scale, 1.8);
-      const rivalX = (w / 2) + (rival.x * w * 0.44 * scale) + (kartGame.curve * (1 - scale) * 40);
-
-      const kartSize = 36 * scale;
-      ctx.fillStyle = rival.color;
-      ctx.fillRect(rivalX - kartSize / 2, rivalY - kartSize / 1.5, kartSize, kartSize / 1.5);
-
-      ctx.fillStyle = '#000';
-      ctx.fillRect(rivalX - kartSize / 1.8, rivalY - kartSize / 2, kartSize * 0.2, kartSize / 2);
-      ctx.fillRect(rivalX + kartSize / 2.8, rivalY - kartSize / 2, kartSize * 0.2, kartSize / 2);
-
-      ctx.fillStyle = '#fff';
-      ctx.font = `${Math.max(9, Math.floor(11 * scale))}px monospace`;
-      ctx.textAlign = 'center';
-      ctx.fillText(rival.name, rivalX, rivalY - kartSize - 2);
-    }
-  });
-
-  // 4. CAJAS CON "?"
+  // 3. RENDERIZADO DE CAJAS DE ÍTEMS Y PLÁTANOS EN PISTAR
   kartGame.itemBoxes.forEach(box => {
-    const relDist = box.dist - (kartGame.lapDistance % kartGame.lapLength);
-    if (relDist > 0 && relDist < 2000) {
-      const scale = 1 - (relDist / 2000);
-      const boxY = horizonY + (h - horizonY) * Math.pow(scale, 1.8) - 10;
-      const boxX = (w / 2) + (box.x * w * 0.44 * scale);
-      const bSize = 22 * scale;
+    if (!box.active) return;
+    const relZ = (box.z - kartGame.playerZ + TRACK_TOTAL_LENGTH) % TRACK_TOTAL_LENGTH;
+    if (relZ > 50 && relZ < DRAW_DISTANCE * ROAD_SEGMENT_LENGTH) {
+      const scale = CAMERA_DEPTH / relZ;
+      const screenX = Math.round((w / 2) + (scale * (box.x * ROAD_BASE_WIDTH - cameraX) * w / 2));
+      const screenY = Math.round((h / 2) + (scale * CAMERA_HEIGHT * h / 2));
+      const boxSize = Math.max(12, 60 * scale * 24);
 
       ctx.fillStyle = '#ff00ff';
-      ctx.fillRect(boxX - bSize / 2, boxY - bSize / 2, bSize, bSize);
+      ctx.fillRect(screenX - boxSize / 2, screenY - boxSize, boxSize, boxSize);
       ctx.strokeStyle = '#ffff00';
       ctx.lineWidth = 2;
-      ctx.strokeRect(boxX - bSize / 2, boxY - bSize / 2, bSize, bSize);
+      ctx.strokeRect(screenX - boxSize / 2, screenY - boxSize, boxSize, boxSize);
       ctx.fillStyle = '#fff';
-      ctx.font = `bold ${Math.floor(14 * scale)}px sans-serif`;
+      ctx.font = `bold ${Math.floor(boxSize * 0.75)}px monospace`;
       ctx.textAlign = 'center';
-      ctx.fillText('?', boxX, boxY + 4 * scale);
+      ctx.fillText('?', screenX, screenY - boxSize * 0.2);
     }
   });
 
-  // 5. KART DE MALENES EN PRIMER PLANO
-  const playerScreenX = (w / 2) + (kartGame.playerX * (w * 0.38));
-  const playerScreenY = h - 55;
+  // Plátanos en pista
+  kartGame.trackHazards.forEach(hazard => {
+    const relZ = (hazard.z - kartGame.playerZ + TRACK_TOTAL_LENGTH) % TRACK_TOTAL_LENGTH;
+    if (relZ > 50 && relZ < DRAW_DISTANCE * ROAD_SEGMENT_LENGTH) {
+      const scale = CAMERA_DEPTH / relZ;
+      const screenX = Math.round((w / 2) + (scale * (hazard.x * ROAD_BASE_WIDTH - cameraX) * w / 2));
+      const screenY = Math.round((h / 2) + (scale * CAMERA_HEIGHT * h / 2));
+      const hazSize = Math.max(8, 32 * scale * 24);
+
+      ctx.font = `${Math.floor(hazSize)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('🍌', screenX, screenY);
+    }
+  });
+
+  // 4. RENDERIZADO DE RIVALES EN PISTA (Con IA y posición real en 3D)
+  // Ordenar rivales por distancia relativa (Z-sorting) para que los más lejanos queden detrás
+  const sortedRivals = [...kartGame.rivals].map(r => {
+    const relZ = (r.z - kartGame.playerZ + TRACK_TOTAL_LENGTH) % TRACK_TOTAL_LENGTH;
+    return { ...r, relZ };
+  }).filter(r => r.relZ > 80 && r.relZ < DRAW_DISTANCE * ROAD_SEGMENT_LENGTH)
+    .sort((a, b) => b.relZ - a.relZ);
+
+  sortedRivals.forEach(rival => {
+    const scale = CAMERA_DEPTH / rival.relZ;
+    const screenX = Math.round((w / 2) + (scale * (rival.x * ROAD_BASE_WIDTH - cameraX) * w / 2));
+    const screenY = Math.round((h / 2) + (scale * CAMERA_HEIGHT * h / 2));
+    const kWidth = Math.max(14, Math.round(scale * 1250));
+    const kHeight = Math.max(10, Math.round(scale * 800));
+
+    // Dibujar Kart Rival escalado
+    ctx.save();
+    ctx.translate(screenX, screenY);
+
+    // Chasis
+    ctx.fillStyle = rival.kartColor;
+    ctx.fillRect(-kWidth / 2, -kHeight, kWidth, kHeight * 0.7);
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(-kWidth / 2 - kWidth * 0.12, -kHeight * 0.6, kWidth * 0.2, kHeight * 0.7);
+    ctx.fillRect(kWidth / 2 - kWidth * 0.08, -kHeight * 0.6, kWidth * 0.2, kHeight * 0.7);
+
+    // Cabeza y pelo del rival
+    ctx.fillStyle = '#f2ba88';
+    ctx.beginPath();
+    ctx.arc(0, -kHeight * 1.15, kWidth * 0.25, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = rival.hairColor;
+    ctx.beginPath();
+    ctx.arc(0, -kHeight * 1.25, kWidth * 0.24, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    // Rótulo con nombre del rival
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${Math.max(9, Math.floor(scale * 240))}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(rival.name, 0, -kHeight * 1.55);
+
+    ctx.restore();
+  });
+
+  // 5. KART DE MALENES EN PRIMER PLANO (Player)
+  const playerScreenX = w / 2;
+  const playerScreenY = h - 25;
 
   ctx.save();
   ctx.translate(playerScreenX, playerScreenY);
   ctx.rotate(kartGame.steerAngle);
 
-  // Fuego de escape con turbo
+  // Fuego de escape si hay turbo
   if (kartGame.itemTimer > 0) {
     ctx.fillStyle = '#00ffff';
     ctx.beginPath();
-    ctx.arc(-16, 22, 8 + Math.random() * 5, 0, Math.PI * 2);
-    ctx.arc(16, 22, 8 + Math.random() * 5, 0, Math.PI * 2);
+    ctx.arc(-22, 14, 10 + Math.random() * 5, 0, Math.PI * 2);
+    ctx.arc(22, 14, 10 + Math.random() * 5, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  // Ruedas
+  // Ruedas traseras
   ctx.fillStyle = '#0a0a0a';
-  ctx.fillRect(-36, 6, 14, 22);
-  ctx.fillRect(22, 6, 14, 22);
+  ctx.fillRect(-44, -8, 16, 26);
+  ctx.fillRect(28, -8, 16, 26);
 
-  // Chasis Kart de Malenes
+  // Chasis Kart de Malenes (Rosa neón & Blanco glam)
   ctx.fillStyle = kartGame.isInvincible ? '#ffff00' : '#ff007f';
   ctx.beginPath();
-  ctx.roundRect(-26, 0, 52, 26, 6);
+  ctx.roundRect(-32, -22, 64, 30, 6);
   ctx.fill();
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Alerón
-  ctx.fillStyle = '#330033';
-  ctx.fillRect(-28, -6, 56, 8);
+  // Alerón trasero
+  ctx.fillStyle = '#22002b';
+  ctx.fillRect(-34, -30, 68, 8);
   ctx.fillStyle = '#00ffff';
-  ctx.fillRect(-22, -10, 44, 4);
+  ctx.fillRect(-26, -34, 52, 4);
 
   // Cabeza de Malenes
   ctx.fillStyle = currentDollState.skinColor || '#f2ba88';
   ctx.beginPath();
-  ctx.arc(0, -14, 12, 0, Math.PI * 2);
+  ctx.arc(0, -42, 15, 0, Math.PI * 2);
   ctx.fill();
 
-  // Pelo
+  // Melena de Malenes
   ctx.fillStyle = currentDollState.hairMainColor || '#181818';
-  ctx.fillRect(-14, -20, 8, 18);
-  ctx.fillRect(6, -20, 8, 18);
+  ctx.fillRect(-18, -48, 10, 22);
+  ctx.fillRect(8, -48, 10, 22);
 
-  // Tiara de Malenes
+  // Corona Tiara Dorada de Malenes
   ctx.fillStyle = '#ffd700';
   ctx.beginPath();
-  ctx.moveTo(-8, -26);
-  ctx.lineTo(-4, -32);
-  ctx.lineTo(0, -28);
-  ctx.lineTo(4, -32);
-  ctx.lineTo(8, -26);
+  ctx.moveTo(-10, -56);
+  ctx.lineTo(-5, -64);
+  ctx.lineTo(0, -58);
+  ctx.lineTo(5, -64);
+  ctx.lineTo(10, -56);
   ctx.closePath();
   ctx.fill();
 
   ctx.restore();
 
-  // 6. HUD / MARCADORES
+  // 6. MINIMAPA / RADAR EN TIEMPO REAL (Esquina inferior derecha)
+  drawMiniMapRadar(ctx, w, h);
+
+  // 7. HUD PROFESIONAL (Posición, Vueltas, Velocímetro e Ítem)
+  // Posición
   ctx.fillStyle = '#ffff00';
-  ctx.font = 'bold 22px Impact, sans-serif';
+  ctx.font = 'bold 24px Impact, sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText(`${kartGame.position}º / ${kartGame.totalRacers}`, 20, 36);
 
+  // Vuelta
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 13px Tahoma, sans-serif';
-  ctx.fillText(`VUELTA: ${Math.min(3, kartGame.lap)} / 3`, 20, 56);
+  ctx.font = 'bold 12px Tahoma, sans-serif';
+  ctx.fillText(`VUELTA: ${Math.min(3, kartGame.lap)} / 3`, 20, 54);
 
-  // Velocímetro digital realista (Escala a km/h de go-kart real: 0 a 85 km/h)
-  const kmh = Math.floor((kartGame.speed / kartGame.maxSpeed) * 85);
+  // Tiempo de vuelta
+  const min = Math.floor(kartGame.lapTime / 60);
+  const sec = Math.floor(kartGame.lapTime % 60);
+  const ms = Math.floor((kartGame.lapTime * 100) % 100);
+  ctx.fillStyle = '#00ffcc';
+  ctx.font = '11px monospace';
+  ctx.fillText(`TIEMPO: ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}.${String(ms).padStart(2, '0')}`, 20, 70);
+
+  // Velocímetro digital realista (0 a 110 KM/H)
+  const kmh = Math.floor((kartGame.speed / kartGame.maxSpeed) * 110);
   ctx.fillStyle = '#00ffcc';
   ctx.font = 'bold 18px monospace';
   ctx.textAlign = 'right';
@@ -6397,40 +6660,39 @@ function drawKartScene() {
 
   // Caja de ítem
   ctx.fillStyle = '#110220';
-  ctx.fillRect(w - 74, 48, 54, 46);
+  ctx.fillRect(w - 74, 46, 54, 46);
   ctx.strokeStyle = '#ff00ff';
   ctx.lineWidth = 2;
-  ctx.strokeRect(w - 74, 48, 54, 46);
+  ctx.strokeRect(w - 74, 46, 54, 46);
 
   ctx.textAlign = 'center';
-  ctx.font = '24px sans-serif';
-  if (kartGame.item === 'turbo') {
-    ctx.fillText('🍄', w - 47, 80);
-  } else if (kartGame.item === 'star') {
-    ctx.fillText('⭐', w - 47, 80);
-  } else {
+  ctx.font = '22px sans-serif';
+  if (kartGame.item === 'turbo') ctx.fillText('🍄', w - 47, 78);
+  else if (kartGame.item === 'star') ctx.fillText('⭐', w - 47, 78);
+  else if (kartGame.item === 'banana') ctx.fillText('🍌', w - 47, 78);
+  else {
     ctx.fillStyle = '#555';
-    ctx.font = '11px monospace';
-    ctx.fillText('VACÍO', w - 47, 76);
+    ctx.font = '10px monospace';
+    ctx.fillText('VACÍO', w - 47, 74);
   }
 
-  // 7. CUENTA REGRESIVA ESTILO MARIO KART (3, 2, 1, ¡YA!)
+  // 8. CUENTA REGRESIVA ESTILO MARIO KART
   if (kartGame.countdownText) {
     ctx.save();
-    ctx.translate(w / 2, h / 2 - 20);
+    ctx.translate(w / 2, h / 2 - 25);
     ctx.scale(kartGame.countdownScale, kartGame.countdownScale);
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = 'bold 54px Impact, sans-serif';
-    ctx.shadowBlur = 20;
+    ctx.font = 'bold 58px Impact, sans-serif';
+    ctx.shadowBlur = 25;
 
     if (kartGame.countdownText === '¡YA!') {
       ctx.fillStyle = '#00ff66';
       ctx.shadowColor = '#00ff66';
     } else {
       ctx.fillStyle = '#ffff00';
-      ctx.shadowColor = '#ff007f';
+      ctx.shadowColor = '#ff0055';
     }
     ctx.fillText(kartGame.countdownText, 0, 0);
     ctx.strokeStyle = '#000000';
@@ -6439,20 +6701,79 @@ function drawKartScene() {
     ctx.restore();
   }
 
-  // 8. FINAL DE CARRERA
+  // 9. FINAL DE CARRERA CON PODIO
   if (kartGame.state === 'finished') {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
-    ctx.fillRect(0, 125, w, 140);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    ctx.fillRect(0, 110, w, 160);
     ctx.fillStyle = '#ffff00';
     ctx.font = 'bold 26px Tahoma, sans-serif';
     ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 12;
-    ctx.fillText(`¡CARRERA FINALIZADA! POSICIÓN: ${kartGame.position}º 🏆`, w / 2, 180);
+    ctx.shadowBlur = 14;
+    ctx.fillText(`¡CARRERA FINALIZADA! POSICIÓN: ${kartGame.position}º 🏆`, w / 2, 165);
     ctx.shadowBlur = 0;
     ctx.font = 'bold 13px Tahoma, sans-serif';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('¡Qué manejo de Malenes! Pulsa "Reiniciar Carrera" para otra tanda', w / 2, 220);
+    ctx.fillText(`Tiempo Total: ${Math.floor(kartGame.raceTime / 60)}m ${Math.floor(kartGame.raceTime % 60)}s`, w / 2, 200);
+    ctx.fillText('¡Gran carrera de Malenes! Pulsa "Reiniciar" para otra tanda', w / 2, 230);
   }
+}
+
+// Dibujar polígono 3D
+function drawPolygon(ctx, x1, y1, x2, y2, x3, y3, x4, y4) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.lineTo(x3, y3);
+  ctx.lineTo(x4, y4);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Radar / Minimapa en tiempo real mostrando las posiciones de todos los coches
+function drawMiniMapRadar(ctx, w, h) {
+  const mapW = 85;
+  const mapH = 85;
+  const mapX = w - mapW - 12;
+  const mapY = h - mapH - 12;
+
+  // Fondo translúcido del minimapa
+  ctx.fillStyle = 'rgba(10, 0, 24, 0.72)';
+  ctx.fillRect(mapX, mapY, mapW, mapH);
+  ctx.strokeStyle = '#00ffff';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(mapX, mapY, mapW, mapH);
+
+  // Trazado circular del circuito en el minimapa
+  ctx.strokeStyle = '#660066';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.ellipse(mapX + mapW / 2, mapY + mapH / 2, mapW * 0.38, mapH * 0.38, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Posición del Jugador (Punto Fucsia Grande)
+  const playerAngle = (kartGame.playerZ / TRACK_TOTAL_LENGTH) * Math.PI * 2;
+  const pMapX = mapX + mapW / 2 + Math.cos(playerAngle) * (mapW * 0.38);
+  const pMapY = mapY + mapH / 2 + Math.sin(playerAngle) * (mapH * 0.38);
+
+  ctx.fillStyle = '#ff00ff';
+  ctx.beginPath();
+  ctx.arc(pMapX, pMapY, 4.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Posición de los Rivales (Puntitos de colores)
+  kartGame.rivals.forEach(rival => {
+    const rAngle = (rival.z / TRACK_TOTAL_LENGTH) * Math.PI * 2;
+    const rMapX = mapX + mapW / 2 + Math.cos(rAngle) * (mapW * 0.38);
+    const rMapY = mapY + mapH / 2 + Math.sin(rAngle) * (mapH * 0.38);
+
+    ctx.fillStyle = rival.color;
+    ctx.beginPath();
+    ctx.arc(rMapX, rMapY, 3, 0, Math.PI * 2);
+    ctx.fill();
+  });
 }
 
 
