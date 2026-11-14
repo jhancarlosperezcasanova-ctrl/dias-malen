@@ -3713,6 +3713,8 @@
   <!-- LIBRERÍAS THREE.JS PARA RENDERIZADO 3D REALISTA Y ANIMACIÓN EN TIEMPO REAL -->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+
 
 </head>
 
@@ -4190,6 +4192,60 @@
 
     </div>
 
+    
+    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P -->
+    <div class="kart-mp-dialog-overlay" id="kart-mp-dialog" style="display:none; position:absolute; top:42px; left:0; width:100%; height:calc(100% - 42px); background:rgba(0,0,0,0.85); z-index:100; overflow-y:auto; padding:15px; box-sizing:border-box;">
+      <div class="arcade-window" style="max-width:480px; width:94%; margin:15px auto; border:3px outset #00ffff; box-shadow:0 0 25px rgba(0,255,255,0.7); background:#120524;">
+        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #00ffff, #ff00bb);">
+          <span>👥 Multijugador Online (2 Dispositivos • WebRTC P2P)</span>
+          <div class="win-btn close" onclick="closeKartMultiplayerModal()">X</div>
+        </div>
+        <div style="background:#120524; color:#fff; padding:12px; font-family:var(--font-mono, monospace);">
+          <div style="display:flex; gap:8px; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:12px;">
+            <button class="retro-btn active" id="tab-btn-host" onclick="switchKartMpTab('host')">🏠 Crear Sala (Host / P1)</button>
+            <button class="retro-btn" id="tab-btn-join" onclick="switchKartMpTab('join')">📱 Unirse a Sala (P2)</button>
+          </div>
+
+          <!-- Pestaña 1: Crear Sala (Host) -->
+          <div id="kart-mp-tab-host">
+            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace directo con tu amigo en otro móvil o PC:</p>
+            <button class="retro-btn" onclick="createKartMultiplayerRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
+            
+            <div id="kart-mp-host-info" style="display:none; background:#000; border:1px solid #00ffff; padding:10px; margin-bottom:10px; text-align:center;">
+              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
+              <div id="kart-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#00ffff; letter-spacing:4px; margin:4px 0;">----</div>
+              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
+                <button class="retro-btn" onclick="copyKartRoomCode()">📋 Copiar Código</button>
+                <button class="retro-btn" onclick="copyKartShareLink()">🔗 Copiar Enlace Directo</button>
+              </div>
+              <div id="kart-mp-host-status" style="font-size:11px; color:#ff00bb; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
+            </div>
+
+            <button id="btn-kart-mp-start" class="retro-btn" onclick="startMultiplayerRaceAsHost()" style="display:none; background:linear-gradient(90deg, #ff00bb, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡EMPEZAR CARRERA JUNTOS!</button>
+          </div>
+
+          <!-- Pestaña 2: Unirse a Sala (Guest) -->
+          <div id="kart-mp-tab-join" style="display:none;">
+            <p style="font-size:11px; color:#00ffff; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala:</p>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
+              <input type="text" id="kart-mp-player-name" value="Piloto 2" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff00bb; padding:6px; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
+              <input type="text" id="kart-mp-join-code" placeholder="Ej: 4821" maxlength="6" style="width:100%; background:#000; color:#00ffff; border:1px solid #00ffff; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <button class="retro-btn" onclick="joinKartMultiplayerFromInput()" style="background:#00ffff; color:#000; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA SALA</button>
+            <div id="kart-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
+          </div>
+
+          <div style="margin-top:12px; border-top:1px dashed #444; padding-top:8px; font-size:9px; color:#888; text-align:center;">
+            🌐 Conexión en tiempo real WebRTC punto a punto (sin servidores intermediarios, ultrabaja latencia).
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="arcade-game-canvas-box">
 
       <canvas id="pvp-canvas" class="arcade-canvas" width="720" height="380"></canvas>
@@ -4232,6 +4288,7 @@
 
       <div style="display:flex; gap:5px; align-items:center;">
         <button class="retro-btn" onclick="openKartMenu()">🏠 Menú</button>
+        <button class="retro-btn" id="btn-kart-mp" onclick="openKartMultiplayerModal()" style="background:linear-gradient(135deg, #ff007f, #00ffff); color:#000; font-weight:bold; box-shadow:0 0 6px #00ffff;">👥 Multijugador (2P)</button>
         <button class="retro-btn" onclick="resetKartRace()">🏁 Reiniciar</button>
         <button class="retro-btn" onclick="closeKartGame()">🚪 Salir</button>
       </div>
@@ -11735,6 +11792,7 @@ function drawFighter(p, isMalenes) {
 
 
 
+
 // =========================================================================
 // MALEN KART 2D GP PRO — MOTOR OUTRUN / MARIO KART DELUXE 2004
 // =========================================================================
@@ -12467,6 +12525,14 @@ function useKartItem() {
     playKartSound('spin');
     kartGame.item = null;
   }
+
+    // Sincronizar uso de ítem en red si estamos en multijugador
+    if (kartNet.conn && kartNet.isConnected) {
+      if (currentItem === 'banana') kartNet.conn.send({ t: 'hazard', z: hazard.z, x: hazard.offset });
+      else if (currentItem === 'redShell' || currentItem === 'bomb') kartNet.conn.send({ t: 'projectile', type: currentItem, z: kartGame.position + kartGame.playerZ + 80, x: kartGame.playerX });
+      else if (currentItem === 'lightning') kartNet.conn.send({ t: 'lightning' });
+    }
+
   else if (currentItem === 'bomb') {
     // BOMBA GLITCH: Se lanza hacia adelante y explota en área
     kartGame.projectiles.push({
@@ -12715,7 +12781,28 @@ function updateKartPhysics(dt) {
   var topAllowedSpeed = (kartGame.turboTimer > 0) ? KART_MAX_SPEED * 1.4 : KART_MAX_SPEED;
   kartGame.speed = KartUtil.limit(kartGame.speed, 0, topAllowedSpeed);
 
+  
+  // Colisión física entre Jugador Local y Jugador Remoto (Multijugador 2P)
+  if (kartNet.isConnected && kartNet.remotePlayer) {
+    kartNet.remotePlayer.z += (kartNet.remotePlayer.targetZ - kartNet.remotePlayer.z) * 0.35;
+    kartNet.remotePlayer.x += (kartNet.remotePlayer.targetX - kartNet.remotePlayer.x) * 0.35;
+
+    var distToRem = Math.abs((kartGame.position + kartGame.playerZ) - kartNet.remotePlayer.z);
+    if (distToRem < 140 && Math.abs(kartGame.playerX - kartNet.remotePlayer.x) < 0.36) {
+      if (kartGame.starTimer > 0) {
+        if (kartNet.conn) kartNet.conn.send({ t: 'lightning' });
+        playKartSound('spin');
+      } else {
+        var pushP = (kartGame.playerX > kartNet.remotePlayer.x) ? 0.24 : -0.24;
+        kartGame.playerX += pushP;
+        kartGame.speed *= 0.88;
+        playKartSound('bump');
+      }
+    }
+  }
+
   kartGame.position = KartUtil.increase(kartGame.position, dt * kartGame.speed, kartGame.trackLength);
+
 
   // COLISIONES CON COCHES EN EL MISMO SEGMENTO
   for (var n = 0; n < playerSegment.cars.length; n++) {
@@ -12928,7 +13015,23 @@ function renderKartScene() {
   }
 
   // 5. PROYECTILES Y ONDAS DE EXPLOSIÓN
+  
+  // RENDERIZADO DEL JUGADOR REMOTO (P2P MULTIJUGADOR ONLINE)
+  if (kartNet.isConnected && kartNet.remotePlayer) {
+    var remZ = kartNet.remotePlayer.z;
+    var remSeg = findKartSegment(remZ);
+    if (remSeg && remSeg.p1 && remSeg.p1.screen && remSeg.p1.screen.scale > 0) {
+      var remScale = remSeg.p1.screen.scale;
+      var remX = remSeg.p1.screen.x + (remScale * kartNet.remotePlayer.x * KART_ROAD_WIDTH * width / 2);
+      var remY = remSeg.p1.screen.y;
+      if (remY < remSeg.clip) {
+        drawRemotePlayerKartSprite(ctx, remX, remY, remScale, kartNet.remotePlayer, width);
+      }
+    }
+  }
+
   drawProjectilesAndExplosions(ctx, width, height, baseSegment);
+
 
   // 6. KART DEL JUGADOR (MALENES)
   if (kartGame.state !== 'menu') {
@@ -13540,7 +13643,26 @@ function drawKartStartMenu(ctx, width, height, now) {
   ctx.lineWidth = 2;
   ctx.strokeRect(btnX, btnY, btnW, btnH);
 
+  
+  // Botón Multijugador en el menú
+  var mpBtnW = 200;
+  var mpBtnH = 26;
+  var mpBtnX = width / 2 - mpBtnW / 2;
+  var mpBtnY = height * 0.72;
+
+  ctx.fillStyle = 'rgba(0, 255, 255, 0.2)';
+  ctx.fillRect(mpBtnX, mpBtnY, mpBtnW, mpBtnH);
+  ctx.strokeStyle = '#00ffff';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(mpBtnX, mpBtnY, mpBtnW, mpBtnH);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('👥 MODO MULTIJUGADOR (2P)', width / 2, mpBtnY + 17);
+
   ctx.fillStyle = '#000000';
+
   ctx.font = 'bold 16px "Trebuchet MS", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('🏁 INICIAR CARRERA', width / 2, btnY + 26);
@@ -13666,7 +13788,36 @@ function drawKartHUD(ctx, width, height) {
     ctx.fill();
   });
 
+  
+  // Indicador de estado Multijugador Online (2P)
+  if (kartNet.isConnected && kartNet.remotePlayer) {
+    ctx.fillStyle = 'rgba(0, 20, 40, 0.75)';
+    ctx.fillRect(width / 2 - 120, height - 24, 240, 20);
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(width / 2 - 120, height - 24, 240, 20);
+
+    ctx.fillStyle = '#00ffff';
+    ctx.font = 'bold 10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`🟢 2P ONLINE: ${kartNet.playerName} vs ${kartNet.remotePlayer.name}`, width / 2, height - 10);
+
+    // Punto del jugador remoto en el minimapa (con halo brillante)
+    var rAngle = (kartNet.remotePlayer.z / kartGame.trackLength) * Math.PI * 2;
+    var rDotX = mapX + mapW / 2 + Math.cos(rAngle) * (mapW * 0.36);
+    var rDotY = mapY + mapH / 2 + Math.sin(rAngle) * (mapH * 0.36);
+
+    ctx.fillStyle = kartNet.remotePlayer.color || '#00ffff';
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(rDotX, rDotY, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+
   ctx.restore();
+
 }
 
 // EFECTOS DE SONIDO SINTETIZADOS CHIPTUNE (WEB AUDIO API)
@@ -13765,6 +13916,478 @@ window.addEventListener('keydown', (e) => {
 function initKartRivals() { resetKartRivals(); }
 function updateKartPhysicsPro(dt) { updateKartPhysics(dt); }
 function renderKartPseudo3D() { renderKartScene(); }
+
+
+// DIBUJAR KART DEL JUGADOR REMOTO (P2P MULTIJUGADOR)
+function drawRemotePlayerKartSprite(ctx, x, y, scale, p, canvasWidth) {
+  var baseW = scale * 340 * (canvasWidth / 2);
+  var isShrunk = (p.shrinkTimer && p.shrinkTimer > 0);
+  if (isShrunk) baseW *= 0.52;
+
+  var w = Math.max(16, Math.round(baseW));
+  var h = Math.round(w * 0.72);
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  if (p.spinTimer > 0) {
+    ctx.rotate((p.spinTimer * 0.45));
+  }
+
+  // Sombra
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, w * 0.54, h * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ruedas
+  ctx.fillStyle = '#111';
+  var tireW = Math.max(2, Math.round(w * 0.16));
+  var tireH = Math.max(4, Math.round(h * 0.52));
+  ctx.fillRect(-w * 0.52, -tireH * 0.9, tireW, tireH);
+  ctx.fillRect(w * 0.52 - tireW, -tireH * 0.9, tireW, tireH);
+
+  // Llamas si tiene turbo
+  if (p.turboTimer > 0) {
+    ctx.fillStyle = '#00ffff';
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.25, 0);
+    ctx.lineTo(-w * 0.18, h * 0.35);
+    ctx.lineTo(-w * 0.12, 0);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(w * 0.12, 0);
+    ctx.lineTo(w * 0.18, h * 0.35);
+    ctx.lineTo(w * 0.25, 0);
+    ctx.fill();
+  }
+
+  // Chasis con color personalizado (P1 Rosa, P2 Cian/Lima)
+  ctx.fillStyle = p.color || '#00ffff';
+  ctx.beginPath();
+  ctx.moveTo(-w * 0.38, -h * 0.1);
+  ctx.lineTo(-w * 0.24, -h * 0.88);
+  ctx.lineTo(w * 0.24, -h * 0.88);
+  ctx.lineTo(w * 0.38, -h * 0.1);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = Math.max(1, Math.round(w * 0.04));
+  ctx.stroke();
+
+  // Alerón trasero
+  ctx.fillStyle = (p.role === 'P1') ? '#d0d0d8' : '#111111';
+  ctx.fillRect(-w * 0.44, -h * 0.22, w * 0.88, Math.max(2, h * 0.18));
+
+  // Piloto
+  ctx.fillStyle = '#ffdbac';
+  ctx.beginPath();
+  ctx.arc(0, -h * 0.95, Math.max(3, w * 0.16), 0, Math.PI * 2);
+  ctx.fill();
+
+  // Casco o tiara según rol
+  if (p.role === 'P1') {
+    // Tiara de diamantes
+    ctx.fillStyle = '#ffff00';
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.1, -h * 1.1);
+    ctx.lineTo(0, -h * 1.25);
+    ctx.lineTo(w * 0.1, -h * 1.1);
+    ctx.fill();
+  } else {
+    // Casco de carreras con visor
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(-w * 0.1, -h * 1.02, w * 0.2, Math.max(1, h * 0.08));
+  }
+
+  // Banner con nombre y etiqueta P1 / P2
+  if (w > 24) {
+    ctx.fillStyle = (p.role === 'P1') ? '#ff00bb' : '#00ffff';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
+    var fontSize = Math.max(9, Math.round(w * 0.2));
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textAlign = 'center';
+    var label = `[${p.role}] ${p.name}`;
+    ctx.strokeText(label, 0, -h * 1.3);
+    ctx.fillText(label, 0, -h * 1.3);
+  }
+
+  ctx.restore();
+}
+
+
+// =========================================================================
+// SUBSISTEMA MULTIJUGADOR ONLINE WEBRTC P2P (MALEN KART GP PRO)
+// =========================================================================
+
+const kartNet = {
+  peer: null,
+  conn: null,
+  isHost: false,
+  isConnected: false,
+  roomCode: null,
+  myRole: 'P1', // 'P1' para Host (Malenes), 'P2' para Invitado
+  playerName: 'Malenes (P1)',
+  playerColor: '#ff00bb',
+  remotePlayer: null,
+  syncInterval: null,
+  lastSyncSent: 0
+};
+
+// Generar o inicializar PeerJS
+function initKartPeer(callback) {
+  if (typeof Peer === 'undefined') {
+    alert('Cargando librería de red... intenta de nuevo en 2 segundos.');
+    return;
+  }
+  if (kartNet.peer && !kartNet.peer.destroyed) {
+    if (callback) callback();
+    return;
+  }
+
+  // Configuración con servidores STUN públicos de Google
+  kartNet.peer = new Peer(null, {
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    }
+  });
+
+  kartNet.peer.on('open', (id) => {
+    if (callback) callback();
+  });
+
+  kartNet.peer.on('error', (err) => {
+    console.warn('Error en PeerJS:', err);
+    var statusEl = document.getElementById(kartNet.isHost ? 'kart-mp-host-status' : 'kart-mp-join-status');
+    if (statusEl) statusEl.textContent = 'Aviso de conexión: ' + (err.type || 'Error de red');
+  });
+}
+
+// 1. CREAR SALA MULTIJUGADOR (HOST / JUGADOR 1)
+function createKartMultiplayerRoom() {
+  initKartPeer(() => {
+    // Generar código de sala de 4 dígitos (ej: 4821)
+    const rawCode = Math.floor(1000 + Math.random() * 9000).toString();
+    kartNet.roomCode = rawCode;
+    kartNet.isHost = true;
+    kartNet.myRole = 'P1';
+    kartNet.playerName = 'Malenes (P1)';
+    kartNet.playerColor = '#ff00bb';
+
+    // Para evitar colisiones en el broker público, usamos prefijo único
+    const hostPeerId = 'malenkart-room-' + rawCode;
+
+    // Destruir peer previo si existe y recrear con ID fijo de sala
+    if (kartNet.peer) kartNet.peer.destroy();
+
+    kartNet.peer = new Peer(hostPeerId, {
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      }
+    });
+
+    kartNet.peer.on('open', (id) => {
+      document.getElementById('kart-mp-host-info').style.display = 'block';
+      document.getElementById('kart-mp-room-code-display').textContent = rawCode;
+      document.getElementById('kart-mp-host-status').textContent = '⏳ Esperando a que el Jugador 2 se conecte...';
+      playKartSound('beepLow');
+    });
+
+    kartNet.peer.on('connection', (conn) => {
+      setupKartNetworkConnection(conn);
+    });
+
+    kartNet.peer.on('error', (err) => {
+      if (err.type === 'unavailable-id') {
+        // Si el código ya está en uso, reintentar con otro
+        createKartMultiplayerRoom();
+      }
+    });
+  });
+}
+
+// 2. UNIRSE A SALA MULTIJUGADOR (JUGADOR 2 / INVITADO)
+function joinKartMultiplayerRoom(code) {
+  if (!code) return;
+  code = code.toString().trim().toUpperCase().replace(/[^0-9A-Z]/g, '');
+
+  var nameInput = document.getElementById('kart-mp-player-name');
+  var customName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Piloto 2';
+
+  var statusEl = document.getElementById('kart-mp-join-status');
+  if (statusEl) statusEl.textContent = '⏳ Conectando con la sala ' + code + '...';
+
+  initKartPeer(() => {
+    kartNet.isHost = false;
+    kartNet.myRole = 'P2';
+    kartNet.playerName = customName + ' (P2)';
+    kartNet.playerColor = '#00ffff';
+    kartNet.roomCode = code;
+
+    const targetPeerId = 'malenkart-room-' + code;
+    const conn = kartNet.peer.connect(targetPeerId, { reliable: true });
+
+    conn.on('open', () => {
+      setupKartNetworkConnection(conn);
+    });
+
+    conn.on('error', (err) => {
+      if (statusEl) statusEl.textContent = '❌ No se pudo conectar a la sala ' + code;
+    });
+  });
+}
+
+function joinKartMultiplayerFromInput() {
+  var input = document.getElementById('kart-mp-join-code');
+  if (input && input.value.trim()) {
+    joinKartMultiplayerRoom(input.value.trim());
+  } else {
+    alert('Ingresa el código de 4 dígitos de la sala.');
+  }
+}
+
+// CONFIGURAR HANDLERS DE LA CONEXIÓN WEBRTC
+function setupKartNetworkConnection(conn) {
+  kartNet.conn = conn;
+  kartNet.isConnected = true;
+
+  // Inicializar estado del jugador remoto
+  kartNet.remotePlayer = {
+    z: 0,
+    targetZ: 0,
+    x: kartNet.isHost ? 0.35 : -0.35,
+    targetX: kartNet.isHost ? 0.35 : -0.35,
+    speed: 0,
+    steer: 0,
+    lap: 1,
+    name: kartNet.isHost ? 'Invitado (P2)' : 'Malenes (P1)',
+    color: kartNet.isHost ? '#00ffff' : '#ff00bb',
+    role: kartNet.isHost ? 'P2' : 'P1',
+    spinTimer: 0,
+    starTimer: 0,
+    turboTimer: 0
+  };
+
+  conn.on('open', () => {
+    playKartSound('fanfare');
+
+    // Informar UI
+    if (kartNet.isHost) {
+      document.getElementById('kart-mp-host-status').innerHTML = '🟢 <b>¡Jugador 2 Conectado!</b> Listo para correr.';
+      document.getElementById('btn-kart-mp-start').style.display = 'block';
+    } else {
+      var statusEl = document.getElementById('kart-mp-join-status');
+      if (statusEl) statusEl.innerHTML = '🟢 <b>¡Conectado a la sala!</b> Esperando al Host para iniciar...';
+    }
+
+    // Iniciar bucle de transmisión telemétrica a 30 Hz
+    startKartNetworkTelemetry();
+
+    // Enviar saludo inicial con nombre y rol
+    conn.send({
+      t: 'hello',
+      name: kartNet.playerName,
+      color: kartNet.playerColor,
+      role: kartNet.myRole
+    });
+  });
+
+  conn.on('data', (data) => {
+    handleKartNetworkData(data);
+  });
+
+  conn.on('close', () => {
+    kartNet.isConnected = false;
+    kartNet.remotePlayer = null;
+    alert('El otro jugador se ha desconectado de la carrera.');
+  });
+}
+
+// TRANSMISIÓN DE TELEMETRÍA (30 FPS)
+function startKartNetworkTelemetry() {
+  if (kartNet.syncInterval) clearInterval(kartNet.syncInterval);
+  kartNet.syncInterval = setInterval(() => {
+    if (!kartNet.conn || !kartNet.isConnected) return;
+
+    try {
+      kartNet.conn.send({
+        t: 'sync',
+        z: Math.round(kartGame.position),
+        x: Number(kartGame.playerX.toFixed(3)),
+        spd: Math.round(kartGame.speed),
+        str: Number(kartGame.steer.toFixed(2)),
+        lap: kartGame.lap,
+        spin: kartGame.spinTimer,
+        star: kartGame.starTimer,
+        turbo: kartGame.turboTimer,
+        name: kartNet.playerName,
+        color: kartNet.playerColor,
+        role: kartNet.myRole
+      });
+    } catch (e) {}
+  }, 33);
+}
+
+// PROCESAMIENTO DE PAQUETES RECIBIDOS POR WEBRTC
+function handleKartNetworkData(data) {
+  if (!data || !data.t) return;
+
+  if (data.t === 'hello') {
+    if (kartNet.remotePlayer) {
+      kartNet.remotePlayer.name = data.name || (kartNet.isHost ? 'Piloto 2 (P2)' : 'Malenes (P1)');
+      kartNet.remotePlayer.color = data.color || (kartNet.isHost ? '#00ffff' : '#ff00bb');
+      kartNet.remotePlayer.role = data.role || (kartNet.isHost ? 'P2' : 'P1');
+    }
+  }
+  else if (data.t === 'sync') {
+    if (kartNet.remotePlayer) {
+      kartNet.remotePlayer.targetZ = data.z;
+      kartNet.remotePlayer.targetX = data.x;
+      kartNet.remotePlayer.speed = data.spd;
+      kartNet.remotePlayer.steer = data.str;
+      kartNet.remotePlayer.lap = data.lap;
+      kartNet.remotePlayer.spinTimer = data.spin;
+      kartNet.remotePlayer.starTimer = data.star;
+      kartNet.remotePlayer.turboTimer = data.turbo;
+    }
+  }
+  else if (data.t === 'startRace') {
+    // El host inició la carrera: sincronizar circuito y arrancar
+    closeKartMultiplayerModal();
+    if (data.track && KART_TRACK_THEMES[data.track]) {
+      currentKartTrackKey = data.track;
+      buildKartCircuit(data.track);
+    }
+    resetKartRace();
+    startKartCountdown();
+  }
+  else if (data.t === 'hazard') {
+    // El rival soltó un plátano en la pista
+    var seg = findKartSegment(data.z);
+    if (seg) {
+      var h = { offset: data.x, z: data.z };
+      seg.hazards.push(h);
+      kartGame.hazards.push(h);
+    }
+  }
+  else if (data.t === 'projectile') {
+    // El rival disparó un proyectil (caparazón rojo o bomba)
+    kartGame.projectiles.push({
+      type: data.type,
+      z: data.z,
+      offset: data.x,
+      speed: KART_MAX_SPEED * 1.5,
+      life: 300,
+      target: (data.type === 'redShell') ? { offset: kartGame.playerX, z: kartGame.position + kartGame.playerZ } : null
+    });
+    playKartSound('turbo');
+  }
+  else if (data.t === 'lightning') {
+    // El rival usó el rayo relámpago
+    if (kartGame.starTimer === 0) {
+      kartGame.spinTimer = 45;
+      kartGame.speed *= 0.45;
+    }
+    playKartSound('spin');
+  }
+}
+
+// INICIAR CARRERA MULTIJUGADOR COMO HOST
+function startMultiplayerRaceAsHost() {
+  if (!kartNet.conn || !kartNet.isConnected) {
+    alert('Espera a que el Jugador 2 se conecte a la sala.');
+    return;
+  }
+
+  // Enviar comando de arranque con la pista seleccionada
+  kartNet.conn.send({
+    t: 'startRace',
+    track: currentKartTrackKey
+  });
+
+  closeKartMultiplayerModal();
+  buildKartCircuit(currentKartTrackKey);
+  resetKartRace();
+  startKartCountdown();
+}
+
+// FUNCIONES DE UI DEL MODAL MULTIJUGADOR
+function openKartMultiplayerModal() {
+  var modal = document.getElementById('kart-mp-dialog');
+  if (modal) modal.style.display = 'block';
+  playKartSound('beepLow');
+}
+
+function closeKartMultiplayerModal() {
+  var modal = document.getElementById('kart-mp-dialog');
+  if (modal) modal.style.display = 'none';
+}
+
+function switchKartMpTab(tab) {
+  document.getElementById('kart-mp-tab-host').style.display = (tab === 'host') ? 'block' : 'none';
+  document.getElementById('kart-mp-tab-join').style.display = (tab === 'join') ? 'block' : 'none';
+
+  document.getElementById('tab-btn-host').classList.toggle('active', tab === 'host');
+  document.getElementById('tab-btn-join').classList.toggle('active', tab === 'join');
+}
+
+function copyKartRoomCode() {
+  if (kartNet.roomCode) {
+    navigator.clipboard.writeText(kartNet.roomCode).then(() => {
+      alert('¡Código ' + kartNet.roomCode + ' copiado al portapapeles!');
+    });
+  }
+}
+
+function copyKartShareLink() {
+  if (kartNet.roomCode) {
+    const link = window.location.origin + window.location.pathname + '#kart=' + kartNet.roomCode;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('¡Enlace de invitación copiado! Compártelo por WhatsApp o mensaje:\n' + link);
+    });
+  }
+}
+
+// DETECTOR AUTOMÁTICO DE ENLACE DE INVITACIÓN (#kart=1234)
+function checkKartAutoJoinURL() {
+  try {
+    const hash = window.location.hash || '';
+    const search = window.location.search || '';
+    let code = null;
+
+    if (hash.includes('kart=')) {
+      code = hash.split('kart=')[1].split('&')[0];
+    } else if (search.includes('kart=')) {
+      const params = new URLSearchParams(search);
+      code = params.get('kart');
+    }
+
+    if (code) {
+      setTimeout(() => {
+        openKartGame();
+        openKartMultiplayerModal();
+        switchKartMpTab('join');
+        var input = document.getElementById('kart-mp-join-code');
+        if (input) input.value = code;
+        joinKartMultiplayerRoom(code);
+      }, 800);
+    }
+  } catch (e) {}
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkKartAutoJoinURL);
+} else {
+  checkKartAutoJoinURL();
+}
 
 
     // 1. Selector de Poses Dinámicas
