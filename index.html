@@ -3773,6 +3773,7 @@
         <button class="retro-btn" onclick="openPvPGame()" style="background:linear-gradient(180deg,#ff0055,#990033); color:#fff; font-weight:bold;">⚔️ Duelo 2 Players (PC)</button>
 
         <button class="retro-btn" onclick="openKartGame()" style="background:linear-gradient(180deg,#00ffff,#0088cc); color:#000; font-weight:bold;">🏎️ Malen Kart 2D (PC/Móvil)</button>
+        <button class="retro-btn" onclick="openContraGame()" style="background:linear-gradient(180deg,#ff5500,#990000); color:#fff; font-weight:bold;">💥 Contra Y2K (1P / 2P Online)</button>
 
         <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo</button>
 
@@ -4148,6 +4149,12 @@
 
   </div>
 
+  <!-- Botón flotante para Contra Y2K 2P -->
+  <div class="floating-doll-btn" onclick="openContraGame()" style="bottom: 170px; background: linear-gradient(135deg, #ff4400, #990000); color:#fff;" title="Jugar Contra: Operación Malenes 2004 (1P / 2P Online)">
+    <span>💥</span>
+    <span>Contra 2P</span>
+  </div>
+
 
 
   <!-- Notificación Toast -->
@@ -4243,7 +4250,113 @@
         <button class="retro-btn" onclick="closeKartGame()">🚪 Salir</button>
       </div>
 
-      <!-- Selector de Circuitos / Mapas -->
+      
+<!-- ============================================================
+     VENTANA ARCADE MODAL: CONTRA: OPERACIÓN MALENES (RED FALCON 2004)
+     ============================================================ -->
+<div class="arcade-modal-overlay" id="contra-modal-overlay" onclick="if(event.target.id==='contra-modal-overlay') closeContraGame()">
+  <div class="arcade-window" style="max-width:760px; width:96%;">
+    <div class="arcade-titlebar" style="background:linear-gradient(90deg, #ff4400, #aa0000, #ffcc00);">
+      <span>💥 Contra_Malenes_2004.exe — [Run & Gun Arcade • 1P & 2P Co-op Online WebRTC]</span>
+      <div class="win-btn close" onclick="closeContraGame()">X</div>
+    </div>
+    <div class="arcade-menubar" style="flex-wrap:wrap; gap:6px;">
+      <div style="display:flex; gap:5px; align-items:center;">
+        <button class="retro-btn" onclick="openContraMenu()">🏠 Menú</button>
+        <button class="retro-btn" id="btn-contra-mp" onclick="openContraMpModal()" style="background:linear-gradient(135deg, #ff4400, #ffcc00); color:#000; font-weight:bold; box-shadow:0 0 6px #ff4400;">👥 Multijugador (2P)</button>
+        <button class="retro-btn" onclick="triggerKonamiCode()" style="background:linear-gradient(135deg, #ff0055, #9900ff); color:#fff; font-weight:bold;">⭐ 30 Vidas (Konami)</button>
+        <button class="retro-btn" onclick="resetContraGame()">🔄 Reiniciar</button>
+        <button class="retro-btn" onclick="closeContraGame()">🚪 Salir</button>
+      </div>
+    </div>
+
+    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P (CONTRA CO-OP PRO) -->
+    <div class="kart-mp-dialog-overlay" id="contra-mp-dialog" style="display:none; position:absolute; top:36px; left:0; width:100%; height:calc(100% - 36px); background:rgba(15, 5, 0, 0.94); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
+      <div class="arcade-window" style="max-width:480px; width:94%; margin:10px auto; border:3px outset #ff4400; box-shadow:0 0 25px rgba(255,68,0,0.7); background:#200800;">
+        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #ff4400, #ffbb00);">
+          <span>👥 Contra Co-op Online (2 Dispositivos • WebRTC P2P)</span>
+          <div class="win-btn close" onclick="closeContraMpModal()">X</div>
+        </div>
+        <div style="background:#200800; color:#fff; padding:14px; font-family:var(--font-mono, monospace);">
+          <div style="display:flex; gap:8px; border-bottom:1px solid #662200; padding-bottom:8px; margin-bottom:12px;">
+            <button class="retro-btn active" id="tab-btn-contra-host" onclick="switchContraMpTab('host')">🏠 Crear Sala (Host / P1)</button>
+            <button class="retro-btn" id="tab-btn-contra-join" onclick="switchContraMpTab('join')">📱 Unirse a Sala (P2)</button>
+          </div>
+
+          <!-- Pestaña 1: Crear Sala (Host) -->
+          <div id="contra-mp-tab-host">
+            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace con tu compañero para jugar la campaña cooperativa en vivo:</p>
+            <button class="retro-btn" onclick="createContraRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
+            
+            <div id="contra-mp-host-info" style="display:none; background:#000; border:1px solid #ff4400; padding:10px; margin-bottom:10px; text-align:center;">
+              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
+              <div id="contra-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#ffcc00; letter-spacing:4px; margin:4px 0;">----</div>
+              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
+                <button class="retro-btn" onclick="copyContraRoomCode()">📋 Copiar Código</button>
+                <button class="retro-btn" onclick="copyContraShareLink()">🔗 Copiar Enlace Directo</button>
+              </div>
+              <div id="contra-mp-host-status" style="font-size:11px; color:#ff4400; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
+            </div>
+
+            <button id="btn-contra-mp-start" class="retro-btn" onclick="startCoopMissionAsHost()" style="display:none; background:linear-gradient(90deg, #ff4400, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡INICIAR MISIÓN CO-OP EN VIVO!</button>
+          </div>
+
+          <!-- Pestaña 2: Unirse a Sala (Guest) -->
+          <div id="contra-mp-tab-join" style="display:none;">
+            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala para unirte como P2 (Lance Bean):</p>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
+              <input type="text" id="contra-mp-player-name" value="Lance Bean" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff4400; padding:6px; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
+              <input type="text" id="contra-mp-join-code" placeholder="Ej: 2004" maxlength="6" style="width:100%; background:#000; color:#ffcc00; border:1px solid #ffcc00; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <button class="retro-btn" onclick="joinContraFromInput()" style="background:#ff4400; color:#fff; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA MISIÓN</button>
+            <div id="contra-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
+          </div>
+
+          <div style="margin-top:12px; border-top:1px dashed #662200; padding-top:8px; font-size:9px; color:#888; text-align:center;">
+            🌐 Conexión en tiempo real WebRTC punto a punto (sin intermediarios, 30 FPS sincronizados).
+          </div>
+          <div style="text-align:center; margin-top:10px;">
+            <button class="retro-btn" onclick="closeContraMpModal()">✖ Cerrar Ventana</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arcade-game-canvas-box">
+      <canvas id="contra-canvas" class="arcade-canvas" width="640" height="360" style="background:#000;"></canvas>
+
+      <!-- Controles táctiles virtuales para Móviles -->
+      <div class="mobile-kart-touch-controls mobile-contra-touch-controls" style="margin-top:8px;">
+        <div class="touch-dpad touch-contra-dpad" style="display:grid; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap:4px;">
+          <div></div>
+          <button class="touch-btn" ontouchstart="contraTouch.up=true" ontouchend="contraTouch.up=false" onmousedown="contraTouch.up=true" onmouseup="contraTouch.up=false" style="font-size:14px; width:40px; height:40px; border-radius:4px; border-color:#ff4400;">▲</button>
+          <div></div>
+          <button class="touch-btn" ontouchstart="contraTouch.left=true" ontouchend="contraTouch.left=false" onmousedown="contraTouch.left=true" onmouseup="contraTouch.left=false" style="font-size:14px; width:40px; height:40px; border-radius:4px; border-color:#ff4400;">◀</button>
+          <div></div>
+          <button class="touch-btn" ontouchstart="contraTouch.right=true" ontouchend="contraTouch.right=false" onmousedown="contraTouch.right=true" onmouseup="contraTouch.right=false" style="font-size:14px; width:40px; height:40px; border-radius:4px; border-color:#ff4400;">▶</button>
+          <div></div>
+          <button class="touch-btn" ontouchstart="contraTouch.down=true" ontouchend="contraTouch.down=false" onmousedown="contraTouch.down=true" onmouseup="contraTouch.down=false" style="font-size:14px; width:40px; height:40px; border-radius:4px; border-color:#ff4400;">▼</button>
+          <div></div>
+        </div>
+        <div class="touch-actions" style="gap:12px;">
+          <button class="touch-btn touch-gas-btn" ontouchstart="contraTouch.jump=true" ontouchend="contraTouch.jump=false" onmousedown="contraTouch.jump=true" onmouseup="contraTouch.jump=false" title="Saltar" style="background:linear-gradient(135deg, #0088ff, #0044aa); width:56px; height:56px; font-size:14px; border-radius:50%; border-color:#00ffff; color:#fff;">A<br><span style="font-size:9px;">SALTO</span></button>
+          <button class="touch-btn touch-item-btn" ontouchstart="contraTouch.shoot=true" ontouchend="contraTouch.shoot=false" onmousedown="contraTouch.shoot=true" onmouseup="contraTouch.shoot=false" title="Disparar" style="background:linear-gradient(135deg, #ff0044, #aa0022); width:56px; height:56px; font-size:14px; border-radius:50%; border-color:#ffcc00; color:#fff;">B<br><span style="font-size:9px;">FUEGO</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="arcade-footer-hints">
+      <div>🕹️ PC: Flechas o WASD = Mover y Apuntar • Z / Espacio = Salto • X = Disparo • Abajo+Z = Bajar plataforma • C = Konami Code (30 Vidas)</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Selector de Circuitos / Mapas -->
 
       <div style="display:flex; gap:4px; align-items:center;">
 
@@ -10688,8 +10801,9 @@ window.addEventListener('keydown', (e) => {
 
   const modal = document.getElementById('pvp-modal-overlay');
   const kartModal = document.getElementById('kart-modal-overlay');
+  const contraModal = document.getElementById('contra-modal-overlay');
 
-  if ((modal && modal.classList.contains('active')) || (kartModal && kartModal.classList.contains('active'))) {
+  if ((modal && modal.classList.contains('active')) || (kartModal && kartModal.classList.contains('active')) || (contraModal && contraModal.classList.contains('active'))) {
 
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
 
@@ -14434,7 +14548,2115 @@ if (document.readyState === 'loading') {
 }
 
 
-    // 1. Selector de Poses Dinámicas
+    
+// =========================================================================
+// CONTRA: OPERACIÓN MALENES (RED FALCON 2004) — MOTOR ARCADE RUN & GUN
+// =========================================================================
+
+const CONTRA_WIDTH = 640;
+const CONTRA_HEIGHT = 360;
+const CONTRA_GRAVITY = 0.65;
+const CONTRA_TERMINAL_VELOCITY = 11;
+
+let contraCanvas = null;
+let contraCtx = null;
+let contraAnimationId = null;
+let contraAudioCtx = null;
+
+// Controles táctiles móviles
+const contraTouch = {
+  left: false,
+  right: false,
+  up: false,
+  down: false,
+  jump: false,
+  shoot: false
+};
+
+// Configuración de red WebRTC Co-op
+const contraNet = {
+  peer: null,
+  conn: null,
+  isHost: false,
+  isConnected: false,
+  roomCode: null,
+  myRole: 'P1', // 'P1' (Malenes) o 'P2' (Neo)
+  playerName: 'Malenes (P1)',
+  remotePlayer: null,
+  syncInterval: null
+};
+
+// ESTADO GLOBAL DEL JUEGO CONTRA
+const contraGame = {
+  active: false,
+  state: 'menu', // 'menu', 'intro', 'playing', 'stageClear', 'bossIntro', 'gameOver', 'victory'
+  stage: 1,      // 1: Jungla, 2: Ascensor Vertical, 3: Fábrica Cyber, 4: Guarida Alien
+  cameraX: 0,
+  cameraY: 0,
+  stageWidth: 3400,
+  stageHeight: 360,
+  isVerticalStage: false,
+  gameTime: 0,
+
+  // Jugadores
+  p1: {
+    id: 'p1',
+    name: 'Malenes',
+    color: '#ff00bb',
+    accent: '#ffffff',
+    role: 'P1',
+    x: 60,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    width: 22,
+    height: 38,
+    facing: 1, // 1: derecha, -1: izquierda
+    aimX: 1,
+    aimY: 0,
+    isGrounded: false,
+    isJumping: false,
+    isCrouched: false,
+    isInWater: false,
+    weapon: 'R', // 'R': Rifle, 'M': Machine Gun, 'S': Spread Gun, 'L': Laser, 'F': Fireball, 'B': Barrier
+    lives: 3,
+    score: 0,
+    invulnerableTimer: 0,
+    barrierTimer: 0,
+    fireCooldown: 0,
+    somersaultAngle: 0,
+    alive: true,
+    respawnTimer: 0
+  },
+
+  p2: {
+    id: 'p2',
+    name: 'Neo (P2)',
+    color: '#00ffff',
+    accent: '#ffff00',
+    role: 'P2',
+    x: 30,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    width: 22,
+    height: 38,
+    facing: 1,
+    aimX: 1,
+    aimY: 0,
+    isGrounded: false,
+    isJumping: false,
+    isCrouched: false,
+    isInWater: false,
+    weapon: 'R',
+    lives: 3,
+    score: 0,
+    invulnerableTimer: 0,
+    barrierTimer: 0,
+    fireCooldown: 0,
+    somersaultAngle: 0,
+    alive: false, // Activo solo en Co-op
+    respawnTimer: 0
+  },
+
+  // Entidades activas en el escenario
+  bullets: [],
+  enemyBullets: [],
+  enemies: [],
+  boss: null,
+  platforms: [],
+  waterZones: [],
+  capsules: [], // Cápsulas voladoras con armas [S], [M], [L], [F], [B]
+  pickups: [],  // Insignias en el suelo
+  particles: [],
+  explosions: [],
+
+  // Código Konami
+  konamiSequence: [],
+  konamiActivated: false
+};
+
+// =========================================================================
+// DEFINICIÓN DE ETAPAS / STAGES (MÁS EXTENSO Y VARIADO QUE EL ORIGINAL)
+// =========================================================================
+const CONTRA_STAGES = {
+  1: {
+    name: 'MISIÓN 1: LA JUNGLA COSTERA DE NEÓN',
+    type: 'horizontal',
+    width: 3400,
+    height: 360,
+    bgColor: '#041220',
+    ambientDesc: 'Infiltración en la base costera de Red Falcon. Destruye la muralla sensor.',
+    bossName: 'Muralla Sensor Red Falcon',
+    bossX: 3050,
+    bossY: 170
+  },
+  2: {
+    name: 'MISIÓN 2: EL ASCENSOR DE LA FORTALEZA SKYFORTRESS',
+    type: 'vertical',
+    width: 640,
+    height: 3000,
+    bgColor: '#150524',
+    ambientDesc: 'Ascenso vertical hacia la cumbre de la torre blindada.',
+    bossName: 'Meca-Araña Centinela Y2K',
+    bossX: 320,
+    bossY: 280
+  },
+  3: {
+    name: 'MISIÓN 3: LA FÁBRICA DE CYBER-GLITCHES',
+    type: 'horizontal',
+    width: 3600,
+    height: 360,
+    bgColor: '#1a1005',
+    ambientDesc: 'Instalaciones industriales con cintas transportadoras y robots blindados.',
+    bossName: 'Titán Móvil Blindado',
+    bossX: 3200,
+    bossY: 200
+  },
+  4: {
+    name: 'MISIÓN 4: LA GUARIDA ALIENÍGENA BIOMECÁNICA',
+    type: 'horizontal',
+    width: 3800,
+    height: 360,
+    bgColor: '#240212',
+    ambientDesc: 'El corazón alienígena final. Erradica la colmena Red Falcon.',
+    bossName: 'Corazón Alienígena Goro Y2K',
+    bossX: 3400,
+    bossY: 160
+  }
+};
+
+// =========================================================================
+// CARGA Y CONSTRUCCIÓN DE ESCENARIOS
+// =========================================================================
+function buildContraStage(stageNum) {
+  contraGame.stage = stageNum;
+  const cfg = CONTRA_STAGES[stageNum] || CONTRA_STAGES[1];
+  contraGame.stageWidth = cfg.width;
+  contraGame.stageHeight = cfg.height;
+  contraGame.isVerticalStage = (cfg.type === 'vertical');
+  contraGame.cameraX = 0;
+  contraGame.cameraY = contraGame.isVerticalStage ? (cfg.height - CONTRA_HEIGHT) : 0;
+
+  contraGame.platforms = [];
+  contraGame.waterZones = [];
+  contraGame.enemies = [];
+  contraGame.capsules = [];
+  contraGame.pickups = [];
+  contraGame.bullets = [];
+  contraGame.enemyBullets = [];
+  contraGame.particles = [];
+  contraGame.explosions = [];
+
+  // 1. Construir plataformas y suelo según etapa
+  if (stageNum === 1) {
+    // Escenario 1: Jungla horizontal clásica
+    // Suelo base con huecos de agua y puentes
+    contraGame.platforms.push({ x: 0, y: 310, w: 600, h: 50, type: 'ground' });
+    contraGame.waterZones.push({ x: 600, y: 320, w: 220, h: 40 });
+    // Puente de madera sobre el agua
+    contraGame.platforms.push({ x: 600, y: 280, w: 220, h: 12, type: 'bridge', timer: 0 });
+
+    contraGame.platforms.push({ x: 820, y: 310, w: 700, h: 50, type: 'ground' });
+    // Plataformas elevadas en los árboles
+    contraGame.platforms.push({ x: 250, y: 230, w: 160, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 450, y: 170, w: 140, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 950, y: 230, w: 180, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 1200, y: 170, w: 160, h: 12, type: 'wood' });
+
+    // Fosa de agua 2
+    contraGame.waterZones.push({ x: 1520, y: 320, w: 240, h: 40 });
+    contraGame.platforms.push({ x: 1520, y: 280, w: 240, h: 12, type: 'bridge', timer: 0 });
+
+    contraGame.platforms.push({ x: 1760, y: 310, w: 1640, h: 50, type: 'ground' });
+    // Puestos elevados cerca de la muralla
+    contraGame.platforms.push({ x: 1900, y: 240, w: 150, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 2150, y: 180, w: 160, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 2450, y: 230, w: 180, h: 12, type: 'wood' });
+    contraGame.platforms.push({ x: 2750, y: 170, w: 200, h: 12, type: 'metal' });
+
+    // Boss 1: Muralla Sensor
+    contraGame.boss = {
+      name: 'Muralla Sensor Red Falcon',
+      type: 'sensorWall',
+      x: cfg.bossX,
+      y: cfg.bossY,
+      w: 140,
+      h: 150,
+      hp: 120,
+      maxHp: 120,
+      coreOpen: true,
+      coreTimer: 0,
+      subTurrets: [
+        { id: 1, relX: 20, relY: 100, hp: 35, alive: true, cooldown: 60 },
+        { id: 2, relX: 20, relY: 30, hp: 35, alive: true, cooldown: 90 },
+        { id: 3, relX: 80, relY: 20, hp: 45, alive: true, cooldown: 110 }
+      ],
+      active: false
+    };
+  }
+  else if (stageNum === 2) {
+    // Escenario 2: Ascenso Vertical (Skyfortress)
+    var stH = cfg.height;
+    for (var py = stH - 80; py >= 100; py -= 90) {
+      var px = (Math.sin(py * 0.02) * 160) + 240;
+      contraGame.platforms.push({ x: px, y: py, w: 160, h: 14, type: 'metal' });
+      // Plataforma secundaria lateral
+      var sideX = (px > 240) ? 60 : 440;
+      contraGame.platforms.push({ x: sideX, y: py - 40, w: 120, h: 12, type: 'grate' });
+    }
+    // Suelo base inicial
+    contraGame.platforms.push({ x: 0, y: stH - 30, w: 640, h: 40, type: 'metal' });
+
+    // Boss 2: Meca-Araña Centinela
+    contraGame.boss = {
+      name: 'Meca-Araña Centinela Y2K',
+      type: 'spiderMech',
+      x: 320,
+      y: 120,
+      w: 120,
+      h: 80,
+      hp: 160,
+      maxHp: 160,
+      moveDir: 1,
+      cooldown: 80,
+      active: false
+    };
+  }
+  else if (stageNum === 3) {
+    // Escenario 3: Fábrica Cyber
+    contraGame.platforms.push({ x: 0, y: 310, w: 1100, h: 50, type: 'metal' });
+    contraGame.platforms.push({ x: 400, y: 220, w: 200, h: 14, type: 'conveyor', speed: 1.5 });
+    contraGame.platforms.push({ x: 750, y: 160, w: 220, h: 14, type: 'metal' });
+
+    contraGame.platforms.push({ x: 1200, y: 310, w: 1100, h: 50, type: 'metal' });
+    contraGame.platforms.push({ x: 1350, y: 220, w: 250, h: 14, type: 'conveyor', speed: -1.5 });
+    contraGame.platforms.push({ x: 1750, y: 170, w: 200, h: 14, type: 'metal' });
+
+    contraGame.platforms.push({ x: 2400, y: 310, w: 1200, h: 50, type: 'metal' });
+
+    // Boss 3: Tanque Titán
+    contraGame.boss = {
+      name: 'Titán Móvil Blindado',
+      type: 'titanTank',
+      x: cfg.bossX,
+      y: cfg.bossY,
+      w: 180,
+      h: 110,
+      hp: 200,
+      maxHp: 200,
+      cooldown: 60,
+      active: false
+    };
+  }
+  else if (stageNum === 4) {
+    // Escenario 4: Guarida Alienígena
+    contraGame.platforms.push({ x: 0, y: 310, w: 3800, h: 50, type: 'alienFlesh' });
+    contraGame.platforms.push({ x: 300, y: 230, w: 150, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 550, y: 160, w: 160, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 900, y: 220, w: 180, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 1300, y: 180, w: 200, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 1700, y: 230, w: 200, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 2200, y: 170, w: 240, h: 14, type: 'alienBone' });
+    contraGame.platforms.push({ x: 2800, y: 220, w: 240, h: 14, type: 'alienBone' });
+
+    // Boss 4: Corazón Alienígena Goro
+    contraGame.boss = {
+      name: 'Corazón Alienígena Goro Y2K',
+      type: 'alienHeart',
+      x: cfg.bossX,
+      y: cfg.bossY,
+      w: 160,
+      h: 160,
+      hp: 250,
+      maxHp: 250,
+      pulse: 0,
+      cooldown: 45,
+      active: false
+    };
+  }
+
+  // Cápsulas voladoras con armas de Contra ([S], [M], [L], [F], [B])
+  spawnContraCapsules(stageNum);
+
+  // Inicializar posiciones de los jugadores
+  var startY = contraGame.isVerticalStage ? (cfg.height - 100) : 220;
+  contraGame.p1.x = 60;
+  contraGame.p1.y = startY;
+  contraGame.p1.vx = 0;
+  contraGame.p1.vy = 0;
+  contraGame.p1.alive = true;
+  contraGame.p1.invulnerableTimer = 120;
+
+  if (contraNet.isConnected) {
+    contraGame.p2.alive = true;
+    contraGame.p2.x = 30;
+    contraGame.p2.y = startY;
+    contraGame.p2.vx = 0;
+    contraGame.p2.vy = 0;
+    contraGame.p2.invulnerableTimer = 120;
+  }
+}
+
+// GENERAR CÁPSULAS VOLADORAS CON ARMAS ICÓNICAS
+function spawnContraCapsules(stageNum) {
+  var weapons = ['S', 'M', 'L', 'F', 'B']; // Spread, Machine Gun, Laser, Fireball, Barrier
+  var numCapsules = 6;
+  var stepX = Math.floor(contraGame.stageWidth / (numCapsules + 1));
+
+  for (var i = 1; i <= numCapsules; i++) {
+    var capX = i * stepX;
+    var capY = 110 + (i % 2) * 50;
+    contraGame.capsules.push({
+      id: i,
+      x: capX,
+      y: capY,
+      w: 28,
+      h: 18,
+      weapon: weapons[(i - 1) % weapons.length],
+      hp: 1,
+      alive: true
+    });
+  }
+}
+
+// INICIAR EL JUEGO CONTRA
+function openContraGame() {
+  const modal = document.getElementById('contra-modal-overlay');
+  if (modal) modal.classList.add('active');
+
+  contraCanvas = document.getElementById('contra-canvas');
+  if (contraCanvas) contraCtx = contraCanvas.getContext('2d');
+
+  contraGame.active = true;
+  contraGame.state = 'menu';
+  buildContraStage(1);
+  startContraLoop();
+}
+
+function closeContraGame() {
+  const modal = document.getElementById('contra-modal-overlay');
+  if (modal) modal.classList.remove('active');
+
+  contraGame.active = false;
+  if (contraAnimationId) cancelAnimationFrame(contraAnimationId);
+}
+
+function openContraMenu() {
+  contraGame.state = 'menu';
+  playContraSound('powerup');
+}
+
+function startContraSinglePlayer() {
+  contraNet.isConnected = false;
+  contraGame.p2.alive = false;
+  contraGame.p1.lives = contraGame.konamiActivated ? 30 : 3;
+  contraGame.p1.score = 0;
+  contraGame.p1.weapon = 'R';
+  buildContraStage(1);
+  contraGame.state = 'playing';
+  playContraSound('powerup');
+}
+
+function resetContraGame() {
+  contraGame.p1.lives = contraGame.konamiActivated ? 30 : 3;
+  contraGame.p1.score = 0;
+  contraGame.p1.weapon = 'R';
+  if (contraNet.isConnected) {
+    contraGame.p2.lives = contraGame.konamiActivated ? 30 : 3;
+    contraGame.p2.weapon = 'R';
+  }
+  buildContraStage(contraGame.stage);
+  contraGame.state = 'playing';
+  playContraSound('powerup');
+}
+
+// BUCLE PRINCIPAL DE JUEGO
+function startContraLoop() {
+  if (contraAnimationId) cancelAnimationFrame(contraAnimationId);
+
+  function loop() {
+    if (!contraGame.active) return;
+    contraGame.gameTime++;
+
+    if (contraGame.state === 'playing') {
+      updateContraPhysics();
+    }
+
+    renderContraScene();
+    contraAnimationId = requestAnimationFrame(loop);
+  }
+
+  contraAnimationId = requestAnimationFrame(loop);
+}
+
+// =========================================================================
+// MOTOR DE FÍSICAS Y CONTROLES RUN & GUN DE CONTRA
+// =========================================================================
+function updateContraPhysics() {
+  // 1. Control del Jugador 1 (Malenes)
+  updatePlayerPhysics(contraGame.p1);
+
+  // 2. Control del Jugador 2 (si está en Co-op local o interpolado P2P)
+  if (contraNet.isConnected && contraNet.remotePlayer) {
+    updateRemotePlayerInterpolation();
+  } else if (contraGame.p2.alive) {
+    updatePlayerPhysics(contraGame.p2);
+  }
+
+  // 3. Desplazamiento de Cámara (Scroll suave que sigue al jugador hacia adelante)
+  updateContraCamera();
+
+  // 4. Actualizar proyectiles y balas
+  updateContraBullets();
+
+  // 5. Generar oleadas de enemigos según el progreso
+  updateEnemySpawner();
+
+  // 6. Actualizar enemigos y jefes
+  updateEnemiesAndBoss();
+
+  // 7. Cápsulas e insignias de armas
+  updateCapsulesAndPickups();
+
+  // 8. Partículas y explosiones
+  updateParticles();
+}
+
+// FÍSICAS INDIVIDUALES DEL COMANDO
+function updatePlayerPhysics(p) {
+  if (!p.alive) {
+    if (p.lives > 0) {
+      p.respawnTimer--;
+      if (p.respawnTimer <= 0) {
+        // Respawn con paracaídas cayendo del cielo
+        p.alive = true;
+        p.x = contraGame.cameraX + 120;
+        p.y = contraGame.cameraY + 20;
+        p.vx = 0;
+        p.vy = 2;
+        p.invulnerableTimer = 180; // 3 segundos de gracia parpadeante
+        p.weapon = 'R';
+        playContraSound('powerup');
+      }
+    }
+    return;
+  }
+
+  if (p.invulnerableTimer > 0) p.invulnerableTimer--;
+  if (p.barrierTimer > 0) p.barrierTimer--;
+  if (p.fireCooldown > 0) p.fireCooldown--;
+
+  // Leer teclas y controles (PC + Móvil)
+  const keys = (typeof pvpKeys !== 'undefined') ? pvpKeys : {};
+  const isLeft = keys['ArrowLeft'] || keys['KeyA'] || contraTouch.left;
+  const isRight = keys['ArrowRight'] || keys['KeyD'] || contraTouch.right;
+  const isUp = keys['ArrowUp'] || keys['KeyW'] || contraTouch.up;
+  const isDown = keys['ArrowDown'] || keys['KeyS'] || contraTouch.down;
+  const isJump = keys['KeyK'] || keys['KeyX'] || keys['Space'] || contraTouch.jump;
+  const isShoot = keys['KeyJ'] || keys['KeyZ'] || contraTouch.shoot;
+
+  // Detección de agachado
+  p.isCrouched = (isDown && p.isGrounded && !isLeft && !isRight);
+
+  // Movimiento horizontal
+  if (isLeft && !p.isCrouched) {
+    p.vx = -3.2;
+    p.facing = -1;
+  } else if (isRight && !p.isCrouched) {
+    p.vx = 3.2;
+    p.facing = 1;
+  } else {
+    p.vx = 0;
+  }
+
+  // Cálculo de ángulo de disparo en 8 direcciones de Contra
+  p.aimX = p.facing;
+  p.aimY = 0;
+
+  if (isUp) {
+    if (isLeft || isRight) {
+      p.aimX = p.facing;
+      p.aimY = -1; // Diagonal arriba
+    } else {
+      p.aimX = 0;
+      p.aimY = -1; // Vertical hacia arriba
+    }
+  } else if (isDown) {
+    if (!p.isGrounded) {
+      if (isLeft || isRight) {
+        p.aimX = p.facing;
+        p.aimY = 1; // Diagonal abajo en el aire
+      } else {
+        p.aimX = 0;
+        p.aimY = 1; // Vertical hacia abajo en el aire
+      }
+    }
+  }
+
+  // Salto clásico con voltereta somersault
+  if (isJump && p.isGrounded && !p.isJumping) {
+    p.vy = -12.5;
+    p.isJumping = true;
+    p.isGrounded = false;
+    playContraSound('jump');
+  }
+
+  // Aplicar gravedad
+  p.vy = Math.min(CONTRA_TERMINAL_VELOCITY, p.vy + CONTRA_GRAVITY);
+
+  // Mover jugador en X e Y
+  p.x += p.vx;
+  p.y += p.vy;
+
+  // Animación de voltereta somersault en el aire
+  if (!p.isGrounded) {
+    p.somersaultAngle += (p.facing * 0.35);
+  } else {
+    p.somersaultAngle = 0;
+    p.isJumping = false;
+  }
+
+  // Colisión con plataformas
+  p.isGrounded = false;
+  contraGame.platforms.forEach(plat => {
+    // Colisión de suelo/plataforma desde arriba (one-way platforming)
+    if (p.vy >= 0 && (p.y + p.height) >= plat.y && (p.y + p.height) <= plat.y + 16) {
+      if (p.x + p.width > plat.x && p.x < plat.x + plat.w) {
+        p.y = plat.y - p.height;
+        p.vy = 0;
+        p.isGrounded = true;
+
+        // Efecto cinta transportadora
+        if (plat.type === 'conveyor') {
+          p.x += plat.speed;
+        }
+      }
+    }
+  });
+
+  // Detección de agua (nadar y sumergirse)
+  p.isInWater = false;
+  contraGame.waterZones.forEach(wz => {
+    if (p.x + p.width > wz.x && p.x < wz.x + wz.w && (p.y + p.height) >= wz.y) {
+      p.isInWater = true;
+      p.y = wz.y - p.height + 12;
+      p.vy = 0;
+      p.isGrounded = true;
+    }
+  });
+
+  // Limitar bordes según cámara
+  p.x = Math.max(contraGame.cameraX, Math.min(contraGame.cameraX + CONTRA_WIDTH - p.width, p.x));
+
+  // Disparo
+  if (isShoot && p.fireCooldown <= 0) {
+    fireContraWeapon(p);
+  }
+
+  // Caída al vacío
+  if (p.y > contraGame.stageHeight + 40) {
+    killContraPlayer(p);
+  }
+}
+
+// SISTEMA DE ARMAS Y DISPAROS CLÁSICOS DE CONTRA
+function fireContraWeapon(p) {
+  var originX = p.x + (p.facing === 1 ? p.width : 0);
+  var originY = p.y + (p.isCrouched ? 24 : 14);
+
+  // Normalizar vector de disparo
+  var len = Math.sqrt(p.aimX * p.aimX + p.aimY * p.aimY) || 1;
+  var dirX = p.aimX / len;
+  var dirY = p.aimY / len;
+
+  if (p.weapon === 'R') {
+    // R: Rifle normal
+    contraGame.bullets.push({
+      x: originX,
+      y: originY,
+      vx: dirX * 12,
+      vy: dirY * 12,
+      type: 'R',
+      damage: 1,
+      life: 60,
+      color: '#ffffff'
+    });
+    p.fireCooldown = 14;
+    playContraSound('shootRifle');
+  }
+  else if (p.weapon === 'M') {
+    // M: Ametralladora (Machine Gun) - Fuego automático continuo
+    contraGame.bullets.push({
+      x: originX,
+      y: originY,
+      vx: dirX * 14,
+      vy: dirY * 14,
+      type: 'M',
+      damage: 1.5,
+      life: 60,
+      color: '#ffcc00'
+    });
+    p.fireCooldown = 6;
+    playContraSound('shootRifle');
+  }
+  else if (p.weapon === 'S') {
+    // S: SPREAD GUN (¡La mítica escopeta abanico de 5 esferas rojas de Contra!)
+    var angles = [-0.28, -0.14, 0, 0.14, 0.28];
+    var baseAngle = Math.atan2(dirY, dirX);
+
+    angles.forEach(offset => {
+      var finalAngle = baseAngle + offset;
+      contraGame.bullets.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(finalAngle) * 11,
+        vy: Math.sin(finalAngle) * 11,
+        type: 'S',
+        radius: 6,
+        damage: 2,
+        life: 55,
+        color: '#ff0033'
+      });
+    });
+    p.fireCooldown = 18;
+    playContraSound('shootSpread');
+  }
+  else if (p.weapon === 'L') {
+    // L: Láser perforante continuo
+    contraGame.bullets.push({
+      x: originX,
+      y: originY,
+      vx: dirX * 18,
+      vy: dirY * 18,
+      type: 'L',
+      w: (dirX !== 0) ? 36 : 6,
+      h: (dirY !== 0) ? 36 : 6,
+      damage: 3.5,
+      life: 50,
+      piercing: true,
+      color: '#00ffff'
+    });
+    p.fireCooldown = 16;
+    playContraSound('shootLaser');
+  }
+  else if (p.weapon === 'F') {
+    // F: Fireball (Bolas de fuego en espiral que causan explosión en área)
+    contraGame.bullets.push({
+      x: originX,
+      y: originY,
+      vx: dirX * 9,
+      vy: dirY * 9,
+      rot: 0,
+      type: 'F',
+      radius: 9,
+      damage: 4,
+      life: 70,
+      color: '#ff6600'
+    });
+    p.fireCooldown = 20;
+    playContraSound('shootFire');
+  }
+
+  // Notificar disparo por WebRTC si estamos en multijugador
+  if (contraNet.isConnected && contraNet.conn) {
+    try {
+      contraNet.conn.send({
+        t: 'shoot',
+        x: Math.round(originX),
+        y: Math.round(originY),
+        dirX: dirX,
+        dirY: dirY,
+        weapon: p.weapon
+      });
+    } catch (e) {}
+  }
+}
+
+// DAÑO Y MUERTE DEL COMANDO
+function killContraPlayer(p) {
+  if (p.invulnerableTimer > 0 || p.barrierTimer > 0 || !p.alive) return;
+
+  p.alive = false;
+  p.lives--;
+  p.respawnTimer = 70; // Tiempo para reaparecer
+  spawnContraExplosion(p.x + p.width / 2, p.y + p.height / 2, 28, '#ff00bb');
+  playContraSound('explosion');
+
+  if (p.lives <= 0) {
+    // Comprobar si ambos jugadores perdieron todas las vidas
+    if (!contraNet.isConnected || (!contraGame.p1.alive && contraGame.p1.lives <= 0 && !contraGame.p2.alive && contraGame.p2.lives <= 0)) {
+      contraGame.state = 'gameOver';
+    }
+  }
+}
+
+// DESPLAZAMIENTO INTELIGENTE DE CÁMARA
+function updateContraCamera() {
+  if (contraGame.isVerticalStage) {
+    // Cámara vertical que sube conforme el jugador escala
+    var targetY = Math.min(contraGame.p1.y, (contraGame.p2.alive ? contraGame.p2.y : contraGame.p1.y)) - 140;
+    if (targetY < contraGame.cameraY) {
+      contraGame.cameraY += (targetY - contraGame.cameraY) * 0.1;
+    }
+    contraGame.cameraY = Math.max(0, Math.min(contraGame.stageHeight - CONTRA_HEIGHT, contraGame.cameraY));
+  } else {
+    // Cámara horizontal que avanza hacia la derecha
+    var targetX = Math.max(contraGame.p1.x, (contraGame.p2.alive ? contraGame.p2.x : contraGame.p1.x)) - 220;
+    if (targetX > contraGame.cameraX) {
+      contraGame.cameraX += (targetX - contraGame.cameraX) * 0.12;
+    }
+    contraGame.cameraX = Math.max(0, Math.min(contraGame.stageWidth - CONTRA_WIDTH, contraGame.cameraX));
+  }
+}
+
+// ACTUALIZACIÓN DE PROYECTILES
+function updateContraBullets() {
+  // 1. Balas de los jugadores contra enemigos y cápsulas
+  for (var b = contraGame.bullets.length - 1; b >= 0; b--) {
+    var bullet = contraGame.bullets[b];
+    bullet.x += bullet.vx;
+    bullet.y += bullet.vy;
+    bullet.life--;
+
+    // Impacto con cápsulas voladoras
+    contraGame.capsules.forEach(cap => {
+      if (cap.alive && Math.abs(bullet.x - cap.x) < 20 && Math.abs(bullet.y - cap.y) < 16) {
+        cap.alive = false;
+        bullet.life = 0;
+        // Soltar insignia en caída
+        contraGame.pickups.push({
+          x: cap.x,
+          y: cap.y,
+          vy: -2,
+          weapon: cap.weapon,
+          alive: true
+        });
+        spawnContraExplosion(cap.x, cap.y, 16, '#ffff00');
+        playContraSound('explosion');
+      }
+    });
+
+    // Impacto con enemigos normales
+    contraGame.enemies.forEach(en => {
+      if (en.alive && Math.abs(bullet.x - en.x) < en.w / 2 + 6 && Math.abs(bullet.y - en.y) < en.h / 2 + 6) {
+        en.hp -= bullet.damage;
+        if (!bullet.piercing) bullet.life = 0;
+        spawnContraExplosion(bullet.x, bullet.y, 10, '#ffffff');
+
+        if (en.hp <= 0) {
+          en.alive = false;
+          contraGame.p1.score += en.points || 100;
+          spawnContraExplosion(en.x, en.y, 22, '#ff6600');
+          playContraSound('explosion');
+        }
+      }
+    });
+
+    // Impacto con el Jefe de la etapa
+    var boss = contraGame.boss;
+    if (boss && boss.active && boss.hp > 0) {
+      // Impacto con sub-torretas
+      if (boss.subTurrets) {
+        boss.subTurrets.forEach(tur => {
+          if (tur.alive && Math.abs(bullet.x - (boss.x + tur.relX)) < 16 && Math.abs(bullet.y - (boss.y + tur.relY)) < 16) {
+            tur.hp -= bullet.damage;
+            bullet.life = 0;
+            if (tur.hp <= 0) {
+              tur.alive = false;
+              spawnContraExplosion(boss.x + tur.relX, boss.y + tur.relY, 26, '#ff0055');
+              playContraSound('bossExplosion');
+            }
+          }
+        });
+      }
+
+      // Impacto con el núcleo principal
+      if (Math.abs(bullet.x - (boss.x + boss.w / 2)) < boss.w / 2 && Math.abs(bullet.y - (boss.y + boss.h / 2)) < boss.h / 2) {
+        boss.hp -= bullet.damage;
+        bullet.life = 0;
+        spawnContraExplosion(bullet.x, bullet.y, 14, '#ff00bb');
+
+        if (boss.hp <= 0) {
+          boss.hp = 0;
+          boss.active = false;
+          triggerContraBossVictory();
+        }
+      }
+    }
+
+    if (bullet.life <= 0 || bullet.x < contraGame.cameraX - 50 || bullet.x > contraGame.cameraX + CONTRA_WIDTH + 50) {
+      contraGame.bullets.splice(b, 1);
+    }
+  }
+
+  // 2. Balas de enemigos contra jugadores
+  for (var eb = contraGame.enemyBullets.length - 1; eb >= 0; eb--) {
+    var eBullet = contraGame.enemyBullets[eb];
+    eBullet.x += eBullet.vx;
+    eBullet.y += eBullet.vy;
+    eBullet.life--;
+
+    // Impacto con P1
+    if (contraGame.p1.alive && Math.abs(eBullet.x - (contraGame.p1.x + 11)) < 12 && Math.abs(eBullet.y - (contraGame.p1.y + 19)) < 16) {
+      killContraPlayer(contraGame.p1);
+      contraGame.enemyBullets.splice(eb, 1);
+      continue;
+    }
+
+    // Impacto con P2
+    if (contraGame.p2.alive && Math.abs(eBullet.x - (contraGame.p2.x + 11)) < 12 && Math.abs(eBullet.y - (contraGame.p2.y + 19)) < 16) {
+      killContraPlayer(contraGame.p2);
+      contraGame.enemyBullets.splice(eb, 1);
+      continue;
+    }
+
+    if (eBullet.life <= 0 || eBullet.x < contraGame.cameraX - 50 || eBullet.x > contraGame.cameraX + CONTRA_WIDTH + 50) {
+      contraGame.enemyBullets.splice(eb, 1);
+    }
+  }
+}
+
+// SPAWNER DE ENEMIGOS EN OLEADAS
+function updateEnemySpawner() {
+  if (contraGame.gameTime % 90 === 0) {
+    // Soldado corredor clásico que entra por la derecha
+    var spawnX = contraGame.cameraX + CONTRA_WIDTH + 20;
+    var spawnY = 270;
+    contraGame.enemies.push({
+      x: spawnX,
+      y: spawnY,
+      vx: -2.4,
+      vy: 0,
+      w: 20,
+      h: 36,
+      hp: 1,
+      alive: true,
+      points: 100,
+      type: 'runner'
+    });
+  }
+
+  if (contraGame.gameTime % 220 === 0) {
+    // Soldado francotirador que dispara ráfagas rojas
+    var snipX = contraGame.cameraX + CONTRA_WIDTH + 10;
+    var snipY = 210;
+    contraGame.enemies.push({
+      x: snipX,
+      y: snipY,
+      vx: 0,
+      vy: 0,
+      w: 22,
+      h: 36,
+      hp: 3,
+      alive: true,
+      shootCooldown: 80,
+      points: 200,
+      type: 'sniper'
+    });
+  }
+}
+
+// ACTUALIZACIÓN DE ENEMIGOS Y COMPORTAMIENTO DE JEFES
+function updateEnemiesAndBoss() {
+  // 1. Enemigos ordinarios
+  contraGame.enemies.forEach(en => {
+    if (!en.alive) return;
+
+    if (en.type === 'runner') {
+      en.x += en.vx;
+    } else if (en.type === 'sniper') {
+      en.shootCooldown--;
+      if (en.shootCooldown <= 0) {
+        en.shootCooldown = 90;
+        // Disparo apuntado hacia el jugador
+        var targetX = contraGame.p1.x;
+        var targetY = contraGame.p1.y;
+        var angle = Math.atan2(targetY - en.y, targetX - en.x);
+        contraGame.enemyBullets.push({
+          x: en.x,
+          y: en.y + 10,
+          vx: Math.cos(angle) * 5,
+          vy: Math.sin(angle) * 5,
+          life: 90,
+          color: '#ff2222'
+        });
+      }
+    }
+
+    // Colisión cuerpo a cuerpo con el jugador
+    if (contraGame.p1.alive && Math.abs(en.x - (contraGame.p1.x + 11)) < 16 && Math.abs(en.y - (contraGame.p1.y + 19)) < 20) {
+      killContraPlayer(contraGame.p1);
+    }
+  });
+
+  // Limpiar enemigos fuera de pantalla
+  contraGame.enemies = contraGame.enemies.filter(en => en.alive && en.x > contraGame.cameraX - 80);
+
+  // 2. Comportamiento del Jefe de Nivel
+  var boss = contraGame.boss;
+  if (boss && !boss.active && contraGame.cameraX >= boss.x - CONTRA_WIDTH + 80) {
+    boss.active = true;
+    playContraSound('bossExplosion');
+  }
+
+  if (boss && boss.active && boss.hp > 0) {
+    boss.cooldown--;
+
+    if (boss.type === 'sensorWall') {
+      // Muralla Sensor: torretas disparan periódicamente
+      if (boss.subTurrets) {
+        boss.subTurrets.forEach(tur => {
+          if (!tur.alive) return;
+          tur.cooldown--;
+          if (tur.cooldown <= 0) {
+            tur.cooldown = 70 + Math.random() * 40;
+            contraGame.enemyBullets.push({
+              x: boss.x + tur.relX,
+              y: boss.y + tur.relY,
+              vx: -6,
+              vy: (Math.random() - 0.5) * 3,
+              life: 80,
+              color: '#ff0055'
+            });
+          }
+        });
+      }
+    } else if (boss.type === 'spiderMech') {
+      // Meca-Araña: oscila y dispara misiles guiados
+      boss.x += boss.moveDir * 2.2;
+      if (boss.x < 120 || boss.x > 500) boss.moveDir *= -1;
+
+      if (boss.cooldown <= 0) {
+        boss.cooldown = 75;
+        contraGame.enemyBullets.push({
+          x: boss.x,
+          y: boss.y + 40,
+          vx: (Math.random() - 0.5) * 5,
+          vy: 6,
+          life: 90,
+          color: '#00ffff'
+        });
+      }
+    } else if (boss.type === 'alienHeart') {
+      // Corazón Alienígena: palpita y dispara proyectiles orgánicos
+      boss.pulse = Math.sin(contraGame.gameTime * 0.1) * 8;
+      if (boss.cooldown <= 0) {
+        boss.cooldown = 50;
+        for (var a = 0; a < 3; a++) {
+          var ang = Math.PI - (a * 0.3);
+          contraGame.enemyBullets.push({
+            x: boss.x + 20,
+            y: boss.y + 80,
+            vx: Math.cos(ang) * 5.5,
+            vy: Math.sin(ang) * 5.5,
+            life: 85,
+            color: '#ff00aa'
+          });
+        }
+      }
+    }
+  }
+}
+
+// VICTORIA DE JEFE Y AVANCE DE ETAPA
+function triggerContraBossVictory() {
+  playContraSound('bossExplosion');
+
+  // Múltiples explosiones en cadena
+  for (var k = 0; k < 12; k++) {
+    setTimeout(() => {
+      var bx = contraGame.boss.x + Math.random() * contraGame.boss.w;
+      var by = contraGame.boss.y + Math.random() * contraGame.boss.h;
+      spawnContraExplosion(bx, by, 35, '#ffcc00');
+      playContraSound('explosion');
+    }, k * 180);
+  }
+
+  setTimeout(() => {
+    playContraSound('stageClear');
+    if (contraGame.stage < 4) {
+      contraGame.stage++;
+      buildContraStage(contraGame.stage);
+    } else {
+      contraGame.state = 'victory';
+    }
+  }, 2600);
+}
+
+// RECOGER INSIGNIAS DE ARMAS ([S], [M], [L], [F], [B])
+function updateCapsulesAndPickups() {
+  for (var i = contraGame.pickups.length - 1; i >= 0; i--) {
+    var p = contraGame.pickups[i];
+    p.y += p.vy;
+    p.vy = Math.min(4, p.vy + 0.2);
+
+    // Suelo
+    if (p.y > 300) {
+      p.y = 300;
+      p.vy = 0;
+    }
+
+    // Colisión con Jugador 1
+    if (contraGame.p1.alive && Math.abs(p.x - contraGame.p1.x) < 26 && Math.abs(p.y - contraGame.p1.y) < 32) {
+      applyWeaponPickup(contraGame.p1, p.weapon);
+      contraGame.pickups.splice(i, 1);
+      continue;
+    }
+
+    // Colisión con Jugador 2
+    if (contraGame.p2.alive && Math.abs(p.x - contraGame.p2.x) < 26 && Math.abs(p.y - contraGame.p2.y) < 32) {
+      applyWeaponPickup(contraGame.p2, p.weapon);
+      contraGame.pickups.splice(i, 1);
+      continue;
+    }
+  }
+}
+
+function applyWeaponPickup(player, weapon) {
+  if (weapon === 'B') {
+    player.barrierTimer = 600; // 10 segundos de escudo invencible
+  } else {
+    player.weapon = weapon;
+  }
+  playContraSound('powerup');
+}
+
+// PARTÍCULAS Y EXPLOSIONES
+function spawnContraExplosion(x, y, radius, color) {
+  contraGame.explosions.push({
+    x: x,
+    y: y,
+    radius: radius || 20,
+    maxRadius: (radius || 20) * 1.8,
+    color: color || '#ff5500',
+    alpha: 1.0
+  });
+
+  for (var i = 0; i < 8; i++) {
+    var ang = Math.random() * Math.PI * 2;
+    var spd = 2 + Math.random() * 4;
+    contraGame.particles.push({
+      x: x,
+      y: y,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd,
+      life: 25,
+      color: color || '#ffaa00'
+    });
+  }
+}
+
+function updateParticles() {
+  for (var e = contraGame.explosions.length - 1; e >= 0; e--) {
+    var exp = contraGame.explosions[e];
+    exp.radius += 1.8;
+    exp.alpha -= 0.055;
+    if (exp.alpha <= 0) contraGame.explosions.splice(e, 1);
+  }
+
+  for (var p = contraGame.particles.length - 1; p >= 0; p--) {
+    var part = contraGame.particles[p];
+    part.x += part.vx;
+    part.y += part.vy;
+    part.life--;
+    if (part.life <= 0) contraGame.particles.splice(p, 1);
+  }
+}
+
+// =========================================================================
+// RENDERIZADO VISUAL RETRO ARCADE DE CONTRA
+// =========================================================================
+function renderContraScene() {
+  if (!contraCanvas || !contraCtx) return;
+  const ctx = contraCtx;
+  const w = CONTRA_WIDTH;
+  const h = CONTRA_HEIGHT;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // 1. Fondo según etapa
+  const cfg = CONTRA_STAGES[contraGame.stage] || CONTRA_STAGES[1];
+  ctx.fillStyle = cfg.bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  // Gráficos ambientales de fondo con parallax
+  renderContraParallaxBackground(ctx, w, h);
+
+  ctx.save();
+  ctx.translate(-contraGame.cameraX, -contraGame.cameraY);
+
+  // 2. Plataformas del escenario
+  renderContraPlatforms(ctx);
+
+  // 3. Cápsulas voladoras e insignias de armas
+  renderContraCapsulesAndPickups(ctx);
+
+  // 4. Enemigos y Jefe
+  renderContraEnemiesAndBoss(ctx);
+
+  // 5. Jugadores
+  if (contraGame.p1.alive) renderContraPlayerSprite(ctx, contraGame.p1);
+  if (contraGame.p2.alive) renderContraPlayerSprite(ctx, contraGame.p2);
+
+  // 6. Balas
+  renderContraBullets(ctx);
+
+  // 7. Explosiones y partículas
+  renderContraExplosions(ctx);
+
+  ctx.restore();
+
+  // 8. HUD de Contra (Vidas, Puntos, Arma activa, Etapa actual)
+  renderContraHUD(ctx, w, h);
+
+  // 9. Pantallas de Estado (Menú, Victoria, Game Over)
+  if (contraGame.state === 'menu') {
+    renderContraMenuOverlay(ctx, w, h);
+  } else if (contraGame.state === 'gameOver') {
+    renderContraGameOver(ctx, w, h);
+  } else if (contraGame.state === 'victory') {
+    renderContraVictory(ctx, w, h);
+  }
+}
+
+// FONDO CON PARALLAX
+function renderContraParallaxBackground(ctx, w, h) {
+  var camX = contraGame.cameraX;
+
+  if (contraGame.stage === 1) {
+    // Cascada y montañas de noche
+    ctx.fillStyle = '#081a2c';
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for (var x = 0; x < w; x += 40) {
+      var my = h * 0.45 + Math.sin((x + camX * 0.2) * 0.02) * 25;
+      ctx.lineTo(x, my);
+    }
+    ctx.lineTo(w, h);
+    ctx.fill();
+  } else if (contraGame.stage === 2) {
+    // Vigas de la fortaleza
+    ctx.strokeStyle = '#22083a';
+    ctx.lineWidth = 2;
+    for (var gx = 0; gx < w; gx += 60) {
+      ctx.beginPath();
+      ctx.moveTo(gx, 0);
+      ctx.lineTo(gx, h);
+      ctx.stroke();
+    }
+  } else if (contraGame.stage === 4) {
+    // Paredes alienígenas con venas pulsantes
+    var pulse = Math.sin(contraGame.gameTime * 0.06) * 0.3 + 0.7;
+    ctx.fillStyle = `rgba(180, 0, 70, ${pulse * 0.25})`;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+// DIBUJAR PLATAFORMAS
+function renderContraPlatforms(ctx) {
+  contraGame.platforms.forEach(p => {
+    if (p.type === 'ground' || p.type === 'wood') {
+      ctx.fillStyle = (contraGame.stage === 1) ? '#1f441e' : '#222';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.strokeStyle = '#00ff88';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(p.x, p.y, p.w, p.h);
+    } else if (p.type === 'bridge') {
+      ctx.fillStyle = '#6b4226';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.strokeStyle = '#d79b63';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(p.x, p.y, p.w, p.h);
+    } else if (p.type === 'conveyor') {
+      ctx.fillStyle = '#333';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.strokeStyle = '#ffff00';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(p.x, p.y, p.w, p.h);
+    } else if (p.type === 'alienFlesh' || p.type === 'alienBone') {
+      ctx.fillStyle = '#660022';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.strokeStyle = '#ff007f';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(p.x, p.y, p.w, p.h);
+    } else {
+      ctx.fillStyle = '#1a1a24';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(p.x, p.y, p.w, p.h);
+    }
+  });
+
+  // Zonas de agua
+  contraGame.waterZones.forEach(wz => {
+    ctx.fillStyle = 'rgba(0, 150, 255, 0.45)';
+    ctx.fillRect(wz.x, wz.y, wz.w, wz.h);
+  });
+}
+
+// DIBUJAR SPRITE DEL COMANDO (MALENES P1 Y NEO P2)
+function renderContraPlayerSprite(ctx, p) {
+  ctx.save();
+  ctx.translate(p.x + p.width / 2, p.y + p.height / 2);
+
+  // Parpadeo de invulnerabilidad tras revivir
+  if (p.invulnerableTimer > 0 && Math.floor(Date.now() / 60) % 2 === 0) {
+    ctx.restore();
+    return;
+  }
+
+  // Aura de Escudo Barrera [B]
+  if (p.barrierTimer > 0) {
+    var auraHue = (contraGame.gameTime * 8) % 360;
+    ctx.strokeStyle = `hsl(${auraHue}, 100%, 65%)`;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, 0, 26, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Rotación por salto voltereta somersault
+  if (p.isJumping) {
+    ctx.rotate(p.somersaultAngle);
+    // Bola de voltereta somersault clásica
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(0, 0, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+    return;
+  }
+
+  ctx.scale(p.facing, 1);
+
+  // Sombra en suelo
+  if (p.isGrounded && !p.isInWater) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+    ctx.beginPath();
+    ctx.ellipse(0, 18, 12, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (p.isCrouched) {
+    // Modo agachado cuerpo a tierra
+    ctx.fillStyle = '#222'; // Pantalón
+    ctx.fillRect(-12, 8, 24, 10);
+    ctx.fillStyle = p.color; // Torso
+    ctx.fillRect(-8, 2, 16, 8);
+    ctx.fillStyle = '#fce4c8'; // Cabeza
+    ctx.beginPath();
+    ctx.arc(8, 2, 7, 0, Math.PI * 2);
+    ctx.fill();
+    // Cañón de rifle
+    ctx.fillStyle = '#888';
+    ctx.fillRect(8, 4, 16, 3);
+  } else {
+    // De pie o corriendo
+    // Piernas
+    var legOffset = (p.vx !== 0) ? Math.sin(contraGame.gameTime * 0.3) * 6 : 0;
+    ctx.fillStyle = '#222233';
+    ctx.fillRect(-8, 6, 6, 12 + legOffset);
+    ctx.fillRect(2, 6, 6, 12 - legOffset);
+
+    // Botas de combate
+    ctx.fillStyle = '#ff0055';
+    ctx.fillRect(-9, 14 + legOffset, 7, 5);
+    ctx.fillRect(1, 14 - legOffset, 7, 5);
+
+    // Torso con chaleco táctico
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-7, -8, 14, 15);
+    ctx.strokeStyle = p.accent;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-7, -8, 14, 15);
+
+    // Cabeza y pelo
+    ctx.fillStyle = '#fce4c8';
+    ctx.beginPath();
+    ctx.arc(0, -14, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cinta de comando roja/rosa (Malenes) o cian (Neo)
+    ctx.fillStyle = (p.role === 'P1') ? '#ff0055' : '#00ffff';
+    ctx.fillRect(-7, -18, 14, 4);
+
+    // Cabello glam de Malenes
+    if (p.role === 'P1') {
+      ctx.fillStyle = '#fae082';
+      ctx.beginPath();
+      ctx.arc(-2, -15, 6, Math.PI, 0);
+      ctx.fill();
+    }
+
+    // Rifle y ángulo de apuntado en 8 direcciones
+    ctx.save();
+    var gunAngle = Math.atan2(p.aimY, Math.abs(p.aimX));
+    ctx.translate(2, -2);
+    ctx.rotate(gunAngle);
+    ctx.fillStyle = '#666';
+    ctx.fillRect(0, -2, 18, 4);
+    ctx.fillStyle = '#aaa';
+    ctx.fillRect(14, -3, 6, 6);
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+// DIBUJAR BALAS
+function renderContraBullets(ctx) {
+  // Balas del jugador
+  contraGame.bullets.forEach(b => {
+    ctx.fillStyle = b.color;
+    if (b.type === 'S') {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius || 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    } else if (b.type === 'L') {
+      ctx.fillRect(b.x - b.w / 2, b.y - b.h / 2, b.w, b.h);
+    } else if (b.type === 'F') {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius || 7, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(b.x - 3, b.y - 3, 6, 6);
+    }
+  });
+
+  // Balas enemigas (esferas rojas brillantes)
+  contraGame.enemyBullets.forEach(eb => {
+    ctx.fillStyle = eb.color || '#ff0033';
+    ctx.beginPath();
+    ctx.arc(eb.x, eb.y, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffff00';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
+// DIBUJAR CÁPSULAS E INSIGNIAS DE ARMAS
+function renderContraCapsulesAndPickups(ctx) {
+  // Cápsulas voladoras
+  contraGame.capsules.forEach(cap => {
+    if (!cap.alive) return;
+    ctx.save();
+    ctx.translate(cap.x, cap.y);
+    // Halcón cápsula clásica de Contra
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, cap.w / 2, cap.h / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ff0033';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ff0000';
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(cap.weapon, 0, 0);
+    ctx.restore();
+  });
+
+  // Insignias caídas en el suelo
+  contraGame.pickups.forEach(pick => {
+    ctx.save();
+    ctx.translate(pick.x, pick.y);
+    ctx.fillStyle = '#00ffff';
+    ctx.fillRect(-10, -10, 20, 20);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-10, -10, 20, 20);
+
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 12px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pick.weapon, 0, 0);
+    ctx.restore();
+  });
+}
+
+// DIBUJAR ENEMIGOS Y JEFE
+function renderContraEnemiesAndBoss(ctx) {
+  // 1. Soldados enemigos
+  contraGame.enemies.forEach(en => {
+    if (!en.alive) return;
+    ctx.save();
+    ctx.translate(en.x, en.y);
+    ctx.fillStyle = '#881111';
+    ctx.fillRect(-en.w / 2, -en.h / 2, en.w, en.h);
+    ctx.strokeStyle = '#ff3333';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-en.w / 2, -en.h / 2, en.w, en.h);
+    ctx.restore();
+  });
+
+  // 2. Jefe de etapa
+  var boss = contraGame.boss;
+  if (boss && boss.active && boss.hp > 0) {
+    ctx.save();
+    ctx.translate(boss.x, boss.y);
+
+    if (boss.type === 'sensorWall') {
+      // Muralla Sensor
+      ctx.fillStyle = '#2b2b36';
+      ctx.fillRect(0, 0, boss.w, boss.h);
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(0, 0, boss.w, boss.h);
+
+      // Núcleo palpitante
+      ctx.fillStyle = (Math.floor(contraGame.gameTime / 10) % 2 === 0) ? '#ff0033' : '#ffff00';
+      ctx.beginPath();
+      ctx.arc(boss.w / 2, boss.h / 2, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sub-torretas
+      if (boss.subTurrets) {
+        boss.subTurrets.forEach(tur => {
+          if (!tur.alive) return;
+          ctx.fillStyle = '#ffaa00';
+          ctx.fillRect(tur.relX - 10, tur.relY - 10, 20, 20);
+        });
+      }
+    } else if (boss.type === 'spiderMech') {
+      // Meca-Araña
+      ctx.fillStyle = '#00ffff';
+      ctx.fillRect(0, 0, boss.w, boss.h);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(0, 0, boss.w, boss.h);
+    } else if (boss.type === 'alienHeart') {
+      // Corazón Alienígena
+      var pSize = 70 + (boss.pulse || 0);
+      ctx.fillStyle = '#ff0055';
+      ctx.beginPath();
+      ctx.arc(boss.w / 2, boss.h / 2, pSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Barra de vida del Jefe
+    var barW = 120;
+    var hpRatio = boss.hp / boss.maxHp;
+    ctx.fillStyle = '#000';
+    ctx.fillRect((boss.w - barW) / 2, -18, barW, 8);
+    ctx.fillStyle = '#ff0033';
+    ctx.fillRect((boss.w - barW) / 2, -18, barW * hpRatio, 8);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect((boss.w - barW) / 2, -18, barW, 8);
+
+    ctx.restore();
+  }
+}
+
+// DIBUJAR EXPLOSIONES
+function renderContraExplosions(ctx) {
+  contraGame.explosions.forEach(exp => {
+    ctx.save();
+    ctx.strokeStyle = exp.color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(exp.x, exp.y, exp.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  contraGame.particles.forEach(part => {
+    ctx.fillStyle = part.color;
+    ctx.fillRect(part.x - 2, part.y - 2, 4, 4);
+  });
+}
+
+// HUD CLÁSICO DE CONTRA (ARRIBA EN PANTALLA)
+function renderContraHUD(ctx, w, h) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(0, 0, w, 28);
+  ctx.strokeStyle = '#ff0055';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, w, 28);
+
+  ctx.font = 'bold 12px monospace';
+
+  // 1P: Vidas, Puntos y Arma activa
+  ctx.fillStyle = '#ff00bb';
+  var p1Text = `1P: ${contraGame.p1.score} | VIDAS: ${contraGame.p1.lives} | ARMA: [${contraGame.p1.weapon}]`;
+  ctx.fillText(p1Text, 12, 18);
+
+  // 2P: Si está activo
+  if (contraNet.isConnected || contraGame.p2.alive) {
+    ctx.fillStyle = '#00ffff';
+    var p2Text = `2P: ${contraGame.p2.score} | VIDAS: ${contraGame.p2.lives} | ARMA: [${contraGame.p2.weapon}]`;
+    ctx.fillText(p2Text, w - 240, 18);
+  } else {
+    // Etapa actual
+    ctx.fillStyle = '#ffcc00';
+    ctx.textAlign = 'right';
+    ctx.fillText(`ETAPA ${contraGame.stage} / 4`, w - 14, 18);
+  }
+
+  ctx.restore();
+}
+
+// PANTALLA DE MENÚ PRINCIPAL
+function renderContraMenuOverlay(ctx, w, h) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(5, 5, 15, 0.88)';
+  ctx.fillRect(0, 0, w, h);
+
+  // Logo CONTRA Y2K
+  ctx.fillStyle = '#ffff00';
+  ctx.strokeStyle = '#ff0033';
+  ctx.lineWidth = 5;
+  ctx.font = 'bold 36px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.strokeText('💥 CONTRA: OPERACIÓN MALENES', w / 2, 80);
+  ctx.fillText('💥 CONTRA: OPERACIÓN MALENES', w / 2, 80);
+
+  ctx.fillStyle = '#00ffff';
+  ctx.font = 'bold 12px monospace';
+  ctx.fillText('★ EDICIÓN ESPECIAL 2004 — CAMPAÑA COMPLETA 4 ETAPAS ★', w / 2, 115);
+
+  // Botón 1: 1 JUGADOR
+  var b1Y = 160;
+  ctx.fillStyle = '#00ff88';
+  ctx.fillRect(w / 2 - 120, b1Y, 240, 36);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(w / 2 - 120, b1Y, 240, 36);
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 15px "Trebuchet MS", sans-serif';
+  ctx.fillText('🎮 1 JUGADOR (CAMPAÑA)', w / 2, b1Y + 24);
+
+  // Botón 2: 2 JUGADORES ONLINE
+  var b2Y = 210;
+  ctx.fillStyle = '#00ffff';
+  ctx.fillRect(w / 2 - 120, b2Y, 240, 36);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(w / 2 - 120, b2Y, 240, 36);
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 15px "Trebuchet MS", sans-serif';
+  ctx.fillText('👥 2 JUGADORES (CO-OP P2P)', w / 2, b2Y + 24);
+
+  // Botón 3: CÓDIGO KONAMI 30 VIDAS
+  var b3Y = 260;
+  ctx.fillStyle = contraGame.konamiActivated ? '#ff00ff' : 'rgba(255, 255, 255, 0.15)';
+  ctx.fillRect(w / 2 - 120, b3Y, 240, 28);
+  ctx.strokeStyle = '#ffff00';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(w / 2 - 120, b3Y, 240, 28);
+  ctx.fillStyle = '#ffff00';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText(contraGame.konamiActivated ? '⭐ 30 VIDAS ACTIVADAS ⭐' : '⭐ ACTIVAR 30 VIDAS (KONAMI CODE)', w / 2, b3Y + 18);
+
+  ctx.fillStyle = '#aaaaaa';
+  ctx.font = '10px monospace';
+  ctx.fillText('PC: Flechas/WASD para mover, K/Espacio saltar, J/Z disparar | Móvil: Botones', w / 2, 330);
+
+  ctx.restore();
+}
+
+// GAME OVER
+function renderContraGameOver(ctx, w, h) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.fillStyle = '#ff0033';
+  ctx.font = 'bold 36px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('💀 GAME OVER 💀', w / 2, h * 0.4);
+
+  ctx.fillStyle = '#ffff00';
+  ctx.font = 'bold 14px monospace';
+  ctx.fillText('Pulsa [🏁 Reiniciar] para intentarlo de nuevo', w / 2, h * 0.6);
+  ctx.restore();
+}
+
+// VICTORIA FINAL
+function renderContraVictory(ctx, w, h) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(10, 0, 30, 0.9)';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.fillStyle = '#ffff00';
+  ctx.font = 'bold 32px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🏆 ¡MISIÓN CUMPLIDA! 🏆', w / 2, h * 0.32);
+
+  ctx.fillStyle = '#00ffff';
+  ctx.font = 'bold 16px monospace';
+  ctx.fillText('Has destruido a Red Falcon y salvado el imperio Y2K de Malenes', w / 2, h * 0.48);
+
+  ctx.fillStyle = '#ffaaee';
+  ctx.font = '12px monospace';
+  ctx.fillText(`Puntuación Final: ${contraGame.p1.score} Puntos`, w / 2, h * 0.62);
+  ctx.restore();
+}
+
+// =========================================================================
+// SINTETIZADOR DE EFECTOS DE AUDIO RETRO DE CONTRA (WEB AUDIO API)
+// =========================================================================
+function playContraSound(type) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    if (!contraAudioCtx) contraAudioCtx = new AudioContext();
+    if (contraAudioCtx.state === 'suspended') contraAudioCtx.resume();
+
+    const now = contraAudioCtx.currentTime;
+    const osc = contraAudioCtx.createOscillator();
+    const gain = contraAudioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(contraAudioCtx.destination);
+
+    if (type === 'shootRifle') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'shootSpread') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.12);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } else if (type === 'shootLaser') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.14);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+      osc.start(now);
+      osc.stop(now + 0.14);
+    } else if (type === 'shootFire') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      osc.start(now);
+      osc.stop(now + 0.18);
+    } else if (type === 'jump') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(540, now + 0.12);
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } else if (type === 'explosion') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(30, now + 0.22);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.start(now);
+      osc.stop(now + 0.22);
+    } else if (type === 'bossExplosion') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(90, now);
+      osc.frequency.exponentialRampToValueAtTime(20, now + 0.5);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc.start(now);
+      osc.stop(now + 0.5);
+    } else if (type === 'powerup') {
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const o = contraAudioCtx.createOscillator();
+        const g = contraAudioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.value = freq;
+        o.connect(g);
+        g.connect(contraAudioCtx.destination);
+        const t = now + (idx * 0.08);
+        g.gain.setValueAtTime(0.08, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+        o.start(t);
+        o.stop(t + 0.2);
+      });
+    } else if (type === 'stageClear') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+        const o = contraAudioCtx.createOscillator();
+        const g = contraAudioCtx.createGain();
+        o.type = 'square';
+        o.frequency.value = freq;
+        o.connect(g);
+        g.connect(contraAudioCtx.destination);
+        const t = now + (idx * 0.12);
+        g.gain.setValueAtTime(0.1, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        o.start(t);
+        o.stop(t + 0.3);
+      });
+    }
+  } catch (e) {}
+}
+
+// CÓDIGO KONAMI (30 VIDAS)
+function triggerKonamiCode() {
+  contraGame.konamiActivated = true;
+  contraGame.p1.lives = 30;
+  if (contraGame.p2.alive) contraGame.p2.lives = 30;
+  playContraSound('powerup');
+  alert('⭐ ¡CÓDIGO KONAMI ACTIVADO! ⭐\nHas desbloqueado 30 VIDAS para la misión.');
+}
+
+// =========================================================================
+// MULTIJUGADOR CO-OP ONLINE WEBRTC P2P PARA CONTRA
+// =========================================================================
+function initContraPeer(callback) {
+  if (typeof Peer === 'undefined') {
+    alert('Cargando librería de red... intenta de nuevo en un segundo.');
+    return;
+  }
+  if (contraNet.peer && !contraNet.peer.destroyed) {
+    if (callback) callback();
+    return;
+  }
+
+  contraNet.peer = new Peer(null, {
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    }
+  });
+
+  contraNet.peer.on('open', () => {
+    if (callback) callback();
+  });
+}
+
+// CREAR SALA CO-OP (HOST / P1 MALENES)
+function createContraRoom() {
+  initContraPeer(() => {
+    const rawCode = Math.floor(1000 + Math.random() * 9000).toString();
+    contraNet.roomCode = rawCode;
+    contraNet.isHost = true;
+    contraNet.myRole = 'P1';
+
+    const hostPeerId = 'contra-room-' + rawCode;
+    if (contraNet.peer) contraNet.peer.destroy();
+
+    contraNet.peer = new Peer(hostPeerId, {
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      }
+    });
+
+    contraNet.peer.on('open', () => {
+      document.getElementById('contra-mp-host-info').style.display = 'block';
+      document.getElementById('contra-mp-room-code-display').textContent = rawCode;
+      document.getElementById('contra-mp-host-status').textContent = '⏳ Esperando que el Jugador 2 se una...';
+      playContraSound('powerup');
+    });
+
+    contraNet.peer.on('connection', (conn) => {
+      setupContraNetConnection(conn);
+    });
+
+    contraNet.peer.on('error', (err) => {
+      if (err.type === 'unavailable-id') createContraRoom();
+    });
+  });
+}
+
+// UNIRSE A SALA CO-OP (GUEST / P2 NEO)
+function joinContraRoom(code) {
+  if (!code) return;
+  code = code.toString().trim().toUpperCase().replace(/[^0-9A-Z]/g, '');
+
+  var nameInput = document.getElementById('contra-mp-player-name');
+  var customName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Neo (P2)';
+
+  var statusEl = document.getElementById('contra-mp-join-status');
+  if (statusEl) statusEl.textContent = '⏳ Conectando a sala Co-op ' + code + '...';
+
+  initContraPeer(() => {
+    contraNet.isHost = false;
+    contraNet.myRole = 'P2';
+    contraNet.playerName = customName;
+    contraNet.roomCode = code;
+
+    const targetPeerId = 'contra-room-' + code;
+    const conn = contraNet.peer.connect(targetPeerId, { reliable: true });
+
+    conn.on('open', () => {
+      setupContraNetConnection(conn);
+    });
+
+    conn.on('error', () => {
+      if (statusEl) statusEl.textContent = '❌ Error al conectar a sala ' + code;
+    });
+  });
+}
+
+function joinContraFromInput() {
+  var input = document.getElementById('contra-mp-join-code');
+  if (input && input.value.trim()) {
+    joinContraRoom(input.value.trim());
+  } else {
+    alert('Ingresa el código de 4 dígitos de la sala.');
+  }
+}
+
+// HANDLERS DE CONEXIÓN WEBRTC
+function setupContraNetConnection(conn) {
+  contraNet.conn = conn;
+  contraNet.isConnected = true;
+  contraGame.p2.alive = true;
+
+  conn.on('open', () => {
+    playContraSound('powerup');
+    if (contraNet.isHost) {
+      document.getElementById('contra-mp-host-status').innerHTML = '🟢 <b>¡Jugador 2 Conectado!</b> Listos para la misión.';
+      document.getElementById('btn-contra-mp-start').style.display = 'block';
+    } else {
+      var statusEl = document.getElementById('contra-mp-join-status');
+      if (statusEl) statusEl.innerHTML = '🟢 <b>¡Conectado!</b> Esperando al Host para desplegar...';
+    }
+
+    startContraNetTelemetry();
+  });
+
+  conn.on('data', (data) => {
+    handleContraNetData(data);
+  });
+
+  conn.on('close', () => {
+    contraNet.isConnected = false;
+    alert('El otro jugador se ha desconectado de la misión.');
+  });
+}
+
+// TELEMETRÍA CO-OP A 30 FPS
+function startContraNetTelemetry() {
+  if (contraNet.syncInterval) clearInterval(contraNet.syncInterval);
+  contraNet.syncInterval = setInterval(() => {
+    if (!contraNet.conn || !contraNet.isConnected) return;
+    var myPlayer = contraNet.isHost ? contraGame.p1 : contraGame.p2;
+
+    try {
+      contraNet.conn.send({
+        t: 'sync',
+        x: Math.round(myPlayer.x),
+        y: Math.round(myPlayer.y),
+        vx: myPlayer.vx,
+        vy: myPlayer.vy,
+        facing: myPlayer.facing,
+        aimX: myPlayer.aimX,
+        aimY: myPlayer.aimY,
+        crouch: myPlayer.isCrouched,
+        jump: myPlayer.isJumping,
+        ground: myPlayer.isGrounded,
+        water: myPlayer.isInWater,
+        weapon: myPlayer.weapon,
+        lives: myPlayer.lives,
+        score: myPlayer.score,
+        alive: myPlayer.alive,
+        angle: myPlayer.somersaultAngle
+      });
+    } catch (e) {}
+  }, 33);
+}
+
+// PROCESAMIENTO DE PAQUETES CO-OP
+function handleContraNetData(data) {
+  if (!data || !data.t) return;
+
+  if (data.t === 'sync') {
+    var rem = contraNet.isHost ? contraGame.p2 : contraGame.p1;
+    rem.x += (data.x - rem.x) * 0.45;
+    rem.y += (data.y - rem.y) * 0.45;
+    rem.vx = data.vx;
+    rem.vy = data.vy;
+    rem.facing = data.facing;
+    rem.aimX = data.aimX;
+    rem.aimY = data.aimY;
+    rem.isCrouched = data.crouch;
+    rem.isJumping = data.jump;
+    rem.isGrounded = data.ground;
+    rem.isInWater = data.water;
+    rem.weapon = data.weapon;
+    rem.lives = data.lives;
+    rem.score = data.score;
+    rem.alive = data.alive;
+    rem.somersaultAngle = data.angle;
+  }
+  else if (data.t === 'shoot') {
+    // Generar bala del compañero en este cliente
+    contraGame.bullets.push({
+      x: data.x,
+      y: data.y,
+      vx: data.dirX * 12,
+      vy: data.dirY * 12,
+      type: data.weapon,
+      damage: 1.5,
+      life: 60,
+      color: '#00ffff'
+    });
+    playContraSound('shootRifle');
+  }
+  else if (data.t === 'startCoop') {
+    closeContraMpModal();
+    buildContraStage(data.stage || 1);
+    contraGame.state = 'playing';
+    playContraSound('powerup');
+  }
+}
+
+// INICIAR MISIÓN CO-OP COMO HOST
+function startCoopMissionAsHost() {
+  if (!contraNet.conn || !contraNet.isConnected) return;
+  contraNet.conn.send({
+    t: 'startCoop',
+    stage: 1
+  });
+
+  closeContraMpModal();
+  buildContraStage(1);
+  contraGame.state = 'playing';
+  playContraSound('powerup');
+}
+
+// UI DEL MODAL MULTIJUGADOR DE CONTRA
+function openContraMpModal() {
+  var modal = document.getElementById('contra-mp-dialog');
+  if (modal) modal.style.display = 'block';
+  playContraSound('powerup');
+}
+
+function closeContraMpModal() {
+  var modal = document.getElementById('contra-mp-dialog');
+  if (modal) modal.style.display = 'none';
+}
+
+function switchContraMpTab(tab) {
+  document.getElementById('contra-mp-tab-host').style.display = (tab === 'host') ? 'block' : 'none';
+  document.getElementById('contra-mp-tab-join').style.display = (tab === 'join') ? 'block' : 'none';
+
+  document.getElementById('tab-btn-contra-host').classList.toggle('active', tab === 'host');
+  document.getElementById('tab-btn-contra-join').classList.toggle('active', tab === 'join');
+}
+
+function copyContraRoomCode() {
+  if (contraNet.roomCode) {
+    navigator.clipboard.writeText(contraNet.roomCode).then(() => {
+      alert('¡Código Co-op ' + contraNet.roomCode + ' copiado al portapapeles!');
+    });
+  }
+}
+
+function copyContraShareLink() {
+  if (contraNet.roomCode) {
+    const link = window.location.origin + window.location.pathname + '#contra=' + contraNet.roomCode;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('¡Enlace de invitación Co-op copiado! Compártelo con tu compañero:\n' + link);
+    });
+  }
+}
+
+// DETECTOR DE AUTO-JOIN PARA CONTRA (#contra=2004)
+function checkContraAutoJoinURL() {
+  try {
+    const hash = window.location.hash || '';
+    const search = window.location.search || '';
+    let code = null;
+
+    if (hash.includes('contra=')) {
+      code = hash.split('contra=')[1].split('&')[0];
+    } else if (search.includes('contra=')) {
+      const params = new URLSearchParams(search);
+      code = params.get('contra');
+    }
+
+    if (code) {
+      setTimeout(() => {
+        openContraGame();
+        openContraMpModal();
+        switchContraMpTab('join');
+        var input = document.getElementById('contra-mp-join-code');
+        if (input) input.value = code;
+        joinContraRoom(code);
+      }, 1000);
+    }
+  } catch (e) {}
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', checkContraAutoJoinURL);
+} else {
+  checkContraAutoJoinURL();
+}
+
+// MANEJADOR DE CLIC EN EL CANVAS DE CONTRA
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('contra-canvas');
+  if (canvas) {
+    function handleContraMenuClick(clientX, clientY) {
+      if (contraGame.state !== 'menu') return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+
+      // Botón 1: 1 JUGADOR (y: 160 a 196)
+      if (x >= (canvas.width / 2 - 120) && x <= (canvas.width / 2 + 120) && y >= 160 && y <= 196) {
+        startContraSinglePlayer();
+        return;
+      }
+
+      // Botón 2: 2 JUGADORES (y: 210 a 246)
+      if (x >= (canvas.width / 2 - 120) && x <= (canvas.width / 2 + 120) && y >= 210 && y <= 246) {
+        openContraMpModal();
+        return;
+      }
+
+      // Botón 3: CÓDIGO KONAMI 30 VIDAS (y: 260 a 288)
+      if (x >= (canvas.width / 2 - 120) && x <= (canvas.width / 2 + 120) && y >= 260 && y <= 288) {
+        triggerKonamiCode();
+        return;
+      }
+    }
+
+    canvas.addEventListener('click', (e) => {
+      handleContraMenuClick(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (contraGame.state === 'menu' && e.touches && e.touches.length > 0) {
+        e.preventDefault();
+        handleContraMenuClick(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+  }
+});
+
+
+// 1. Selector de Poses Dinámicas
 
     function setDollPose(poseName) {
 
