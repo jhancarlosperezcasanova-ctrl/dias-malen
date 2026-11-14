@@ -3774,6 +3774,7 @@
 
         <button class="retro-btn" onclick="openKartGame()" style="background:linear-gradient(180deg,#00ffff,#0088cc); color:#000; font-weight:bold;">🏎️ Malen Kart 2D (PC/Móvil)</button>
         <button class="retro-btn" onclick="openContraGame()" style="background:linear-gradient(180deg,#ff5500,#990000); color:#fff; font-weight:bold;">💥 Contra Y2K (1P / 2P Online)</button>
+        <button class="retro-btn" onclick="openCrushGame()" style="background:linear-gradient(180deg,#ff007f,#660099); color:#fff; font-weight:bold;">🍬 Malen Crush (PC/Móvil)</button>
 
         <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo</button>
 
@@ -4155,6 +4156,12 @@
     <span>Contra 2P</span>
   </div>
 
+  <!-- Botón flotante para Malen Crush Y2K -->
+  <div class="floating-doll-btn" onclick="openCrushGame()" style="bottom: 220px; background: linear-gradient(135deg, #ff007f, #9900ff); color:#fff;" title="Jugar Malen Crush Saga Y2K">
+    <span>🍬</span>
+    <span>Crush</span>
+  </div>
+
 
 
   <!-- Notificación Toast -->
@@ -4399,6 +4406,70 @@
     </div>
   </div>
 </div>
+
+<!-- =========================================================================
+     MODAL JUEGO 4: MALEN CRUSH Y2K (SAGA DE DULCES & JOYAS RETRO - PC & MÓVIL)
+     ========================================================================= -->
+<div class="arcade-modal-overlay" id="crush-modal-overlay" onclick="if(event.target.id==='crush-modal-overlay') closeCrushGame()">
+  <div class="arcade-window" style="max-width:520px; width:96%;">
+    <div class="arcade-titlebar" style="background:linear-gradient(90deg, #ff007f, #9900ff, #00ffff);">
+      <span>🍬 Malen_Crush_Saga_2004.exe — [Saga de Dulces Y2K • PC & Móvil]</span>
+      <div class="win-btn close" onclick="closeCrushGame()">X</div>
+    </div>
+    <div class="arcade-menubar" style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; gap:6px;">
+        <button class="retro-btn" onclick="openCrushMap()">🗺️ Mapa Saga</button>
+        <button class="retro-btn" onclick="restartCurrentCrushLevel()">🔄 Reintentar</button>
+        <button class="retro-btn" onclick="closeCrushGame()">🚪 Salir</button>
+      </div>
+      <div style="font-size:10px; color:#ff00bb; font-weight:bold;">
+        🍭 MATCH-3 Y2K EDITION
+      </div>
+    </div>
+
+    <!-- HUD Superior del Nivel -->
+    <div class="crush-hud" style="display:flex; justify-content:space-between; align-items:center; background:#1c0326; border-bottom:2px outset #ff00bb; padding:8px 12px; color:#fff; font-family:var(--font-mono, monospace);">
+      <div>
+        <div id="crush-hud-title" style="font-size:12px; font-weight:bold; color:#ffcc00;">Nivel 1: Dulce Bienvenida</div>
+        <div id="crush-hud-target" style="font-size:10px; color:#00ffff;">Meta: 4,500</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:9px; color:#aaa;">MOVIMIENTOS</div>
+        <div id="crush-hud-moves" style="font-size:22px; font-weight:bold; color:#ff00bb;">18</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:9px; color:#aaa;">PUNTUACIÓN</div>
+        <div id="crush-hud-score" style="font-size:18px; font-weight:bold; color:#00ff88;">0</div>
+      </div>
+    </div>
+
+    <!-- Contenedor del Tablero Canvas -->
+    <div class="arcade-game-canvas-box" style="padding:4px; background:#000;">
+      <canvas id="crush-canvas" class="arcade-canvas" width="480" height="520" style="max-width:100%; height:auto; display:block; margin:0 auto; background:#000; touch-action:none;"></canvas>
+    </div>
+
+    <!-- Barra de Boosters / Potenciadores -->
+    <div class="crush-boosters" style="display:flex; justify-content:space-around; align-items:center; background:#12011c; border-top:2px outset #ff00bb; padding:6px 8px; flex-wrap:wrap; gap:4px;">
+      <button class="retro-btn" onclick="activateCrushBooster('hammer')" title="Martillo Piruleta: Rompe un caramelo o bloque" style="display:flex; align-items:center; gap:4px; font-size:10px; padding:3px 6px;">
+        <span>🔨</span><span>Martillo (<span id="crush-b-hammer-count">3</span>)</span>
+      </button>
+      <button class="retro-btn" onclick="activateCrushBooster('switch')" title="Cambio Libre: Intercambia 2 caramelos adyacentes" style="display:flex; align-items:center; gap:4px; font-size:10px; padding:3px 6px;">
+        <span>🔄</span><span>Cambio (<span id="crush-b-switch-count">3</span>)</span>
+      </button>
+      <button class="retro-btn" onclick="activateCrushBooster('bomb')" title="Bomba Disco: Genera una bola de color" style="display:flex; align-items:center; gap:4px; font-size:10px; padding:3px 6px;">
+        <span>🪩</span><span>Bomba (<span id="crush-b-bomb-count">2</span>)</span>
+      </button>
+      <button class="retro-btn" onclick="activateCrushBooster('moves')" title="+5 Movimientos Extra" style="display:flex; align-items:center; gap:4px; font-size:10px; padding:3px 6px;">
+        <span>➕5</span><span>Extra (<span id="crush-b-moves-count">2</span>)</span>
+      </button>
+    </div>
+
+    <div class="arcade-footer-hints">
+      <div>🍬 Desliza o toca dos caramelos contiguos para combinarlos • Combina 4 para rayados, 5 en línea para bola disco 🪩</div>
+    </div>
+  </div>
+</div>
+
 
 <!-- =========================================================================
 
@@ -10870,7 +10941,20 @@ function closeAllGameModals() {
     contraAnimationId = null;
   }
 
-  // 4. Dollz Studio
+  // 4. Malen Crush Saga
+  const crushModal = document.getElementById('crush-modal-overlay');
+  if (crushModal) crushModal.classList.remove('active');
+  if (typeof crushGame !== 'undefined') crushGame.active = false;
+  if (typeof crushAnimId !== 'undefined' && crushAnimId) {
+    cancelAnimationFrame(crushAnimId);
+    crushAnimId = null;
+  }
+  if (typeof crushGame !== 'undefined' && crushGame.timerInterval) {
+    clearInterval(crushGame.timerInterval);
+    crushGame.timerInterval = null;
+  }
+
+  // 5. Dollz Studio
   const dollModal = document.getElementById('doll-modal-overlay');
   if (dollModal) dollModal.classList.remove('active');
   if (typeof stopGlitterAnimation === 'function') stopGlitterAnimation();
@@ -16631,6 +16715,1630 @@ document.addEventListener('DOMContentLoaded', () => {
         handleContraMenuClick(e.touches[0].clientX, e.touches[0].clientY);
       }
     }, { passive: false });
+  }
+});
+
+
+
+// =========================================================================
+// MALEN CRUSH Y2K: SAGA DE DULCES & JOYAS RETRO — MOTOR COMPLETO MATCH-3
+// =========================================================================
+
+const CRUSH_COLS = 8;
+const CRUSH_ROWS = 8;
+const CRUSH_CELL = 44; // Tamaño de celda en px dentro del canvas
+const CRUSH_WIDTH = 480;
+const CRUSH_HEIGHT = 520;
+const CRUSH_OFFSET_X = 64; // Centrado horizontal
+const CRUSH_OFFSET_Y = 110; // Espacio superior para HUD
+
+let crushCanvas = null;
+let crushCtx = null;
+let crushAnimId = null;
+let crushAudioCtx = null;
+
+// Colores e Íconos de Caramelos Y2K
+const CRUSH_CANDIES = [
+  { id: 0, name: 'corazon', color: '#ff007f', icon: '💖', label: 'Corazón Fresa' },
+  { id: 1, name: 'diamante', color: '#00e5ff', icon: '💎', label: 'Diamante Cyan' },
+  { id: 2, name: 'estrella', color: '#ffcc00', icon: '⭐', label: 'Estrella Dorada' },
+  { id: 3, name: 'uva', color: '#b000ff', icon: '🟣', label: 'Gema Uva Y2K' },
+  { id: 4, name: 'menta', color: '#00ff66', icon: '🟢', label: 'Burbuja Menta' },
+  { id: 5, name: 'naranja', color: '#ff6600', icon: '🍊', label: 'Gota Naranja' }
+];
+
+// Definición de Niveles de la Saga
+const CRUSH_LEVELS = [
+  {
+    level: 1,
+    title: 'Nivel 1: Dulce Bienvenida',
+    targetScore: 4500,
+    moves: 18,
+    type: 'score', // 'score', 'jelly', 'frosting', 'ingredients', 'time'
+    description: 'Consigue 4,500 puntos antes de que se acaben los 18 movimientos.',
+    stars: [2000, 3500, 4500]
+  },
+  {
+    level: 2,
+    title: 'Nivel 2: Limpieza de Gelatina',
+    targetScore: 6000,
+    moves: 20,
+    type: 'jelly',
+    description: 'Elimina las 16 casillas de Gelatina rosa haciendo combinaciones sobre ellas.',
+    jellyLayout: [
+      [2,2],[2,3],[2,4],[2,5],
+      [3,2],[3,3],[3,4],[3,5],
+      [4,2],[4,3],[4,4],[4,5],
+      [5,2],[5,3],[5,4],[5,5]
+    ],
+    stars: [3000, 5000, 7000]
+  },
+  {
+    level: 3,
+    title: 'Nivel 3: Romper el Glaseado',
+    targetScore: 7000,
+    moves: 22,
+    type: 'frosting',
+    description: 'Rompe los 14 bloques de Chocolate/Glaseado combinando caramelos adyacentes.',
+    frostingLayout: [
+      [1,1],[1,6],[2,2],[2,5],[3,3],[3,4],[4,3],[4,4],[5,2],[5,5],[6,1],[6,6],
+      [0,3],[0,4]
+    ],
+    stars: [4000, 6500, 9000]
+  },
+  {
+    level: 4,
+    title: 'Nivel 4: Caída de Ingredientes',
+    targetScore: 8000,
+    moves: 24,
+    type: 'ingredients',
+    ingredientsTotal: 3, // 2 Cerezas, 1 Bellota
+    description: 'Haz descender las 2 Cerezas 🍒 y 1 Bellota 🌰 hasta la fila inferior.',
+    stars: [5000, 8000, 11000]
+  },
+  {
+    level: 5,
+    title: 'Nivel 5: Gelatina Doble & Obstáculos',
+    targetScore: 10000,
+    moves: 25,
+    type: 'jelly',
+    description: 'Limpia la Gelatina Doble y destruye los obstáculos.',
+    jellyLayout: [
+      [1,2],[1,3],[1,4],[1,5],
+      [2,1],[2,2],[2,5],[2,6],
+      [5,1],[5,2],[5,5],[5,6],
+      [6,2],[6,3],[6,4],[6,5]
+    ],
+    doubleJelly: true,
+    frostingLayout: [[3,2],[3,5],[4,2],[4,5]],
+    stars: [6000, 10000, 14000]
+  },
+  {
+    level: 6,
+    title: 'Nivel 6: Desafío Sugar Rush (60s)',
+    targetScore: 12000,
+    timeLimit: 60,
+    type: 'time',
+    description: '¡Modo Contrarreloj! Consigue 12,000 puntos antes de que el reloj llegue a 0.',
+    stars: [8000, 12000, 18000]
+  }
+];
+
+// Estado Global del Juego
+const crushGame = {
+  active: false,
+  state: 'map', // 'map', 'playing', 'levelWin', 'gameOver', 'sugarRush'
+  currentLevelIdx: 0,
+  score: 0,
+  movesLeft: 0,
+  timeLeft: 60,
+  timerInterval: null,
+  comboCount: 0,
+  floatingTexts: [],
+  particles: [],
+  selectedCell: null, // {r, c}
+  isSwapping: false,
+  isProcessing: false,
+  board: [], // 8x8
+  jellyCount: 0,
+  frostingCount: 0,
+  ingredientsSaved: 0,
+  activeBooster: null, // 'hammer', 'switch', 'bomb', 'moves'
+  boosters: {
+    hammer: 3,
+    switch: 3,
+    bomb: 2,
+    moves: 2
+  },
+  userProgress: {
+    unlockedLevel: 1,
+    scores: {},
+    stars: {}
+  }
+};
+
+// Cargar progreso de localStorage si existe
+try {
+  const saved = localStorage.getItem('malen_crush_progress');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (parsed.unlockedLevel) crushGame.userProgress = parsed;
+  }
+} catch (e) {}
+
+function saveCrushProgress() {
+  try {
+    localStorage.setItem('malen_crush_progress', JSON.stringify(crushGame.userProgress));
+  } catch (e) {}
+}
+
+// =========================================================================
+// SISTEMA DE AUDIO RETRO CHIPTUNE / DULCE (WEB AUDIO API)
+// =========================================================================
+function playCrushSound(type, pitchMultiplier = 1) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    if (!crushAudioCtx) crushAudioCtx = new AudioContext();
+    if (crushAudioCtx.state === 'suspended') crushAudioCtx.resume();
+
+    const t = crushAudioCtx.currentTime;
+    const osc = crushAudioCtx.createOscillator();
+    const gain = crushAudioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(crushAudioCtx.destination);
+
+    if (type === 'pop') {
+      osc.type = 'triangle';
+      const baseFreq = 440 * pitchMultiplier;
+      osc.frequency.setValueAtTime(baseFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, t + 0.08);
+      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.08);
+      osc.start(t);
+      osc.stop(t + 0.08);
+    } else if (type === 'swap') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, t);
+      osc.frequency.linearRampToValueAtTime(480, t + 0.07);
+      gain.gain.setValueAtTime(0.18, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.07);
+      osc.start(t);
+      osc.stop(t + 0.07);
+    } else if (type === 'special') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(300, t);
+      osc.frequency.linearRampToValueAtTime(900, t + 0.22);
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.22);
+      osc.start(t);
+      osc.stop(t + 0.22);
+    } else if (type === 'laser') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(1200, t);
+      osc.frequency.exponentialRampToValueAtTime(200, t + 0.25);
+      gain.gain.setValueAtTime(0.35, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.25);
+      osc.start(t);
+      osc.stop(t + 0.25);
+    } else if (type === 'bomb') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(160, t);
+      osc.frequency.linearRampToValueAtTime(50, t + 0.35);
+      gain.gain.setValueAtTime(0.45, t);
+      gain.gain.linearRampToValueAtTime(0.01, t + 0.35);
+      osc.start(t);
+      osc.stop(t + 0.35);
+    } else if (type === 'win') {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        const o = crushAudioCtx.createOscillator();
+        const g = crushAudioCtx.createGain();
+        o.connect(g);
+        g.connect(crushAudioCtx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(freq, t + idx * 0.1);
+        g.gain.setValueAtTime(0.25, t + idx * 0.1);
+        g.gain.linearRampToValueAtTime(0.01, t + idx * 0.1 + 0.18);
+        o.start(t + idx * 0.1);
+        o.stop(t + idx * 0.1 + 0.18);
+      });
+    }
+  } catch (e) {}
+}
+
+// =========================================================================
+// INICIALIZACIÓN DEL TABLERO Y NIVELES
+// =========================================================================
+function initCrushBoard(levelIdx) {
+  crushGame.currentLevelIdx = levelIdx;
+  const cfg = CRUSH_LEVELS[levelIdx];
+  crushGame.score = 0;
+  crushGame.movesLeft = cfg.moves || 20;
+  crushGame.timeLeft = cfg.timeLimit || 60;
+  crushGame.comboCount = 0;
+  crushGame.floatingTexts = [];
+  crushGame.particles = [];
+  crushGame.selectedCell = null;
+  crushGame.isSwapping = false;
+  crushGame.isProcessing = false;
+  crushGame.activeBooster = null;
+  crushGame.ingredientsSaved = 0;
+
+  // Detener reloj anterior
+  if (crushGame.timerInterval) clearInterval(crushGame.timerInterval);
+
+  // Generar cuadrícula vacía
+  crushGame.board = [];
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    const row = [];
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      row.push({
+        r: r,
+        c: c,
+        color: null,
+        type: 'normal', // 'normal', 'striped_h', 'striped_v', 'wrapped', 'color_bomb', 'ingredient', 'frosting'
+        jelly: 0,       // 0: sin gelatina, 1: normal, 2: doble
+        frosting: 0,    // 0: sin glaseado, 1: rompible
+        animY: 0,       // Desplazamiento animado
+        animX: 0,
+        scale: 1,
+        alpha: 1,
+        ingredientType: null // 'cherry', 'hazelnut'
+      });
+    }
+    crushGame.board.push(row);
+  }
+
+  // Configurar Gelatinas si el nivel lo requiere
+  crushGame.jellyCount = 0;
+  if (cfg.jellyLayout) {
+    cfg.jellyLayout.forEach(([r, c]) => {
+      if (r < CRUSH_ROWS && c < CRUSH_COLS) {
+        crushGame.board[r][c].jelly = cfg.doubleJelly ? 2 : 1;
+        crushGame.jellyCount += (cfg.doubleJelly ? 2 : 1);
+      }
+    });
+  }
+
+  // Configurar Glaseados / Chocolates
+  crushGame.frostingCount = 0;
+  if (cfg.frostingLayout) {
+    cfg.frostingLayout.forEach(([r, c]) => {
+      if (r < CRUSH_ROWS && c < CRUSH_COLS) {
+        crushGame.board[r][c].frosting = 1;
+        crushGame.board[r][c].type = 'frosting';
+        crushGame.frostingCount++;
+      }
+    });
+  }
+
+  // Rellenar con caramelos aleatorios sin coincidencias iniciales de 3
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      if (crushGame.board[r][c].type !== 'frosting') {
+        let validColors = [0, 1, 2, 3, 4, 5];
+        // Evitar match-3 horizontal
+        if (c >= 2 && crushGame.board[r][c-1].color === crushGame.board[r][c-2].color) {
+          validColors = validColors.filter(col => col !== crushGame.board[r][c-1].color);
+        }
+        // Evitar match-3 vertical
+        if (r >= 2 && crushGame.board[r-1][c].color === crushGame.board[r-2][c].color) {
+          validColors = validColors.filter(col => col !== crushGame.board[r-1][c].color);
+        }
+        const pick = validColors[Math.floor(Math.random() * validColors.length)];
+        crushGame.board[r][c].color = pick;
+        crushGame.board[r][c].type = 'normal';
+      }
+    }
+  }
+
+  // En nivel de ingredientes, colocar el primero en la fila superior
+  if (cfg.type === 'ingredients') {
+    const colPick = Math.floor(Math.random() * (CRUSH_COLS - 2)) + 1;
+    crushGame.board[0][colPick].type = 'ingredient';
+    crushGame.board[0][colPick].ingredientType = 'cherry';
+    crushGame.board[0][colPick].color = null;
+  }
+
+  // Iniciar reloj si es nivel con tiempo
+  if (cfg.type === 'time') {
+    crushGame.timerInterval = setInterval(() => {
+      if (crushGame.state === 'playing') {
+        crushGame.timeLeft--;
+        if (crushGame.timeLeft <= 0) {
+          clearInterval(crushGame.timerInterval);
+          checkCrushLevelEnd();
+        }
+      }
+    }, 1000);
+  }
+
+  crushGame.state = 'playing';
+  updateCrushHudUI();
+}
+
+// =========================================================================
+// BÚSQUEDA Y EVALUACIÓN DE COMBINACIONES (MATCH-3, 4, 5, T/L)
+// =========================================================================
+function findCrushMatches() {
+  const matches = [];
+  const matchedSet = new Set();
+
+  // 1. Horizontales
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    let matchLen = 1;
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      const cell = crushGame.board[r][c];
+      const nextCell = (c < CRUSH_COLS - 1) ? crushGame.board[r][c + 1] : null;
+
+      if (cell.color !== null && nextCell && nextCell.color === cell.color && cell.type !== 'frosting' && nextCell.type !== 'frosting') {
+        matchLen++;
+      } else {
+        if (matchLen >= 3) {
+          const group = [];
+          for (let k = 0; k < matchLen; k++) {
+            group.push({ r: r, c: c - k });
+            matchedSet.add(`${r},${c - k}`);
+          }
+          matches.push({ dir: 'h', cells: group, color: cell.color });
+        }
+        matchLen = 1;
+      }
+    }
+  }
+
+  // 2. Verticales
+  for (let c = 0; c < CRUSH_COLS; c++) {
+    let matchLen = 1;
+    for (let r = 0; r < CRUSH_ROWS; r++) {
+      const cell = crushGame.board[r][c];
+      const nextCell = (r < CRUSH_ROWS - 1) ? crushGame.board[r + 1][c] : null;
+
+      if (cell.color !== null && nextCell && nextCell.color === cell.color && cell.type !== 'frosting' && nextCell.type !== 'frosting') {
+        matchLen++;
+      } else {
+        if (matchLen >= 3) {
+          const group = [];
+          for (let k = 0; k < matchLen; k++) {
+            group.push({ r: r - k, c: c });
+            matchedSet.add(`${r - k},${c}`);
+          }
+          matches.push({ dir: 'v', cells: group, color: cell.color });
+        }
+        matchLen = 1;
+      }
+    }
+  }
+
+  return { matches, matchedSet };
+}
+
+// =========================================================================
+// PROCESAMIENTO DE INTERCAMBIOS Y CREACIÓN DE DULCES ESPECIALES
+// =========================================================================
+function trySwapCandies(r1, c1, r2, c2) {
+  if (crushGame.isProcessing || crushGame.isSwapping) return;
+
+  const cellA = crushGame.board[r1][c1];
+  const cellB = crushGame.board[r2][c2];
+
+  if (!cellA || !cellB) return;
+  if (cellA.type === 'frosting' || cellB.type === 'frosting') return;
+
+  // Comprobar adyacencia directa (arriba, abajo, izq, der)
+  const dr = Math.abs(r1 - r2);
+  const dc = Math.abs(c1 - c2);
+  if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
+    // Si hay un booster activo de cambio libre, cambiar sin requerir match
+    if (crushGame.activeBooster === 'switch') {
+      executeRawSwap(r1, c1, r2, c2);
+      crushGame.boosters.switch--;
+      crushGame.activeBooster = null;
+      updateCrushHudUI();
+      processCrushBoardMatches();
+      return;
+    }
+
+    // Intercambiar de prueba
+    crushGame.isSwapping = true;
+    playCrushSound('swap');
+
+    // Combinación de especiales directos:
+    // 1. Bola de color + Bola de color (Wipe total)
+    if (cellA.type === 'color_bomb' && cellB.type === 'color_bomb') {
+      detonateColorBombPlusColorBomb();
+      useMove();
+      crushGame.isSwapping = false;
+      return;
+    }
+
+    // 2. Bola de color + Rayado (Transforma todos los de ese color en rayados y detona)
+    if ((cellA.type === 'color_bomb' && (cellB.type === 'striped_h' || cellB.type === 'striped_v')) ||
+        (cellB.type === 'color_bomb' && (cellA.type === 'striped_h' || cellA.type === 'striped_v'))) {
+      const bombCell = (cellA.type === 'color_bomb') ? cellA : cellB;
+      const otherCell = (bombCell === cellA) ? cellB : cellA;
+      detonateColorBombPlusStriped(bombCell, otherCell.color);
+      useMove();
+      crushGame.isSwapping = false;
+      return;
+    }
+
+    // 3. Bola de color + Caramelo normal
+    if (cellA.type === 'color_bomb' || cellB.type === 'color_bomb') {
+      const bombCell = (cellA.type === 'color_bomb') ? cellA : cellB;
+      const otherCell = (bombCell === cellA) ? cellB : cellA;
+      detonateColorBomb(bombCell, otherCell.color);
+      useMove();
+      crushGame.isSwapping = false;
+      return;
+    }
+
+    // 4. Rayado + Rayado (Cruz láser gigante)
+    if ((cellA.type === 'striped_h' || cellA.type === 'striped_v') &&
+        (cellB.type === 'striped_h' || cellB.type === 'striped_v')) {
+      detonateStripedPlusStriped(r2, c2);
+      useMove();
+      crushGame.isSwapping = false;
+      return;
+    }
+
+    // 5. Rayado + Envuelto (Cruz gigante de 3 de ancho)
+    if (((cellA.type === 'striped_h' || cellA.type === 'striped_v') && cellB.type === 'wrapped') ||
+        ((cellB.type === 'striped_h' || cellB.type === 'striped_v') && cellA.type === 'wrapped')) {
+      detonateStripedPlusWrapped(r2, c2);
+      useMove();
+      crushGame.isSwapping = false;
+      return;
+    }
+
+    // Intercambio normal
+    executeRawSwap(r1, c1, r2, c2);
+    const { matches } = findCrushMatches();
+
+    if (matches.length > 0) {
+      // ¡Movimiento válido!
+      useMove();
+      crushGame.isSwapping = false;
+      processCrushBoardMatches(r2, c2); // El origen especial se crea en la casilla destino
+    } else {
+      // Movimiento inválido: revertir animación
+      setTimeout(() => {
+        executeRawSwap(r1, c1, r2, c2);
+        crushGame.isSwapping = false;
+        playCrushSound('pop', 0.6);
+      }, 200);
+    }
+  }
+}
+
+function executeRawSwap(r1, c1, r2, c2) {
+  const temp = {
+    color: crushGame.board[r1][c1].color,
+    type: crushGame.board[r1][c1].type,
+    ingredientType: crushGame.board[r1][c1].ingredientType
+  };
+  crushGame.board[r1][c1].color = crushGame.board[r2][c2].color;
+  crushGame.board[r1][c1].type = crushGame.board[r2][c2].type;
+  crushGame.board[r1][c1].ingredientType = crushGame.board[r2][c2].ingredientType;
+
+  crushGame.board[r2][c2].color = temp.color;
+  crushGame.board[r2][c2].type = temp.type;
+  crushGame.board[r2][c2].ingredientType = temp.ingredientType;
+}
+
+function useMove() {
+  const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+  if (cfg.type !== 'time') {
+    crushGame.movesLeft--;
+    if (crushGame.movesLeft < 0) crushGame.movesLeft = 0;
+  }
+  crushGame.comboCount = 0;
+  updateCrushHudUI();
+}
+
+// =========================================================================
+// DETONACIONES Y EFECTOS ESPECIALES
+// =========================================================================
+function detonateStripedCandy(r, c, dir) {
+  playCrushSound('laser');
+  createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#00ffff', 25);
+
+  if (dir === 'h' || dir === 'striped_h') {
+    for (let col = 0; col < CRUSH_COLS; col++) {
+      clearSingleCell(r, col);
+    }
+  } else {
+    for (let row = 0; row < CRUSH_ROWS; row++) {
+      clearSingleCell(row, c);
+    }
+  }
+}
+
+function detonateWrappedCandy(r, c) {
+  playCrushSound('bomb');
+  createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#ff00ff', 30);
+  for (let dr = -1; dr <= 1; dr++) {
+    for (let dc = -1; dc <= 1; dc++) {
+      const nr = r + dr;
+      const nc = c + dc;
+      if (nr >= 0 && nr < CRUSH_ROWS && nc >= 0 && nc < CRUSH_COLS) {
+        clearSingleCell(nr, nc);
+      }
+    }
+  }
+}
+
+function detonateColorBomb(bombCell, targetColor) {
+  playCrushSound('special');
+  createExplosionParticles(bombCell.c * CRUSH_CELL + CRUSH_OFFSET_X, bombCell.r * CRUSH_CELL + CRUSH_OFFSET_Y, '#ffff00', 40);
+  bombCell.color = null;
+  bombCell.type = 'normal';
+
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      if (crushGame.board[r][c].color === targetColor) {
+        clearSingleCell(r, c);
+        createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#ffff00', 10);
+      }
+    }
+  }
+  processGravityAndRefill();
+}
+
+function detonateStripedPlusStriped(r, c) {
+  playCrushSound('laser');
+  for (let col = 0; col < CRUSH_COLS; col++) clearSingleCell(r, col);
+  for (let row = 0; row < CRUSH_ROWS; row++) clearSingleCell(row, c);
+  processGravityAndRefill();
+}
+
+function detonateStripedPlusWrapped(r, c) {
+  playCrushSound('laser');
+  playCrushSound('bomb');
+  for (let dr = -1; dr <= 1; dr++) {
+    const nr = r + dr;
+    if (nr >= 0 && nr < CRUSH_ROWS) {
+      for (let col = 0; col < CRUSH_COLS; col++) clearSingleCell(nr, col);
+    }
+  }
+  for (let dc = -1; dc <= 1; dc++) {
+    const nc = c + dc;
+    if (nc >= 0 && nc < CRUSH_COLS) {
+      for (let row = 0; row < CRUSH_ROWS; row++) clearSingleCell(row, nc);
+    }
+  }
+  processGravityAndRefill();
+}
+
+function detonateColorBombPlusStriped(bombCell, targetColor) {
+  playCrushSound('special');
+  bombCell.color = null;
+  bombCell.type = 'normal';
+
+  const targets = [];
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      if (crushGame.board[r][c].color === targetColor) {
+        crushGame.board[r][c].type = (Math.random() > 0.5) ? 'striped_h' : 'striped_v';
+        targets.push({ r, c, type: crushGame.board[r][c].type });
+      }
+    }
+  }
+
+  // Detonar todos en secuencia rápida
+  setTimeout(() => {
+    targets.forEach(t => detonateStripedCandy(t.r, t.c, t.type));
+    processGravityAndRefill();
+  }, 200);
+}
+
+function detonateColorBombPlusColorBomb() {
+  playCrushSound('special');
+  playCrushSound('bomb');
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      clearSingleCell(r, c);
+    }
+  }
+  processGravityAndRefill();
+}
+
+// Limpiar una sola casilla y actualizar gelatinas/glaseados
+function clearSingleCell(r, c) {
+  const cell = crushGame.board[r][c];
+  if (!cell) return;
+
+  // Limpiar gelatina si existe
+  if (cell.jelly > 0) {
+    cell.jelly--;
+    crushGame.jellyCount--;
+    addScore(150);
+    createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#ff00bb', 8);
+  }
+
+  // Destruir glaseado adyacente
+  destroyAdjacentFrosting(r, c);
+
+  // Puntos por dulce
+  if (cell.color !== null || cell.type === 'color_bomb') {
+    addScore(60);
+    cell.color = null;
+    cell.type = 'normal';
+  }
+}
+
+function destroyAdjacentFrosting(r, c) {
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+  dirs.forEach(([dr, dc]) => {
+    const nr = r + dr;
+    const nc = c + dc;
+    if (nr >= 0 && nr < CRUSH_ROWS && nc >= 0 && nc < CRUSH_COLS) {
+      const neighbor = crushGame.board[nr][nc];
+      if (neighbor.frosting > 0) {
+        neighbor.frosting = 0;
+        neighbor.type = 'normal';
+        neighbor.color = Math.floor(Math.random() * 6);
+        crushGame.frostingCount--;
+        addScore(100);
+        createExplosionParticles(nc * CRUSH_CELL + CRUSH_OFFSET_X, nr * CRUSH_CELL + CRUSH_OFFSET_Y, '#ffffff', 12);
+      }
+    }
+  });
+}
+
+function addScore(pts) {
+  crushGame.score += pts;
+  updateCrushHudUI();
+}
+
+// =========================================================================
+// BUCLE DE CASCADA Y GRAVEDAD
+// =========================================================================
+function processCrushBoardMatches(lastSwapR = -1, lastSwapC = -1) {
+  crushGame.isProcessing = true;
+  const { matches, matchedSet } = findCrushMatches();
+
+  if (matches.length === 0) {
+    // Comprobar si algún ingrediente llegó al fondo
+    checkIngredientsSaved();
+    crushGame.isProcessing = false;
+    checkCrushLevelEnd();
+    return;
+  }
+
+  crushGame.comboCount++;
+  const pitch = Math.min(2.0, 1.0 + (crushGame.comboCount * 0.15));
+  playCrushSound('pop', pitch);
+
+  // Anuncios vocales/texto según el combo
+  if (crushGame.comboCount === 2) showFloatingText('¡DULCE! 🍬', '#00ffff');
+  else if (crushGame.comboCount === 3) showFloatingText('¡SABROSO! 🍓', '#ff00bb');
+  else if (crushGame.comboCount === 4) showFloatingText('¡DELICIOSO! 🌟', '#ffff00');
+  else if (crushGame.comboCount >= 5) showFloatingText('¡DIVINO Y2K! 💖', '#ff3300');
+
+  // Evaluar creación de especiales
+  const specialSpawnQueue = [];
+
+  matches.forEach(m => {
+    const len = m.cells.length;
+    // Ubicación donde crear el especial: si coincide con la casilla movida, usarla; si no, la del medio
+    let spawnCell = m.cells[Math.floor(len / 2)];
+    if (lastSwapR !== -1 && lastSwapC !== -1) {
+      const found = m.cells.find(c => c.r === lastSwapR && c.c === lastSwapC);
+      if (found) spawnCell = found;
+    }
+
+    if (len >= 5) {
+      // 5 en línea -> Bola de Color / Disco Ball
+      specialSpawnQueue.push({ r: spawnCell.r, c: spawnCell.c, type: 'color_bomb', color: null });
+      showFloatingText('¡BOLA DISCO! 🪩', '#ff00ff');
+    } else if (len === 4) {
+      // 4 en línea -> Rayado horizontal o vertical
+      const stripeType = (m.dir === 'h') ? 'striped_v' : 'striped_h'; // Contradireccional para máxima utilidad
+      specialSpawnQueue.push({ r: spawnCell.r, c: spawnCell.c, type: stripeType, color: m.color });
+    }
+  });
+
+  // Eliminar caramelos emparejados
+  matchedSet.forEach(coord => {
+    const [r, c] = coord.split(',').map(Number);
+    const cell = crushGame.board[r][c];
+
+    // Si ya era especial antes de romperse, detonar su efecto
+    if (cell.type === 'striped_h' || cell.type === 'striped_v') {
+      detonateStripedCandy(r, c, cell.type);
+    } else if (cell.type === 'wrapped') {
+      detonateWrappedCandy(r, c);
+    }
+
+    clearSingleCell(r, c);
+    createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#ff007f', 8);
+  });
+
+  // Colocar los nuevos especiales generados
+  specialSpawnQueue.forEach(sp => {
+    crushGame.board[sp.r][sp.c].type = sp.type;
+    crushGame.board[sp.r][sp.c].color = sp.color;
+    playCrushSound('special');
+  });
+
+  // Dar tiempo para la animación de desaparición y luego aplicar gravedad
+  setTimeout(() => {
+    processGravityAndRefill();
+  }, 220);
+}
+
+function processGravityAndRefill() {
+  // 1. Desplazar hacia abajo los caramelos en cada columna
+  for (let c = 0; c < CRUSH_COLS; c++) {
+    for (let r = CRUSH_ROWS - 1; r >= 0; r--) {
+      if (crushGame.board[r][c].color === null && crushGame.board[r][c].type !== 'frosting') {
+        // Buscar el caramelo superior más cercano
+        for (let above = r - 1; above >= 0; above--) {
+          if (crushGame.board[above][c].color !== null || crushGame.board[above][c].type === 'ingredient') {
+            crushGame.board[r][c].color = crushGame.board[above][c].color;
+            crushGame.board[r][c].type = crushGame.board[above][c].type;
+            crushGame.board[r][c].ingredientType = crushGame.board[above][c].ingredientType;
+
+            crushGame.board[above][c].color = null;
+            crushGame.board[above][c].type = 'normal';
+            crushGame.board[above][c].ingredientType = null;
+            break;
+          }
+        }
+      }
+    }
+
+    // 2. Rellenar los huecos vacíos en la parte superior
+    for (let r = 0; r < CRUSH_ROWS; r++) {
+      if (crushGame.board[r][c].color === null && crushGame.board[r][c].type !== 'frosting') {
+        crushGame.board[r][c].color = Math.floor(Math.random() * 6);
+        crushGame.board[r][c].type = 'normal';
+        crushGame.board[r][c].animY = -CRUSH_CELL * 2; // Efecto de caída suave
+      }
+    }
+  }
+
+  // Comprobar si la cascada genera nuevas combinaciones
+  setTimeout(() => {
+    processCrushBoardMatches();
+  }, 250);
+}
+
+function checkIngredientsSaved() {
+  for (let c = 0; c < CRUSH_COLS; c++) {
+    const bottomCell = crushGame.board[CRUSH_ROWS - 1][c];
+    if (bottomCell.type === 'ingredient') {
+      crushGame.ingredientsSaved++;
+      bottomCell.type = 'normal';
+      bottomCell.color = Math.floor(Math.random() * 6);
+      bottomCell.ingredientType = null;
+      addScore(2500);
+      playCrushSound('special');
+      showFloatingText('¡INGREDIENTE SALVADO! 🍒', '#00ff88');
+
+      // Si quedan ingredientes por bajar en este nivel, soltar otro arriba
+      const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+      if (cfg.ingredientsTotal && crushGame.ingredientsSaved < cfg.ingredientsTotal) {
+        const topCol = Math.floor(Math.random() * (CRUSH_COLS - 2)) + 1;
+        crushGame.board[0][topCol].type = 'ingredient';
+        crushGame.board[0][topCol].ingredientType = (Math.random() > 0.5) ? 'cherry' : 'hazelnut';
+        crushGame.board[0][topCol].color = null;
+      }
+    }
+  }
+}
+
+// =========================================================================
+// VERIFICACIÓN DE CONDICIÓN DE VICTORIA O DERROTA
+// =========================================================================
+function checkCrushLevelEnd() {
+  const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+  let isWin = false;
+
+  if (cfg.type === 'score') {
+    if (crushGame.score >= cfg.targetScore) isWin = true;
+  } else if (cfg.type === 'jelly') {
+    if (crushGame.jellyCount <= 0) isWin = true;
+  } else if (cfg.type === 'frosting') {
+    if (crushGame.frostingCount <= 0) isWin = true;
+  } else if (cfg.type === 'ingredients') {
+    if (crushGame.ingredientsSaved >= (cfg.ingredientsTotal || 3)) isWin = true;
+  } else if (cfg.type === 'time') {
+    if (crushGame.score >= cfg.targetScore) isWin = true;
+  }
+
+  if (isWin) {
+    triggerSugarRush();
+    return;
+  }
+
+  // Derrota por falta de movimientos o tiempo
+  if ((cfg.type !== 'time' && crushGame.movesLeft <= 0) || (cfg.type === 'time' && crushGame.timeLeft <= 0)) {
+    crushGame.state = 'gameOver';
+    playCrushSound('pop', 0.5);
+    updateCrushHudUI();
+  }
+}
+
+// "SUGAR CRUSH" DE FINAL DE NIVEL (LOS MOVIMIENTOS RESTANTES SE CONVIERTEN EN ESPECIALES)
+function triggerSugarRush() {
+  crushGame.state = 'sugarRush';
+  showFloatingText('¡SUGAR CRUSH! 🍬✨', '#ffff00');
+  playCrushSound('special');
+
+  const movesBonus = crushGame.movesLeft;
+  crushGame.movesLeft = 0;
+
+  // Convertir movimientos restantes en caramelos rayados
+  for (let i = 0; i < movesBonus; i++) {
+    setTimeout(() => {
+      const rx = Math.floor(Math.random() * CRUSH_ROWS);
+      const ry = Math.floor(Math.random() * CRUSH_COLS);
+      if (crushGame.board[rx][ry].color !== null) {
+        crushGame.board[rx][ry].type = (Math.random() > 0.5) ? 'striped_h' : 'striped_v';
+        detonateStripedCandy(rx, ry, crushGame.board[rx][ry].type);
+        addScore(1000);
+      }
+    }, i * 180);
+  }
+
+  setTimeout(() => {
+    crushGame.state = 'levelWin';
+    playCrushSound('win');
+
+    // Calcular estrellas ganadas
+    const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+    let starsEarned = 1;
+    if (crushGame.score >= cfg.stars[2]) starsEarned = 3;
+    else if (crushGame.score >= cfg.stars[1]) starsEarned = 2;
+
+    const lvlNum = cfg.level;
+    crushGame.userProgress.scores[lvlNum] = Math.max(crushGame.userProgress.scores[lvlNum] || 0, crushGame.score);
+    crushGame.userProgress.stars[lvlNum] = Math.max(crushGame.userProgress.stars[lvlNum] || 0, starsEarned);
+    if (lvlNum >= crushGame.userProgress.unlockedLevel && lvlNum < CRUSH_LEVELS.length) {
+      crushGame.userProgress.unlockedLevel = lvlNum + 1;
+    }
+    saveCrushProgress();
+    updateCrushHudUI();
+  }, (movesBonus + 1) * 180 + 400);
+}
+
+// =========================================================================
+// SISTEMA DE BOOSTERS / POTENCIADORES
+// =========================================================================
+function activateCrushBooster(type) {
+  if (crushGame.state !== 'playing' || crushGame.isProcessing) return;
+
+  if (type === 'hammer') {
+    if (crushGame.boosters.hammer > 0) {
+      crushGame.activeBooster = 'hammer';
+      showFloatingText('¡Toca un caramelo para destruirlo! 🔨', '#00ffff');
+    } else {
+      alert('¡Sin Martillos Piruleta restantes!');
+    }
+  } else if (type === 'switch') {
+    if (crushGame.boosters.switch > 0) {
+      crushGame.activeBooster = 'switch';
+      showFloatingText('¡Intercambia 2 caramelos libres! 🔄', '#ff00bb');
+    } else {
+      alert('¡Sin Cambios Libres restantes!');
+    }
+  } else if (type === 'bomb') {
+    if (crushGame.boosters.bomb > 0) {
+      crushGame.boosters.bomb--;
+      // Colocar una bola de color en el centro
+      crushGame.board[3][3].type = 'color_bomb';
+      crushGame.board[3][3].color = null;
+      playCrushSound('special');
+      showFloatingText('¡BOLA DE COLOR AÑADIDA! 🪩', '#ffff00');
+      updateCrushHudUI();
+    } else {
+      alert('¡Sin Bombas restantes!');
+    }
+  } else if (type === 'moves') {
+    if (crushGame.boosters.moves > 0) {
+      crushGame.boosters.moves--;
+      crushGame.movesLeft += 5;
+      playCrushSound('win');
+      showFloatingText('¡+5 MOVIMIENTOS! ➕5', '#00ff88');
+      updateCrushHudUI();
+    } else {
+      alert('¡Sin +5 Movimientos restantes!');
+    }
+  }
+}
+
+function handleBoosterUseOnCell(r, c) {
+  if (crushGame.activeBooster === 'hammer') {
+    crushGame.boosters.hammer--;
+    crushGame.activeBooster = null;
+    playCrushSound('bomb');
+    clearSingleCell(r, c);
+    createExplosionParticles(c * CRUSH_CELL + CRUSH_OFFSET_X, r * CRUSH_CELL + CRUSH_OFFSET_Y, '#00ffff', 25);
+    updateCrushHudUI();
+    processGravityAndRefill();
+  }
+}
+
+// =========================================================================
+// EFECTOS VISUALES Y RENDERIZADO EN CANVAS
+// =========================================================================
+function showFloatingText(text, color) {
+  crushGame.floatingTexts.push({
+    text: text,
+    color: color,
+    x: CRUSH_WIDTH / 2,
+    y: CRUSH_OFFSET_Y + 140,
+    vy: -1.2,
+    alpha: 1.0,
+    life: 55
+  });
+}
+
+function createExplosionParticles(x, y, color, count = 15) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 4 + 1.5;
+    crushGame.particles.push({
+      x: x + CRUSH_CELL / 2,
+      y: y + CRUSH_CELL / 2,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      color: color,
+      size: Math.random() * 4 + 2,
+      alpha: 1.0,
+      life: 30
+    });
+  }
+}
+
+function renderCrushGame() {
+  if (!crushCtx) return;
+  const ctx = crushCtx;
+
+  // Fondo arcade Y2K con degradado rosa/morado
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, CRUSH_HEIGHT);
+  bgGrad.addColorStop(0, '#1c0326');
+  bgGrad.addColorStop(0.5, '#2e0840');
+  bgGrad.addColorStop(1, '#0e0114');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, CRUSH_WIDTH, CRUSH_HEIGHT);
+
+  // Cuadrícula y casillas
+  renderCrushBoardGrid(ctx);
+
+  // Renderizar partículas
+  for (let i = crushGame.particles.length - 1; i >= 0; i--) {
+    const p = crushGame.particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= 1 / p.life;
+    if (p.alpha <= 0) {
+      crushGame.particles.splice(i, 1);
+    } else {
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Renderizar textos flotantes de combo
+  for (let i = crushGame.floatingTexts.length - 1; i >= 0; i--) {
+    const ft = crushGame.floatingTexts[i];
+    ft.y += ft.vy;
+    ft.alpha -= 1 / ft.life;
+    if (ft.alpha <= 0) {
+      crushGame.floatingTexts.splice(i, 1);
+    } else {
+      ctx.save();
+      ctx.globalAlpha = ft.alpha;
+      ctx.font = 'bold 22px Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#000000';
+      ctx.fillText(ft.text, ft.x + 2, ft.y + 2);
+      ctx.fillStyle = ft.color;
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    }
+  }
+
+  // Superposiciones de estado (Mapa, Victoria, Derrota)
+  if (crushGame.state === 'map') {
+    renderCrushSagaMap(ctx);
+  } else if (crushGame.state === 'levelWin') {
+    renderCrushWinDialog(ctx);
+  } else if (crushGame.state === 'gameOver') {
+    renderCrushGameOverDialog(ctx);
+  }
+}
+
+function renderCrushBoardGrid(ctx) {
+  // Marco del tablero con sombra de neón
+  ctx.save();
+  ctx.strokeStyle = '#ff00bb';
+  ctx.lineWidth = 4;
+  ctx.shadowColor = '#00ffff';
+  ctx.shadowBlur = 12;
+  ctx.strokeRect(CRUSH_OFFSET_X - 4, CRUSH_OFFSET_Y - 4, CRUSH_COLS * CRUSH_CELL + 8, CRUSH_ROWS * CRUSH_CELL + 8);
+  ctx.restore();
+
+  // Celdas del tablero
+  for (let r = 0; r < CRUSH_ROWS; r++) {
+    for (let c = 0; c < CRUSH_COLS; c++) {
+      const x = c * CRUSH_CELL + CRUSH_OFFSET_X;
+      const y = r * CRUSH_CELL + CRUSH_OFFSET_Y;
+      const cell = crushGame.board[r][c];
+
+      // Fondo de celda estilo tablero de ajedrez sutil
+      ctx.fillStyle = ((r + c) % 2 === 0) ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.25)';
+      ctx.fillRect(x, y, CRUSH_CELL, CRUSH_CELL);
+
+      // Gelatina rosa/cian
+      if (cell.jelly > 0) {
+        ctx.fillStyle = (cell.jelly === 2) ? 'rgba(255, 0, 180, 0.45)' : 'rgba(0, 255, 255, 0.35)';
+        ctx.fillRect(x + 2, y + 2, CRUSH_CELL - 4, CRUSH_CELL - 4);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 3, y + 3, CRUSH_CELL - 6, CRUSH_CELL - 6);
+      }
+
+      // Glaseado / Chocolate
+      if (cell.type === 'frosting' || cell.frosting > 0) {
+        ctx.fillStyle = '#5c2c16';
+        ctx.fillRect(x + 3, y + 3, CRUSH_CELL - 6, CRUSH_CELL - 6);
+        ctx.fillStyle = '#ffcc99';
+        ctx.font = '16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🍩', x + CRUSH_CELL / 2, y + CRUSH_CELL / 2 + 6);
+        continue;
+      }
+
+      // Dibujar Caramelo si existe
+      if (cell.color !== null || cell.type === 'color_bomb' || cell.type === 'ingredient') {
+        renderSingleCandy(ctx, cell, x, y);
+      }
+
+      // Resaltado de selección
+      if (crushGame.selectedCell && crushGame.selectedCell.r === r && crushGame.selectedCell.c === c) {
+        ctx.save();
+        ctx.strokeStyle = '#ffff00';
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#ffff00';
+        ctx.shadowBlur = 10;
+        ctx.strokeRect(x + 1, y + 1, CRUSH_CELL - 2, CRUSH_CELL - 2);
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function renderSingleCandy(ctx, cell, x, y) {
+  const cx = x + CRUSH_CELL / 2 + (cell.animX || 0);
+  const cy = y + CRUSH_CELL / 2 + (cell.animY || 0);
+
+  // Si tiene animación de caída, interpolar suavemente hacia 0
+  if (cell.animY < 0) {
+    cell.animY = Math.min(0, cell.animY + 8);
+  }
+
+  // 1. Bola de Color / Disco Ball
+  if (cell.type === 'color_bomb') {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, 18);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.3, '#ff00ff');
+    grad.addColorStop(0.6, '#00ffff');
+    grad.addColorStop(1, '#ffcc00');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#000';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🪩', cx, cy + 5);
+    ctx.restore();
+    return;
+  }
+
+  // 2. Ingrediente (Cereza o Bellota)
+  if (cell.type === 'ingredient') {
+    ctx.font = '26px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(cell.ingredientType === 'cherry' ? '🍒' : '🌰', cx, cy + 9);
+    return;
+  }
+
+  const candyDef = CRUSH_CANDIES[cell.color];
+  if (!candyDef) return;
+
+  // Fondo circular del caramelo
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 17, 0, Math.PI * 2);
+  const cGrad = ctx.createRadialGradient(cx - 5, cy - 5, 2, cx, cy, 17);
+  cGrad.addColorStop(0, '#ffffff');
+  cGrad.addColorStop(0.3, candyDef.color);
+  cGrad.addColorStop(1, '#110022');
+  ctx.fillStyle = cGrad;
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Rayas horizontales o verticales si es Striped Candy
+  if (cell.type === 'striped_h') {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(cx - 16, cy - 3, 32, 6);
+  } else if (cell.type === 'striped_v') {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(cx - 3, cy - 16, 6, 32);
+  } else if (cell.type === 'wrapped') {
+    // Caramelo Envuelto (Halo brillante)
+    ctx.strokeStyle = '#ffff00';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(cx - 18, cy - 18, 36, 36);
+  }
+
+  // Ícono representativo en el centro
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(candyDef.icon, cx, cy + 5);
+  ctx.restore();
+}
+
+// =========================================================================
+// RENDERIZADO DEL MAPA DE NIVELES SAGA
+// =========================================================================
+function renderCrushSagaMap(ctx) {
+  // Fondo semitransparente
+  ctx.fillStyle = 'rgba(10, 0, 20, 0.94)';
+  ctx.fillRect(0, 0, CRUSH_WIDTH, CRUSH_HEIGHT);
+
+  // Título de la Saga
+  ctx.font = 'bold 24px Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ff00bb';
+  ctx.fillText('🍬 MALEN CRUSH Y2K 🍬', CRUSH_WIDTH / 2, 45);
+
+  ctx.font = '12px Tahoma, sans-serif';
+  ctx.fillStyle = '#00ffff';
+  ctx.fillText('✨ Mapa de la Saga de Dulces • Selecciona un Nivel ✨', CRUSH_WIDTH / 2, 68);
+
+  // Dibujar camino sinuoso entre niveles
+  const nodePositions = [
+    { x: 90, y: 140 },
+    { x: 240, y: 180 },
+    { x: 390, y: 150 },
+    { x: 370, y: 280 },
+    { x: 220, y: 330 },
+    { x: 100, y: 390 }
+  ];
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255, 0, 255, 0.4)';
+  ctx.lineWidth = 8;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  nodePositions.forEach((pt, i) => {
+    if (i === 0) ctx.moveTo(pt.x, pt.y);
+    else ctx.lineTo(pt.x, pt.y);
+  });
+  ctx.stroke();
+  ctx.restore();
+
+  // Dibujar cada nodo de nivel
+  CRUSH_LEVELS.forEach((lvl, idx) => {
+    const pt = nodePositions[idx];
+    const isUnlocked = (lvl.level <= crushGame.userProgress.unlockedLevel);
+    const stars = crushGame.userProgress.stars[lvl.level] || 0;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 28, 0, Math.PI * 2);
+
+    if (isUnlocked) {
+      const grad = ctx.createRadialGradient(pt.x - 6, pt.y - 6, 4, pt.x, pt.y, 28);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.3, '#ff007f');
+      grad.addColorStop(1, '#660033');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Número de Nivel
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 18px Tahoma, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(lvl.level, pt.x, pt.y + 6);
+
+      // Estrellas doradas ganadas
+      const starsStr = '⭐'.repeat(stars) || '☆☆☆';
+      ctx.font = '10px sans-serif';
+      ctx.fillText(starsStr, pt.x, pt.y + 24);
+    } else {
+      // Bloqueado con candado
+      ctx.fillStyle = '#333344';
+      ctx.fill();
+      ctx.strokeStyle = '#555566';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#888899';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🔒', pt.x, pt.y + 6);
+    }
+    ctx.restore();
+  });
+
+  // Instrucción inferior
+  ctx.font = 'bold 12px Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffcc00';
+  ctx.fillText('👆 Toca un nivel desbloqueado para jugar', CRUSH_WIDTH / 2, 470);
+}
+
+function renderCrushWinDialog(ctx) {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
+  ctx.fillRect(0, 0, CRUSH_WIDTH, CRUSH_HEIGHT);
+
+  const boxW = 360;
+  const boxH = 260;
+  const boxX = (CRUSH_WIDTH - boxW) / 2;
+  const boxY = (CRUSH_HEIGHT - boxH) / 2;
+
+  ctx.save();
+  ctx.fillStyle = '#1c052e';
+  ctx.strokeStyle = '#00ffff';
+  ctx.lineWidth = 3;
+  ctx.shadowColor = '#00ffff';
+  ctx.shadowBlur = 15;
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+  ctx.font = 'bold 24px Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffff00';
+  ctx.fillText('🎉 ¡NIVEL COMPLETADO! 🎉', CRUSH_WIDTH / 2, boxY + 45);
+
+  const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+  const stars = crushGame.userProgress.stars[cfg.level] || 1;
+  ctx.font = '32px sans-serif';
+  ctx.fillText('⭐'.repeat(stars), CRUSH_WIDTH / 2, boxY + 95);
+
+  ctx.font = '14px Tahoma, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(`Puntuación: ${crushGame.score} pts`, CRUSH_WIDTH / 2, boxY + 130);
+
+  // Botón Siguiente Nivel
+  ctx.fillStyle = '#ff00bb';
+  ctx.fillRect(CRUSH_WIDTH / 2 - 110, boxY + 160, 220, 38);
+  ctx.strokeStyle = '#ffffff';
+  ctx.strokeRect(CRUSH_WIDTH / 2 - 110, boxY + 160, 220, 38);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 14px Tahoma, sans-serif';
+  ctx.fillText('▶ SIGUIENTE NIVEL', CRUSH_WIDTH / 2, boxY + 185);
+
+  // Botón Volver al Mapa
+  ctx.font = '12px Tahoma, sans-serif';
+  ctx.fillStyle = '#00ffff';
+  ctx.fillText('🗺️ Volver al Mapa de Niveles', CRUSH_WIDTH / 2, boxY + 225);
+  ctx.restore();
+}
+
+function renderCrushGameOverDialog(ctx) {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+  ctx.fillRect(0, 0, CRUSH_WIDTH, CRUSH_HEIGHT);
+
+  const boxW = 340;
+  const boxH = 240;
+  const boxX = (CRUSH_WIDTH - boxW) / 2;
+  const boxY = (CRUSH_HEIGHT - boxH) / 2;
+
+  ctx.save();
+  ctx.fillStyle = '#220011';
+  ctx.strokeStyle = '#ff0055';
+  ctx.lineWidth = 3;
+  ctx.shadowColor = '#ff0055';
+  ctx.shadowBlur = 15;
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+  ctx.font = 'bold 22px Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ff0055';
+  ctx.fillText('💔 ¡FIN DEL JUEGO! 💔', CRUSH_WIDTH / 2, boxY + 45);
+
+  ctx.font = '13px Tahoma, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('Te has quedado sin movimientos.', CRUSH_WIDTH / 2, boxY + 80);
+  ctx.fillText(`Puntuación alcanzada: ${crushGame.score}`, CRUSH_WIDTH / 2, boxY + 105);
+
+  // Botón Reintentar
+  ctx.fillStyle = '#00ffff';
+  ctx.fillRect(CRUSH_WIDTH / 2 - 100, boxY + 135, 200, 36);
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 14px Tahoma, sans-serif';
+  ctx.fillText('🔄 REINTENTAR NIVEL', CRUSH_WIDTH / 2, boxY + 158);
+
+  // Botón Mapa
+  ctx.font = '12px Tahoma, sans-serif';
+  ctx.fillStyle = '#ffcc00';
+  ctx.fillText('🗺️ Volver al Mapa', CRUSH_WIDTH / 2, boxY + 205);
+  ctx.restore();
+}
+
+// =========================================================================
+// GESTOR DE EVENTOS TÁCTILES Y RATÓN
+// =========================================================================
+let crushPointerStart = null;
+
+function handleCrushPointerDown(clientX, clientY) {
+  if (!crushCanvas) return;
+  const rect = crushCanvas.getBoundingClientRect();
+  const scaleX = crushCanvas.width / rect.width;
+  const scaleY = crushCanvas.height / rect.height;
+  const x = (clientX - rect.left) * scaleX;
+  const y = (clientY - rect.top) * scaleY;
+
+  // Si estamos en el mapa, comprobar selección de nivel
+  if (crushGame.state === 'map') {
+    const nodePositions = [
+      { x: 90, y: 140 },
+      { x: 240, y: 180 },
+      { x: 390, y: 150 },
+      { x: 370, y: 280 },
+      { x: 220, y: 330 },
+      { x: 100, y: 390 }
+    ];
+    for (let i = 0; i < CRUSH_LEVELS.length; i++) {
+      const pt = nodePositions[i];
+      const dist = Math.hypot(x - pt.x, y - pt.y);
+      if (dist <= 32) {
+        if (CRUSH_LEVELS[i].level <= crushGame.userProgress.unlockedLevel) {
+          playCrushSound('special');
+          initCrushBoard(i);
+          return;
+        } else {
+          playCrushSound('pop', 0.5);
+          alert('¡Este nivel aún está bloqueado! Supera los anteriores para desbloquearlo.');
+          return;
+        }
+      }
+    }
+    return;
+  }
+
+  // Si estamos en diálogo de Victoria
+  if (crushGame.state === 'levelWin') {
+    const boxY = (CRUSH_HEIGHT - 260) / 2;
+    // Botón Siguiente Nivel (boxY + 160 a 198)
+    if (x >= CRUSH_WIDTH / 2 - 110 && x <= CRUSH_WIDTH / 2 + 110 && y >= boxY + 160 && y <= boxY + 198) {
+      const nextIdx = crushGame.currentLevelIdx + 1;
+      if (nextIdx < CRUSH_LEVELS.length) initCrushBoard(nextIdx);
+      else crushGame.state = 'map';
+      return;
+    }
+    // Botón Mapa (boxY + 210 a 240)
+    if (y >= boxY + 210 && y <= boxY + 240) {
+      crushGame.state = 'map';
+      return;
+    }
+    return;
+  }
+
+  // Si estamos en diálogo de Derrota
+  if (crushGame.state === 'gameOver') {
+    const boxY = (CRUSH_HEIGHT - 240) / 2;
+    // Reintentar
+    if (x >= CRUSH_WIDTH / 2 - 100 && x <= CRUSH_WIDTH / 2 + 100 && y >= boxY + 135 && y <= boxY + 171) {
+      initCrushBoard(crushGame.currentLevelIdx);
+      return;
+    }
+    // Mapa
+    if (y >= boxY + 190 && y <= boxY + 225) {
+      crushGame.state = 'map';
+      return;
+    }
+    return;
+  }
+
+  // Si estamos jugando: comprobar clic en el tablero
+  if (crushGame.state === 'playing') {
+    const col = Math.floor((x - CRUSH_OFFSET_X) / CRUSH_CELL);
+    const row = Math.floor((y - CRUSH_OFFSET_Y) / CRUSH_CELL);
+
+    if (col >= 0 && col < CRUSH_COLS && row >= 0 && row < CRUSH_ROWS) {
+      // Si hay un booster de martillo activo
+      if (crushGame.activeBooster === 'hammer') {
+        handleBoosterUseOnCell(row, col);
+        return;
+      }
+
+      crushPointerStart = { r: row, c: col, x: x, y: y };
+
+      // Selección por dos toques alternativos
+      if (!crushGame.selectedCell) {
+        crushGame.selectedCell = { r: row, c: col };
+        playCrushSound('pop', 1.2);
+      } else {
+        const sel = crushGame.selectedCell;
+        if (sel.r === row && sel.c === col) {
+          crushGame.selectedCell = null; // Deseleccionar
+        } else {
+          // Intentar intercambiar
+          trySwapCandies(sel.r, sel.c, row, col);
+          crushGame.selectedCell = null;
+        }
+      }
+    } else {
+      crushGame.selectedCell = null;
+    }
+  }
+}
+
+function handleCrushPointerUp(clientX, clientY) {
+  if (!crushPointerStart || !crushCanvas) return;
+  const rect = crushCanvas.getBoundingClientRect();
+  const scaleX = crushCanvas.width / rect.width;
+  const scaleY = crushCanvas.height / rect.height;
+  const x = (clientX - rect.left) * scaleX;
+  const y = (clientY - rect.top) * scaleY;
+
+  const dx = x - crushPointerStart.x;
+  const dy = y - crushPointerStart.y;
+  const minSwipe = 18;
+
+  if (Math.abs(dx) > minSwipe || Math.abs(dy) > minSwipe) {
+    const r1 = crushPointerStart.r;
+    const c1 = crushPointerStart.c;
+    let r2 = r1;
+    let c2 = c1;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      c2 += (dx > 0) ? 1 : -1;
+    } else {
+      r2 += (dy > 0) ? 1 : -1;
+    }
+
+    if (r2 >= 0 && r2 < CRUSH_ROWS && c2 >= 0 && c2 < CRUSH_COLS) {
+      trySwapCandies(r1, c1, r2, c2);
+      crushGame.selectedCell = null;
+    }
+  }
+  crushPointerStart = null;
+}
+
+// =========================================================================
+// BUCLE PRINCIPAL DE ANIMACIÓN
+// =========================================================================
+function startCrushLoop() {
+  if (crushAnimId) cancelAnimationFrame(crushAnimId);
+
+  function loop() {
+    if (!crushGame.active) return;
+    renderCrushGame();
+    crushAnimId = requestAnimationFrame(loop);
+  }
+
+  crushAnimId = requestAnimationFrame(loop);
+}
+
+// =========================================================================
+// GESTIÓN DE MODAL Y ACTUALIZACIÓN DEL DOM / HUD
+// =========================================================================
+function openCrushGame() {
+  if (typeof closeAllGameModals === 'function') closeAllGameModals();
+
+  const modal = document.getElementById('crush-modal-overlay');
+  if (modal) modal.classList.add('active');
+
+  crushCanvas = document.getElementById('crush-canvas');
+  if (crushCanvas) {
+    crushCtx = crushCanvas.getContext('2d');
+  }
+
+  crushGame.active = true;
+  crushGame.state = 'map';
+  updateCrushHudUI();
+  startCrushLoop();
+}
+
+function closeCrushGame() {
+  const modal = document.getElementById('crush-modal-overlay');
+  if (modal) modal.classList.remove('active');
+
+  crushGame.active = false;
+  if (crushAnimId) {
+    cancelAnimationFrame(crushAnimId);
+    crushAnimId = null;
+  }
+  if (crushGame.timerInterval) {
+    clearInterval(crushGame.timerInterval);
+    crushGame.timerInterval = null;
+  }
+}
+
+function openCrushMap() {
+  crushGame.state = 'map';
+  playCrushSound('pop', 1.2);
+}
+
+function restartCurrentCrushLevel() {
+  initCrushBoard(crushGame.currentLevelIdx);
+}
+
+function updateCrushHudUI() {
+  const cfg = CRUSH_LEVELS[crushGame.currentLevelIdx];
+  const scoreEl = document.getElementById('crush-hud-score');
+  const movesEl = document.getElementById('crush-hud-moves');
+  const targetEl = document.getElementById('crush-hud-target');
+  const titleEl = document.getElementById('crush-hud-title');
+
+  // Actualizar botones de boosters
+  const bHammer = document.getElementById('crush-b-hammer-count');
+  const bSwitch = document.getElementById('crush-b-switch-count');
+  const bBomb = document.getElementById('crush-b-bomb-count');
+  const bMoves = document.getElementById('crush-b-moves-count');
+
+  if (scoreEl) scoreEl.textContent = crushGame.score;
+  if (movesEl) {
+    if (cfg && cfg.type === 'time') {
+      movesEl.textContent = `${crushGame.timeLeft}s`;
+    } else {
+      movesEl.textContent = crushGame.movesLeft;
+    }
+  }
+  if (targetEl && cfg) {
+    if (cfg.type === 'jelly') {
+      targetEl.textContent = `Gelatinas: ${crushGame.jellyCount}`;
+    } else if (cfg.type === 'frosting') {
+      targetEl.textContent = `Glaseados: ${crushGame.frostingCount}`;
+    } else if (cfg.type === 'ingredients') {
+      targetEl.textContent = `Frutas: ${crushGame.ingredientsSaved}/${cfg.ingredientsTotal || 3}`;
+    } else {
+      targetEl.textContent = `Meta: ${cfg.targetScore}`;
+    }
+  }
+  if (titleEl && cfg) titleEl.textContent = cfg.title;
+
+  if (bHammer) bHammer.textContent = crushGame.boosters.hammer;
+  if (bSwitch) bSwitch.textContent = crushGame.boosters.switch;
+  if (bBomb) bBomb.textContent = crushGame.boosters.bomb;
+  if (bMoves) bMoves.textContent = crushGame.boosters.moves;
+}
+
+// Registrar eventos del Canvas
+window.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('crush-canvas');
+  if (canvas) {
+    canvas.addEventListener('mousedown', (e) => handleCrushPointerDown(e.clientX, e.clientY));
+    window.addEventListener('mouseup', (e) => handleCrushPointerUp(e.clientX, e.clientY));
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        e.preventDefault();
+        handleCrushPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', (e) => {
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        handleCrushPointerUp(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      }
+    });
   }
 });
 
