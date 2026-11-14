@@ -1693,6 +1693,158 @@
       100% { transform: translateY(0) scale(1); }
     }
 
+  /* =============================================================================
+   ESTILOS RETRO PARA LOS NUEVOS JUEGOS:
+   1) DUELO 2 JUGADORES TECLADO PC (PIXEL SMASH 2004)
+   2) MALEN KART 2D (RETRO RACER PC & MOBILE)
+   ============================================================================= */
+
+.arcade-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 0, 16, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 99998;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.arcade-modal-overlay.active { display: flex; }
+
+.arcade-window {
+  width: 100%;
+  max-width: 820px;
+  background: #c0c0c0;
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+  border-right: 3px solid #404040;
+  border-bottom: 3px solid #404040;
+  box-shadow: 0 0 35px #00ffff, 0 16px 32px rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  font-family: Tahoma, sans-serif;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.arcade-titlebar {
+  background: linear-gradient(90deg, #ff0055, #6600cc, #00ffff);
+  color: #ffffff;
+  padding: 6px 10px;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.arcade-menubar {
+  background: #ece9d8;
+  padding: 5px 8px;
+  border-bottom: 1px solid #999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.arcade-game-canvas-box {
+  background: #000;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.arcade-canvas {
+  background: #050510;
+  border: 2px inset #555;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.arcade-footer-hints {
+  background: #110022;
+  color: #ff99ff;
+  border-top: 1px solid #333;
+  padding: 6px 10px;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-mono);
+}
+
+/* Controles táctiles en pantalla para móvil (Solo Malen Kart) */
+.mobile-kart-touch-controls {
+  display: none;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 8px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.touch-dpad, .touch-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.touch-btn {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  user-select: none;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+
+.touch-btn:active {
+  background: #ff00ff;
+  border-color: #ffff00;
+  transform: scale(0.92);
+}
+
+.touch-gas-btn {
+  background: rgba(0, 255, 100, 0.25);
+  border-color: #00ff66;
+}
+
+.touch-item-btn {
+  background: rgba(255, 0, 150, 0.25);
+  border-color: #ff0099;
+}
+
+@media (max-width: 768px) {
+  .mobile-kart-touch-controls {
+    display: flex;
+  }
+}
+
   </style>
   <!-- LIBRERÍAS THREE.JS PARA RENDERIZADO 3D REALISTA Y ANIMACIÓN EN TIEMPO REAL -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1722,7 +1874,9 @@
         <strong id="current-slot-label" style="color:#003399;">⚡ Bloque 2000s Activo</strong>
       </div>
       <div class="theme-controls">
-        <button class="retro-btn btn-dollz-highlight" onclick="openDollGame()">👗 Juego de Vestir Muñeca (Dollz 2004)</button>
+        <button class="retro-btn btn-dollz-highlight" onclick="openDollGame()">👗 Vestir Muñeca 3D</button>
+        <button class="retro-btn" onclick="openPvPGame()" style="background:linear-gradient(180deg,#ff0055,#990033); color:#fff; font-weight:bold;">⚔️ Duelo 2 Players (PC)</button>
+        <button class="retro-btn" onclick="openKartGame()" style="background:linear-gradient(180deg,#00ffff,#0088cc); color:#000; font-weight:bold;">🏎️ Malen Kart 2D (PC/Móvil)</button>
         <button class="retro-btn" onclick="generateInfiniteStyleManual()">🎨 Mutar Estilo</button>
         <button class="retro-btn" onclick="generateNewQuoteManual()">🤖 Nueva Frase IA</button>
         <button class="retro-btn" onclick="sendNudge()">📳 Zumbido MSN</button>
@@ -1884,7 +2038,9 @@
         <div class="micro-badge"><span>MP3</span>REAL 2000s HITS</div>
         <div class="micro-badge"><span>ARES</span>SEARCH ENGINE</div>
         <div class="micro-badge"><span>IA</span>COLOMBO-VENEZOLANA</div>
-        <div class="micro-badge"><span>DOLLZ</span>JUEGO DE VESTIR</div>
+        <div class="micro-badge"><span>DOLLZ</span>3D STUDIO</div>
+        <div class="micro-badge"><span>2P-GAME</span>PIXEL SMASH (PC)</div>
+        <div class="micro-badge"><span>KART-2D</span>MALEN RACER</div>
         <div class="micro-badge"><span>QUEEN</span>MALENES</div>
         <div class="micro-badge"><span>SPAWN</span>15-10-2004</div>
       </div>
@@ -1893,13 +2049,92 @@
   </div>
 
   <!-- Botón flotante para abrir el juego -->
-  <div class="floating-doll-btn" onclick="openDollGame()" title="Abrir Taller de Muñecas 2004">
+  <!-- Botón flotante para abrir el Taller de Muñecas -->
+  <div class="floating-doll-btn" onclick="openDollGame()" title="Abrir Taller de Muñecas 3D">
     <span>🎀</span>
-    <span>Vestir Muñeca (Dollz)</span>
+    <span>Dollz 3D</span>
+  </div>
+  <!-- Botón flotante para Malen Kart 2D -->
+  <div class="floating-doll-btn" onclick="openKartGame()" style="bottom: 70px; background: linear-gradient(135deg, #00ffff, #0066cc); color:#000;" title="Jugar Malen Kart 2D">
+    <span>🏎️</span>
+    <span>Malen Kart</span>
+  </div>
+  <!-- Botón flotante para Duelo 2P -->
+  <div class="floating-doll-btn" onclick="openPvPGame()" style="bottom: 120px; background: linear-gradient(135deg, #ff0055, #660022);" title="Duelo 2 Jugadores Teclado PC">
+    <span>⚔️</span>
+    <span>Duelo 2P</span>
   </div>
 
   <!-- Notificación Toast -->
   <div class="doll-toast" id="doll-toast">✨ ¡Look copiado al portapapeles!</div>
+
+  <!-- =========================================================================
+     MODAL JUEGO 1: DUELO 2 JUGADORES TECLADO PC EXCLUSIVO (PIXEL SMASH 2004)
+     ========================================================================= -->
+<div class="arcade-modal-overlay" id="pvp-modal-overlay" onclick="if(event.target.id==='pvp-modal-overlay') closePvPGame()">
+  <div class="arcade-window">
+    <div class="arcade-titlebar">
+      <span>⚔️ Pixel_Smash_2004_v1.0.exe — [Duelo 2 Jugadores • Exclusivo Teclado PC]</span>
+      <div class="win-btn close" onclick="closePvPGame()">X</div>
+    </div>
+    <div class="arcade-menubar">
+      <div style="display:flex; gap:6px;">
+        <button class="retro-btn" onclick="resetPvPRound()">🔄 Reiniciar Pelea</button>
+        <button class="retro-btn" onclick="closePvPGame()">🚪 Salir</button>
+      </div>
+      <div style="font-size:10px; color:#990066; font-weight:bold;">
+        🎮 MODO COMPETITIVO RETRO (1 VS 1 LOCAL)
+      </div>
+    </div>
+    <div class="arcade-game-canvas-box">
+      <canvas id="pvp-canvas" class="arcade-canvas" width="720" height="380"></canvas>
+    </div>
+    <div class="arcade-footer-hints">
+      <div><strong>💖 JUGADOR 1 (Malenes):</strong> W (Salto) • A (Izq) • D (Der) • F (Golpe) • G (Poder Especial)</div>
+      <div><strong>💙 JUGADOR 2 (Rival):</strong> ↑ (Salto) • ← (Izq) • → (Der) • K (Golpe) • L (Poder Especial)</div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL JUEGO 2: MALEN KART 2D (RETRO SUPER RACER - PC & MÓVIL)
+     ========================================================================= -->
+<div class="arcade-modal-overlay" id="kart-modal-overlay" onclick="if(event.target.id==='kart-modal-overlay') closeKartGame()">
+  <div class="arcade-window">
+    <div class="arcade-titlebar" style="background:linear-gradient(90deg, #ff00bb, #ff9900, #00ffff);">
+      <span>🏎️ Malen_Kart_2D_GP.exe — [Gran Premio 2000s • PC & Móvil]</span>
+      <div class="win-btn close" onclick="closeKartGame()">X</div>
+    </div>
+    <div class="arcade-menubar">
+      <div style="display:flex; gap:6px;">
+        <button class="retro-btn" onclick="resetKartRace()">🏁 Reiniciar Carrera</button>
+        <button class="retro-btn" onclick="closeKartGame()">🚪 Salir</button>
+      </div>
+      <div style="font-size:10px; color:#006699; font-weight:bold;">
+        🎮 PC: Flechas o W,A,S,D + [ESPACIO] Ítem | MÓVIL: Botones Táctiles
+      </div>
+    </div>
+    <div class="arcade-game-canvas-box">
+      <canvas id="kart-canvas" class="arcade-canvas" width="640" height="360"></canvas>
+
+      <!-- Controles táctiles virtuales para Android & iPhone -->
+      <div class="mobile-kart-touch-controls">
+        <div class="touch-dpad">
+          <button class="touch-btn" ontouchstart="kartTouch.left=true" ontouchend="kartTouch.left=false" onmousedown="kartTouch.left=true" onmouseup="kartTouch.left=false">◀</button>
+          <button class="touch-btn" ontouchstart="kartTouch.right=true" ontouchend="kartTouch.right=false" onmousedown="kartTouch.right=true" onmouseup="kartTouch.right=false">▶</button>
+        </div>
+        <div class="touch-actions">
+          <button class="touch-btn touch-item-btn" ontouchstart="kartTouch.item=true" ontouchend="kartTouch.item=false" onmousedown="kartTouch.item=true" onmouseup="kartTouch.item=false" title="Usar Ítem">⭐</button>
+          <button class="touch-btn" ontouchstart="kartTouch.brake=true" ontouchend="kartTouch.brake=false" onmousedown="kartTouch.brake=true" onmouseup="kartTouch.brake=false" title="Frenar">🛑</button>
+          <button class="touch-btn touch-gas-btn" ontouchstart="kartTouch.gas=true" ontouchend="kartTouch.gas=false" onmousedown="kartTouch.gas=true" onmouseup="kartTouch.gas=false" title="Acelerar">⚡</button>
+        </div>
+      </div>
+    </div>
+    <div class="arcade-footer-hints">
+      <div>🏁 3 Vueltas por Carrera • Coge las Cajas con "?" para turbos de velocidad y estrellas de invencibilidad</div>
+    </div>
+  </div>
+</div>
 
   <!-- =========================================================================
        VENTANA RETRO REPOTENCIADA: JUEGO DE VESTIR MUÑECAS (DOLLZ STUDIO 2004)
@@ -5043,6 +5278,1019 @@ function toggle3D2DMode() {
       toggleBtn.style.color = '';
     }
     showDollToast('✨ Volviendo al Taller 2D');
+  }
+}
+
+
+    
+// =============================================================================
+// JUEGO 1: DUELO 2 JUGADORES TECLADO PC EXCLUSIVO (PIXEL SMASH 2004)
+// JUGADOR 1: W (Salto), A (Izq), D (Der), F (Golpe), G (Poder Especial)
+// JUGADOR 2: Flecha Arriba (Salto), Izq, Der, K (Golpe), L (Poder Especial)
+// =============================================================================
+
+let pvpAnimationId = null;
+let pvpCanvas = null;
+let pvpCtx = null;
+
+const pvpKeys = {};
+
+window.addEventListener('keydown', (e) => {
+  pvpKeys[e.code] = true;
+  // Prevenir scroll en las flechas si la ventana de juego está abierta
+  const modal = document.getElementById('pvp-modal-overlay');
+  if (modal && modal.classList.contains('active')) {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+      e.preventDefault();
+    }
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  pvpKeys[e.code] = false;
+});
+
+const pvpGame = {
+  active: false,
+  roundTime: 60,
+  timerInterval: null,
+  winner: null,
+  p1: {
+    name: 'Malenes (Reina Y2K)',
+    x: 120, y: 260, vx: 0, vy: 0,
+    width: 38, height: 68,
+    isGrounded: false,
+    hp: 100, energy: 100,
+    facing: 1, // 1: der, -1: izq
+    color: '#ff00aa',
+    attackCooldown: 0,
+    specialCooldown: 0,
+    isAttacking: false,
+    isSpecial: false,
+    animFrame: 0,
+    score: 0
+  },
+  p2: {
+    name: 'Rival (Chamo del Ciber)',
+    x: 560, y: 260, vx: 0, vy: 0,
+    width: 38, height: 68,
+    isGrounded: false,
+    hp: 100, energy: 100,
+    facing: -1,
+    color: '#00ccff',
+    attackCooldown: 0,
+    specialCooldown: 0,
+    isAttacking: false,
+    isSpecial: false,
+    animFrame: 0,
+    score: 0
+  },
+  projectiles: [],
+  particles: []
+};
+
+function openPvPGame() {
+  const modal = document.getElementById('pvp-modal-overlay');
+  modal.classList.add('active');
+  pvpCanvas = document.getElementById('pvp-canvas');
+  pvpCtx = pvpCanvas.getContext('2d');
+  resetPvPRound();
+  pvpGame.active = true;
+  startPvPLoop();
+  playRetroDollSound('fanfare');
+}
+
+function closePvPGame() {
+  const modal = document.getElementById('pvp-modal-overlay');
+  modal.classList.remove('active');
+  pvpGame.active = false;
+  if (pvpAnimationId) cancelAnimationFrame(pvpAnimationId);
+  if (pvpGame.timerInterval) clearInterval(pvpGame.timerInterval);
+}
+
+function resetPvPRound() {
+  pvpGame.p1.x = 140;
+  pvpGame.p1.y = 260;
+  pvpGame.p1.vx = 0;
+  pvpGame.p1.vy = 0;
+  pvpGame.p1.hp = 100;
+  pvpGame.p1.energy = 100;
+  pvpGame.p1.facing = 1;
+
+  pvpGame.p2.x = 540;
+  pvpGame.p2.y = 260;
+  pvpGame.p2.vx = 0;
+  pvpGame.p2.vy = 0;
+  pvpGame.p2.hp = 100;
+  pvpGame.p2.energy = 100;
+  pvpGame.p2.facing = -1;
+
+  pvpGame.projectiles = [];
+  pvpGame.particles = [];
+  pvpGame.roundTime = 60;
+  pvpGame.winner = null;
+
+  if (pvpGame.timerInterval) clearInterval(pvpGame.timerInterval);
+  pvpGame.timerInterval = setInterval(() => {
+    if (!pvpGame.active || pvpGame.winner) return;
+    pvpGame.roundTime--;
+    // Regenerar energía lentamente
+    if (pvpGame.p1.energy < 100) pvpGame.p1.energy = Math.min(100, pvpGame.p1.energy + 4);
+    if (pvpGame.p2.energy < 100) pvpGame.p2.energy = Math.min(100, pvpGame.p2.energy + 4);
+
+    if (pvpGame.roundTime <= 0) {
+      pvpGame.roundTime = 0;
+      if (pvpGame.p1.hp > pvpGame.p2.hp) {
+        pvpGame.winner = pvpGame.p1.name;
+        pvpGame.p1.score++;
+      } else if (pvpGame.p2.hp > pvpGame.p1.hp) {
+        pvpGame.winner = pvpGame.p2.name;
+        pvpGame.p2.score++;
+      } else {
+        pvpGame.winner = '¡EMPATE TÉCNICO!';
+      }
+      playRetroDollSound('fanfare');
+    }
+  }, 1000);
+}
+
+function startPvPLoop() {
+  if (pvpAnimationId) cancelAnimationFrame(pvpAnimationId);
+
+  function loop() {
+    if (!pvpGame.active) return;
+    updatePvPPhysics();
+    drawPvPScene();
+    pvpAnimationId = requestAnimationFrame(loop);
+  }
+
+  pvpAnimationId = requestAnimationFrame(loop);
+}
+
+function updatePvPPhysics() {
+  if (pvpGame.winner) return;
+
+  const p1 = pvpGame.p1;
+  const p2 = pvpGame.p2;
+  const gravity = 0.85;
+  const floorY = 280;
+
+  // CONTROLES JUGADOR 1 (W, A, S, D, F, G)
+  if (pvpKeys['KeyA']) {
+    p1.vx = -4.5;
+    p1.facing = -1;
+  } else if (pvpKeys['KeyD']) {
+    p1.vx = 4.5;
+    p1.facing = 1;
+  } else {
+    p1.vx *= 0.75;
+  }
+
+  if (pvpKeys['KeyW'] && p1.isGrounded) {
+    p1.vy = -14;
+    p1.isGrounded = false;
+    playRetroDollSound('pop');
+  }
+
+  // Golpe normal J1 (F)
+  if (pvpKeys['KeyF'] && p1.attackCooldown <= 0) {
+    p1.isAttacking = true;
+    p1.attackCooldown = 18;
+    playRetroDollSound('click');
+    // Chequear impacto cuerpo a cuerpo
+    const dist = Math.abs(p1.x - p2.x);
+    const facingRight = (p1.facing === 1 && p2.x > p1.x);
+    const facingLeft = (p1.facing === -1 && p2.x < p1.x);
+    if (dist < 65 && (facingRight || facingLeft) && Math.abs(p1.y - p2.y) < 50) {
+      p2.hp = Math.max(0, p2.hp - 12);
+      p2.vx = p1.facing * 8;
+      p2.vy = -5;
+      spawnPvPHitParticles(p2.x, p2.y + 20, '#ffff00');
+      checkPvPWinner();
+    }
+  }
+
+  // Poder Especial J1 (G) -> Disparo Disco Neón
+  if (pvpKeys['KeyG'] && p1.specialCooldown <= 0 && p1.energy >= 35) {
+    p1.energy -= 35;
+    p1.specialCooldown = 30;
+    pvpGame.projectiles.push({
+      x: p1.x + (p1.facing * 25),
+      y: p1.y + 25,
+      vx: p1.facing * 8.5,
+      owner: 1,
+      radius: 12,
+      color: '#ff00ff'
+    });
+    playRetroDollSound('sparkle');
+  }
+
+  // CONTROLES JUGADOR 2 (Flechas, K, L)
+  if (pvpKeys['ArrowLeft']) {
+    p2.vx = -4.5;
+    p2.facing = -1;
+  } else if (pvpKeys['ArrowRight']) {
+    p2.vx = 4.5;
+    p2.facing = 1;
+  } else {
+    p2.vx *= 0.75;
+  }
+
+  if (pvpKeys['ArrowUp'] && p2.isGrounded) {
+    p2.vy = -14;
+    p2.isGrounded = false;
+    playRetroDollSound('pop');
+  }
+
+  // Golpe normal J2 (K)
+  if (pvpKeys['KeyK'] && p2.attackCooldown <= 0) {
+    p2.isAttacking = true;
+    p2.attackCooldown = 18;
+    playRetroDollSound('click');
+    const dist = Math.abs(p2.x - p1.x);
+    const facingRight = (p2.facing === 1 && p1.x > p2.x);
+    const facingLeft = (p2.facing === -1 && p1.x < p2.x);
+    if (dist < 65 && (facingRight || facingLeft) && Math.abs(p2.y - p1.y) < 50) {
+      p1.hp = Math.max(0, p1.hp - 12);
+      p1.vx = p2.facing * 8;
+      p1.vy = -5;
+      spawnPvPHitParticles(p1.x, p1.y + 20, '#00ffff');
+      checkPvPWinner();
+    }
+  }
+
+  // Poder Especial J2 (L) -> Bola de Energía Cyber
+  if (pvpKeys['KeyL'] && p2.specialCooldown <= 0 && p2.energy >= 35) {
+    p2.energy -= 35;
+    p2.specialCooldown = 30;
+    pvpGame.projectiles.push({
+      x: p2.x + (p2.facing * 25),
+      y: p2.y + 25,
+      vx: p2.facing * 8.5,
+      owner: 2,
+      radius: 12,
+      color: '#00ffff'
+    });
+    playRetroDollSound('sparkle');
+  }
+
+  // Actualizar cooldowns
+  if (p1.attackCooldown > 0) p1.attackCooldown--;
+  if (p1.specialCooldown > 0) p1.specialCooldown--;
+  if (p2.attackCooldown > 0) p2.attackCooldown--;
+  if (p2.specialCooldown > 0) p2.specialCooldown--;
+
+  // Aplicar gravedad y límites a P1
+  p1.vy += gravity;
+  p1.x += p1.vx;
+  p1.y += p1.vy;
+  if (p1.y >= floorY) {
+    p1.y = floorY;
+    p1.vy = 0;
+    p1.isGrounded = true;
+  }
+  p1.x = Math.max(30, Math.min(690, p1.x));
+
+  // Aplicar gravedad y límites a P2
+  p2.vy += gravity;
+  p2.x += p2.vx;
+  p2.y += p2.vy;
+  if (p2.y >= floorY) {
+    p2.y = floorY;
+    p2.vy = 0;
+    p2.isGrounded = true;
+  }
+  p2.x = Math.max(30, Math.min(690, p2.x));
+
+  // Actualizar proyectiles
+  for (let i = pvpGame.projectiles.length - 1; i >= 0; i--) {
+    const proj = pvpGame.projectiles[i];
+    proj.x += proj.vx;
+
+    // Impacto con P2
+    if (proj.owner === 1 && Math.abs(proj.x - p2.x) < 32 && Math.abs(proj.y - (p2.y + 30)) < 38) {
+      p2.hp = Math.max(0, p2.hp - 24);
+      p2.vx = proj.vx * 0.8;
+      spawnPvPHitParticles(proj.x, proj.y, proj.color);
+      pvpGame.projectiles.splice(i, 1);
+      checkPvPWinner();
+      continue;
+    }
+
+    // Impacto con P1
+    if (proj.owner === 2 && Math.abs(proj.x - p1.x) < 32 && Math.abs(proj.y - (p1.y + 30)) < 38) {
+      p1.hp = Math.max(0, p1.hp - 24);
+      p1.vx = proj.vx * 0.8;
+      spawnPvPHitParticles(proj.x, proj.y, proj.color);
+      pvpGame.projectiles.splice(i, 1);
+      checkPvPWinner();
+      continue;
+    }
+
+    // Fuera de pantalla
+    if (proj.x < 0 || proj.x > 720) {
+      pvpGame.projectiles.splice(i, 1);
+    }
+  }
+
+  // Actualizar partículas
+  for (let i = pvpGame.particles.length - 1; i >= 0; i--) {
+    const part = pvpGame.particles[i];
+    part.x += part.vx;
+    part.y += part.vy;
+    part.life--;
+    if (part.life <= 0) pvpGame.particles.splice(i, 1);
+  }
+}
+
+function spawnPvPHitParticles(x, y, color) {
+  for (let i = 0; i < 14; i++) {
+    pvpGame.particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8,
+      color,
+      size: 3 + Math.random() * 3,
+      life: 15 + Math.random() * 10
+    });
+  }
+}
+
+function checkPvPWinner() {
+  if (pvpGame.p2.hp <= 0) {
+    pvpGame.winner = pvpGame.p1.name;
+    pvpGame.p1.score++;
+    playRetroDollSound('fanfare');
+  } else if (pvpGame.p1.hp <= 0) {
+    pvpGame.winner = pvpGame.p2.name;
+    pvpGame.p2.score++;
+    playRetroDollSound('fanfare');
+  }
+}
+
+function drawPvPScene() {
+  const ctx = pvpCtx;
+  const w = pvpCanvas.width;
+  const h = pvpCanvas.height;
+
+  // Fondo cibercafé 2004 con neones
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+  bgGrad.addColorStop(0, '#0c0018');
+  bgGrad.addColorStop(0.7, '#25003e');
+  bgGrad.addColorStop(1, '#050010');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Cuadrícula retro en el suelo
+  ctx.strokeStyle = '#ff00aa';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x < w; x += 40) {
+    ctx.moveTo(x, 348);
+    ctx.lineTo(x + (x - w / 2) * 0.4, h);
+  }
+  for (let y = 348; y < h; y += 15) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+  }
+  ctx.stroke();
+
+  // Plataforma de combate
+  ctx.fillStyle = '#150022';
+  ctx.fillRect(20, 345, w - 40, 10);
+  ctx.strokeStyle = '#00ffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(20, 345, w - 40, 10);
+
+  // DIBUJAR BARRAS DE VIDA Y ENERGÍA
+  // Jugador 1
+  ctx.fillStyle = '#ff007f';
+  ctx.font = 'bold 12px monospace';
+  ctx.fillText(pvpGame.p1.name + ` [WINS: ${pvpGame.p1.score}]`, 30, 24);
+
+  ctx.fillStyle = '#222';
+  ctx.fillRect(30, 30, 240, 16);
+  ctx.fillStyle = '#00ff66';
+  ctx.fillRect(30, 30, (pvpGame.p1.hp / 100) * 240, 16);
+  ctx.strokeStyle = '#fff';
+  ctx.strokeRect(30, 30, 240, 16);
+
+  // Barra de poder J1
+  ctx.fillStyle = '#ffff00';
+  ctx.fillRect(30, 48, (pvpGame.p1.energy / 100) * 160, 6);
+
+  // Jugador 2
+  ctx.fillStyle = '#00ffff';
+  ctx.textAlign = 'right';
+  ctx.fillText(pvpGame.p2.name + ` [WINS: ${pvpGame.p2.score}]`, w - 30, 24);
+
+  ctx.fillStyle = '#222';
+  ctx.fillRect(w - 270, 30, 240, 16);
+  ctx.fillStyle = '#00ff66';
+  ctx.fillRect(w - 270 + (1 - pvpGame.p2.hp / 100) * 240, 30, (pvpGame.p2.hp / 100) * 240, 16);
+  ctx.strokeStyle = '#fff';
+  ctx.strokeRect(w - 270, 30, 240, 16);
+
+  // Barra de poder J2
+  ctx.fillStyle = '#00ffff';
+  ctx.fillRect(w - 30 - (pvpGame.p2.energy / 100) * 160, 48, (pvpGame.p2.energy / 100) * 160, 6);
+
+  ctx.textAlign = 'center';
+  // Reloj central
+  ctx.fillStyle = '#ffff00';
+  ctx.font = 'bold 22px monospace';
+  ctx.fillText(String(pvpGame.roundTime), w / 2, 42);
+
+  // DIBUJAR LUCHADORES ESTILO PIXEL ART 2004
+  drawFighter(pvpGame.p1, true);
+  drawFighter(pvpGame.p2, false);
+
+  // DIBUJAR PROYECTILES
+  pvpGame.projectiles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  // DIBUJAR PARTÍCULAS
+  pvpGame.particles.forEach(pt => {
+    ctx.fillStyle = pt.color;
+    ctx.fillRect(pt.x, pt.y, pt.size, pt.size);
+  });
+
+  // MENSAJE DE GANADOR
+  if (pvpGame.winner) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(0, 120, w, 140);
+    ctx.fillStyle = '#ffff00';
+    ctx.font = 'bold 26px Tahoma, sans-serif';
+    ctx.shadowColor = '#ff00aa';
+    ctx.shadowBlur = 15;
+    ctx.fillText('¡K.O.! GANADOR: ' + pvpGame.winner, w / 2, 180);
+    ctx.shadowBlur = 0;
+    ctx.font = 'bold 13px Tahoma, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Pulsa [ESPACIO] o el botón "Reiniciar Pelea" para la Revancha', w / 2, 220);
+
+    if (pvpKeys['Space']) {
+      resetPvPRound();
+    }
+  }
+}
+
+function drawFighter(p, isMalenes) {
+  const ctx = pvpCtx;
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  if (p.facing === -1) ctx.scale(-1, 1);
+
+  // Sombra en el suelo
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(0, 68, 22, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (isMalenes) {
+    // Malenes: Tiara dorada, top fucsia, pelo largo
+    ctx.fillStyle = currentDollState.skinColor || '#f2ba88';
+    // Piernas
+    ctx.fillRect(-10, 42, 8, 26);
+    ctx.fillRect(2, 42, 8, 26);
+    // Botas
+    ctx.fillStyle = '#111';
+    ctx.fillRect(-11, 58, 10, 10);
+    ctx.fillRect(1, 58, 10, 10);
+
+    // Falda / Pantalón
+    ctx.fillStyle = '#b3003b';
+    ctx.fillRect(-12, 34, 24, 14);
+
+    // Torso / Top
+    ctx.fillStyle = '#ff007f';
+    ctx.fillRect(-10, 16, 20, 20);
+
+    // Cabeza
+    ctx.fillStyle = currentDollState.skinColor || '#f2ba88';
+    ctx.beginPath();
+    ctx.arc(0, 6, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Corona Tiara de Malenes
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    ctx.moveTo(-10, -8);
+    ctx.lineTo(-6, -16);
+    ctx.lineTo(-2, -10);
+    ctx.lineTo(2, -18);
+    ctx.lineTo(6, -10);
+    ctx.lineTo(10, -8);
+    ctx.closePath();
+    ctx.fill();
+
+    // Pelo
+    ctx.fillStyle = currentDollState.hairMainColor || '#181818';
+    ctx.fillRect(-14, -8, 8, 28);
+    ctx.fillRect(6, -8, 8, 28);
+
+    // Brazo / Golpe
+    ctx.fillStyle = currentDollState.skinColor || '#f2ba88';
+    if (p.attackCooldown > 6) {
+      // Puño extendido hacia adelante
+      ctx.fillRect(10, 18, 24, 8);
+      ctx.fillStyle = '#ff007f';
+      ctx.beginPath();
+      ctx.arc(34, 22, 6, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(8, 18, 8, 18);
+    }
+  } else {
+    // Rival Chamo del Ciber (Gorra, camiseta skate azul, bermudas)
+    ctx.fillStyle = '#f2ba88';
+    ctx.fillRect(-10, 44, 8, 24);
+    ctx.fillRect(2, 44, 8, 24);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-12, 60, 11, 8);
+    ctx.fillRect(1, 60, 11, 8);
+
+    // Bermudas
+    ctx.fillStyle = '#263322';
+    ctx.fillRect(-13, 34, 26, 16);
+
+    // Camiseta azul
+    ctx.fillStyle = '#0088cc';
+    ctx.fillRect(-11, 16, 22, 20);
+
+    // Cabeza
+    ctx.fillStyle = '#f2ba88';
+    ctx.beginPath();
+    ctx.arc(0, 6, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Gorra hacia atrás
+    ctx.fillStyle = '#cc0000';
+    ctx.fillRect(-12, -7, 24, 7);
+    ctx.fillRect(-18, -4, 8, 4);
+
+    // Brazo / Golpe
+    ctx.fillStyle = '#f2ba88';
+    if (p.attackCooldown > 6) {
+      ctx.fillRect(10, 18, 24, 8);
+      ctx.fillStyle = '#00ffff';
+      ctx.beginPath();
+      ctx.arc(34, 22, 6, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(8, 18, 8, 18);
+    }
+  }
+
+  ctx.restore();
+}
+
+
+// =============================================================================
+// JUEGO 2: MALEN KART 2D (RETRO SUPER SCALER RACER - PC & MÓVIL)
+// CONTROLES PC: Flechas o W, A, S, D + ESPACIO para Ítem
+// CONTROLES MÓVIL: Botones táctiles virtuales (Gas, Freno, Izq, Der, Ítem)
+// =============================================================================
+
+let kartAnimationId = null;
+let kartCanvas = null;
+let kartCtx = null;
+
+const kartTouch = {
+  left: false,
+  right: false,
+  gas: false,
+  brake: false,
+  item: false
+};
+
+const kartGame = {
+  active: false,
+  speed: 0,
+  maxSpeed: 145,
+  accel: 1.2,
+  friction: 0.985,
+  roadOffset: 0,
+  playerX: 0, // -1 a 1 (posición relativa en el carril)
+  lap: 1,
+  maxLaps: 3,
+  lapDistance: 0,
+  lapLength: 4200,
+  position: 1,
+  totalRacers: 6,
+  item: 'turbo', // 'turbo', 'banana', 'star', null
+  itemTimer: 0,
+  isInvincible: false,
+  score: 0,
+  curve: 0,
+  finished: false,
+  rivals: [
+    { name: 'Don Omar', x: -0.4, dist: 600, speed: 110, color: '#ffcc00' },
+    { name: 'Kudai', x: 0.35, dist: 1200, speed: 115, color: '#111111' },
+    { name: 'Shakira', x: -0.25, dist: 1900, speed: 125, color: '#ff00bb' },
+    { name: 'Avril', x: 0.45, dist: 2600, speed: 120, color: '#00ffff' },
+    { name: 'Eminem', x: 0.1, dist: 3300, speed: 128, color: '#ffffff' }
+  ],
+  roadSegments: [],
+  coins: 0,
+  itemBoxes: []
+};
+
+// Generar pista de carreras procedural
+function initKartTrack() {
+  kartGame.roadSegments = [];
+  for (let i = 0; i < 400; i++) {
+    const curve = Math.sin(i / 18) * 2.8;
+    const hill = Math.sin(i / 12) * 45;
+    kartGame.roadSegments.push({ curve, hill });
+  }
+
+  // Cajas de ítems misteriosos estilo Mario Kart
+  kartGame.itemBoxes = [
+    { dist: 800, x: -0.3, active: true },
+    { dist: 800, x: 0.3, active: true },
+    { dist: 2000, x: -0.3, active: true },
+    { dist: 2000, x: 0.3, active: true },
+    { dist: 3200, x: 0.0, active: true }
+  ];
+}
+
+function openKartGame() {
+  const modal = document.getElementById('kart-modal-overlay');
+  modal.classList.add('active');
+  kartCanvas = document.getElementById('kart-canvas');
+  kartCtx = kartCanvas.getContext('2d');
+  initKartTrack();
+  resetKartRace();
+  kartGame.active = true;
+  startKartLoop();
+  playRetroDollSound('fanfare');
+}
+
+function closeKartGame() {
+  const modal = document.getElementById('kart-modal-overlay');
+  modal.classList.remove('active');
+  kartGame.active = false;
+  if (kartAnimationId) cancelAnimationFrame(kartAnimationId);
+}
+
+function resetKartRace() {
+  kartGame.speed = 0;
+  kartGame.roadOffset = 0;
+  kartGame.playerX = 0;
+  kartGame.lap = 1;
+  kartGame.lapDistance = 0;
+  kartGame.position = 4;
+  kartGame.item = 'turbo';
+  kartGame.finished = false;
+  kartGame.coins = 0;
+
+  kartGame.rivals = [
+    { name: 'Don Omar', x: -0.4, dist: 300, speed: 110, color: '#ffcc00' },
+    { name: 'Kudai', x: 0.35, dist: 650, speed: 115, color: '#111111' },
+    { name: 'Shakira', x: -0.25, dist: 1050, speed: 122, color: '#ff00bb' },
+    { name: 'Avril', x: 0.45, dist: 1450, speed: 118, color: '#00ffff' },
+    { name: 'Eminem', x: 0.1, dist: 1800, speed: 128, color: '#ffffff' }
+  ];
+}
+
+function startKartLoop() {
+  if (kartAnimationId) cancelAnimationFrame(kartAnimationId);
+
+  function loop() {
+    if (!kartGame.active) return;
+    updateKartPhysics();
+    drawKartScene();
+    kartAnimationId = requestAnimationFrame(loop);
+  }
+
+  kartAnimationId = requestAnimationFrame(loop);
+}
+
+function useKartItem() {
+  if (!kartGame.item || kartGame.finished) return;
+
+  if (kartGame.item === 'turbo') {
+    kartGame.speed = Math.min(kartGame.maxSpeed + 35, kartGame.speed + 45);
+    kartGame.itemTimer = 90;
+    playRetroDollSound('sparkle');
+    kartGame.item = null;
+  } else if (kartGame.item === 'star') {
+    kartGame.isInvincible = true;
+    kartGame.speed = kartGame.maxSpeed + 25;
+    kartGame.itemTimer = 160;
+    playRetroDollSound('fanfare');
+    kartGame.item = null;
+  }
+}
+
+function updateKartPhysics() {
+  if (kartGame.finished) return;
+
+  const keys = pvpKeys; // Reusamos el mapa global de teclas
+  const isUp = keys['ArrowUp'] || keys['KeyW'] || kartTouch.gas;
+  const isDown = keys['ArrowDown'] || keys['KeyS'] || kartTouch.brake;
+  const isLeft = keys['ArrowLeft'] || keys['KeyA'] || kartTouch.left;
+  const isRight = keys['ArrowRight'] || keys['KeyD'] || kartTouch.right;
+  const isItem = keys['Space'] || keys['KeyE'] || kartTouch.item;
+
+  if (isItem) useKartItem();
+
+  // Aceleración y freno
+  if (isUp) {
+    kartGame.speed = Math.min(kartGame.maxSpeed, kartGame.speed + kartGame.accel);
+  } else if (isDown) {
+    kartGame.speed = Math.max(0, kartGame.speed - kartGame.accel * 2.2);
+  } else {
+    kartGame.speed *= kartGame.friction;
+  }
+
+  // Dirección lateral según velocidad
+  if (kartGame.speed > 5) {
+    const steerSpeed = 0.024 * (kartGame.speed / kartGame.maxSpeed);
+    if (isLeft) kartGame.playerX -= steerSpeed;
+    if (isRight) kartGame.playerX += steerSpeed;
+  }
+
+  // Límite de carretera (pasto desacelera el kart)
+  if (Math.abs(kartGame.playerX) > 0.85) {
+    kartGame.speed *= 0.94; // Rozamiento del pasto
+  }
+  kartGame.playerX = Math.max(-1.15, Math.min(1.15, kartGame.playerX));
+
+  // Distancia y vueltas
+  kartGame.lapDistance += kartGame.speed;
+  kartGame.roadOffset += kartGame.speed;
+
+  // Manejo de curvas en la carretera
+  const segmentIdx = Math.floor(kartGame.lapDistance / 100) % kartGame.roadSegments.length;
+  kartGame.curve = kartGame.roadSegments[segmentIdx].curve;
+  kartGame.playerX -= kartGame.curve * 0.0035 * (kartGame.speed / kartGame.maxSpeed);
+
+  // Paso por línea de meta
+  if (kartGame.lapDistance >= kartGame.lapLength) {
+    kartGame.lapDistance = 0;
+    kartGame.lap++;
+    playRetroDollSound('sparkle');
+    if (kartGame.lap > kartGame.maxLaps) {
+      kartGame.finished = true;
+      playRetroDollSound('fanfare');
+    }
+  }
+
+  // Actualizar rivales y posición en carrera
+  let aheadCount = 0;
+  kartGame.rivals.forEach(rival => {
+    rival.dist += rival.speed * 0.95;
+    if (rival.dist > kartGame.lapDistance) aheadCount++;
+  });
+  kartGame.position = aheadCount + 1;
+
+  // Interacción con cajas de ítems
+  kartGame.itemBoxes.forEach(box => {
+    const relDist = Math.abs((kartGame.lapDistance % kartGame.lapLength) - box.dist);
+    if (relDist < 80 && Math.abs(kartGame.playerX - box.x) < 0.35 && !kartGame.item) {
+      kartGame.item = Math.random() > 0.5 ? 'turbo' : 'star';
+      playRetroDollSound('sparkle');
+    }
+  });
+
+  // Temporizador de efectos especiales
+  if (kartGame.itemTimer > 0) {
+    kartGame.itemTimer--;
+    if (kartGame.itemTimer <= 0) kartGame.isInvincible = false;
+  }
+}
+
+function drawKartScene() {
+  const ctx = kartCtx;
+  const w = kartCanvas.width;
+  const h = kartCanvas.height;
+
+  // 1. Cielo degradado Y2K con estrellas y puesta de sol
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 160);
+  skyGrad.addColorStop(0, '#0f051d');
+  skyGrad.addColorStop(0.6, '#4a084a');
+  skyGrad.addColorStop(1, '#ff007f');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, w, 160);
+
+  // Sol de neón retro
+  ctx.fillStyle = '#ffff00';
+  ctx.beginPath();
+  ctx.arc(w / 2 + (kartGame.curve * 12), 120, 42, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Palmeras / Siluetas de fondo
+  ctx.fillStyle = '#1a0026';
+  for (let px = 20; px < w; px += 80) {
+    ctx.fillRect(px, 130, 8, 30);
+    ctx.beginPath();
+    ctx.arc(px + 4, 130, 22, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 2. Carretera en perspectiva 2D (Modo 7 clásico)
+  const horizonY = 160;
+  const roadWBottom = w * 0.95;
+  const roadWTop = 20;
+
+  for (let y = horizonY; y < h; y += 4) {
+    const progress = (y - horizonY) / (h - horizonY);
+    const perspective = Math.pow(progress, 2.2);
+    const currentRoadW = roadWTop + (roadWBottom - roadWTop) * perspective;
+    const curveOffset = kartGame.curve * (1 - progress) * 90;
+    const roadCenterX = (w / 2) + curveOffset;
+
+    // Pasto alternado (efecto velocidad)
+    const isStripe = (Math.floor(kartGame.roadOffset / 20) + y) % 18 < 9;
+    ctx.fillStyle = isStripe ? '#184518' : '#123312';
+    ctx.fillRect(0, y, w, 4);
+
+    // Bordillo / Pianos de carrera (rojo y blanco)
+    const curbW = 18 * perspective;
+    ctx.fillStyle = isStripe ? '#ff0000' : '#ffffff';
+    ctx.fillRect(roadCenterX - currentRoadW / 2 - curbW, y, curbW, 4);
+    ctx.fillRect(roadCenterX + currentRoadW / 2, y, curbW, 4);
+
+    // Asfalto
+    ctx.fillStyle = isStripe ? '#33333e' : '#292933';
+    ctx.fillRect(roadCenterX - currentRoadW / 2, y, currentRoadW, 4);
+
+    // Líneas divisorias de carril
+    if (isStripe) {
+      ctx.fillStyle = '#ffff00';
+      ctx.fillRect(roadCenterX - 2, y, 4, 4);
+    }
+  }
+
+  // 3. DIBUJAR RIVALES EN LA PISTA
+  kartGame.rivals.forEach(rival => {
+    const relDist = rival.dist - kartGame.lapDistance;
+    if (relDist > 0 && relDist < 2500) {
+      const scale = 1 - (relDist / 2500);
+      const rivalY = horizonY + (h - horizonY) * Math.pow(scale, 1.8);
+      const rivalX = (w / 2) + (rival.x * w * 0.45 * scale) + (kartGame.curve * (1 - scale) * 40);
+
+      const kartSize = 38 * scale;
+      ctx.fillStyle = rival.color;
+      ctx.fillRect(rivalX - kartSize / 2, rivalY - kartSize / 1.5, kartSize, kartSize / 1.5);
+
+      // Ruedas del rival
+      ctx.fillStyle = '#000';
+      ctx.fillRect(rivalX - kartSize / 1.8, rivalY - kartSize / 2, kartSize * 0.2, kartSize / 2);
+      ctx.fillRect(rivalX + kartSize / 2.8, rivalY - kartSize / 2, kartSize * 0.2, kartSize / 2);
+
+      // Nombre sobre el rival
+      ctx.fillStyle = '#fff';
+      ctx.font = `${Math.max(9, Math.floor(11 * scale))}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText(rival.name, rivalX, rivalY - kartSize - 2);
+    }
+  });
+
+  // 4. DIBUJAR CAJAS DE ÍTEMS FLOTANTES
+  kartGame.itemBoxes.forEach(box => {
+    const relDist = box.dist - (kartGame.lapDistance % kartGame.lapLength);
+    if (relDist > 0 && relDist < 2000) {
+      const scale = 1 - (relDist / 2000);
+      const boxY = horizonY + (h - horizonY) * Math.pow(scale, 1.8) - 10;
+      const boxX = (w / 2) + (box.x * w * 0.45 * scale);
+      const bSize = 22 * scale;
+
+      ctx.fillStyle = '#ff00ff';
+      ctx.fillRect(boxX - bSize / 2, boxY - bSize / 2, bSize, bSize);
+      ctx.strokeStyle = '#ffff00';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(boxX - bSize / 2, boxY - bSize / 2, bSize, bSize);
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.floor(14 * scale)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('?', boxX, boxY + 4 * scale);
+    }
+  });
+
+  // 5. DIBUJAR EL KART DE MALENES (JUGADOR PRINCIPAL EN PRIMER PLANO)
+  const playerScreenX = (w / 2) + (kartGame.playerX * (w * 0.38));
+  const playerScreenY = h - 55;
+
+  ctx.save();
+  ctx.translate(playerScreenX, playerScreenY);
+
+  // Inclinación al doblar
+  if (pvpKeys['ArrowLeft'] || pvpKeys['KeyA'] || kartTouch.left) ctx.rotate(-0.06);
+  if (pvpKeys['ArrowRight'] || pvpKeys['KeyD'] || kartTouch.right) ctx.rotate(0.06);
+
+  // Fuego de escape si usa turbo
+  if (kartGame.itemTimer > 0) {
+    ctx.fillStyle = '#00ffff';
+    ctx.beginPath();
+    ctx.arc(-16, 22, 9 + Math.random() * 5, 0, Math.PI * 2);
+    ctx.arc(16, 22, 9 + Math.random() * 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Ruedas traseras
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(-36, 6, 14, 22);
+  ctx.fillRect(22, 6, 14, 22);
+
+  // Chasis Kart Rosa & Diamante de Malenes
+  ctx.fillStyle = kartGame.isInvincible ? '#ffff00' : '#ff007f';
+  ctx.beginPath();
+  ctx.roundRect(-26, 0, 52, 26, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Alerón trasero
+  ctx.fillStyle = '#330033';
+  ctx.fillRect(-28, -6, 56, 8);
+  ctx.fillStyle = '#00ffff';
+  ctx.fillRect(-22, -10, 44, 4);
+
+  // Corona Tiara y Malenes conduciendo
+  ctx.fillStyle = currentDollState.skinColor || '#f2ba88';
+  ctx.beginPath();
+  ctx.arc(0, -14, 12, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pelo de Malenes al viento
+  ctx.fillStyle = currentDollState.hairMainColor || '#181818';
+  ctx.fillRect(-14, -20, 8, 18);
+  ctx.fillRect(6, -20, 8, 18);
+
+  // Corona Dorada de Malenes
+  ctx.fillStyle = '#ffd700';
+  ctx.beginPath();
+  ctx.moveTo(-8, -26);
+  ctx.lineTo(-4, -32);
+  ctx.lineTo(0, -28);
+  ctx.lineTo(4, -32);
+  ctx.lineTo(8, -26);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+
+  // 6. HUD / MARCADORES EN PANTALLA (Vueltas, Posición, Velocímetro e Ítem)
+  // Posición
+  ctx.fillStyle = '#ffff00';
+  ctx.font = 'bold 22px Impact, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(`${kartGame.position}º / ${kartGame.totalRacers}`, 20, 36);
+
+  // Vuelta
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 13px Tahoma, sans-serif';
+  ctx.fillText(`VUELTA: ${Math.min(3, kartGame.lap)} / 3`, 20, 56);
+
+  // Velocímetro digital
+  ctx.fillStyle = '#00ffcc';
+  ctx.font = 'bold 18px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${Math.floor(kartGame.speed * 1.8)} KM/H`, w - 20, 36);
+
+  // Caja de ítem actual (Esquina superior derecha)
+  ctx.fillStyle = '#110220';
+  ctx.fillRect(w - 74, 48, 54, 46);
+  ctx.strokeStyle = '#ff00ff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(w - 74, 48, 54, 46);
+
+  ctx.textAlign = 'center';
+  ctx.font = '24px sans-serif';
+  if (kartGame.item === 'turbo') {
+    ctx.fillText('🍄', w - 47, 80);
+  } else if (kartGame.item === 'star') {
+    ctx.fillText('⭐', w - 47, 80);
+  } else {
+    ctx.fillStyle = '#555';
+    ctx.font = '12px monospace';
+    ctx.fillText('VACÍO', w - 47, 76);
+  }
+
+  // Cartel de llegada / Ganador
+  if (kartGame.finished) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(0, 130, w, 130);
+    ctx.fillStyle = '#ffff00';
+    ctx.font = 'bold 26px Tahoma, sans-serif';
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 12;
+    ctx.fillText(`¡CARRERA FINALIZADA! POSICIÓN: ${kartGame.position}º 🏆`, w / 2, 185);
+    ctx.shadowBlur = 0;
+    ctx.font = 'bold 13px Tahoma, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('¡Qué manejo de Malenes! Pulsa "Reiniciar Carrera" para otra tanda', w / 2, 225);
   }
 }
 
