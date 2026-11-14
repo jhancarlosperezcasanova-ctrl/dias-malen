@@ -1719,7 +1719,7 @@
     <!-- Barra de herramientas interactiva -->
     <div class="menu-bar">
       <div>
-        <strong id="current-slot-label" style="color:#003399;">⏳ Cargando bloque...</strong>
+        <strong id="current-slot-label" style="color:#003399;">⚡ Bloque 2000s Activo</strong>
       </div>
       <div class="theme-controls">
         <button class="retro-btn btn-dollz-highlight" onclick="openDollGame()">👗 Juego de Vestir Muñeca (Dollz 2004)</button>
@@ -4295,8 +4295,7 @@
     }
 
     // =========================================================================
-    # coding: utf-8
-// =============================================================================
+    // =============================================================================
 // DOLLZ 3D REAL-TIME ENGINE (WebGL + Three.js) PARA DIAS-MALEN (MALENES)
 // =============================================================================
 
@@ -5321,12 +5320,35 @@ function toggle3D2DMode() {
     })();
 
     // =========================================================================
-    // 8. ARRANQUE DEL SISTEMA
+    // 8. ARRANQUE DEL SISTEMA (ROBUSTO Y RESILIENTE)
     // =========================================================================
-    updateCounters();
-    loadRandomArtistFromCurrentGenre(false);
-    if (isBirthdayToday(new Date())) spawnRetroConfetti();
-    setInterval(updateCounters, 1000);
+    function startMainApp() {
+      try {
+        updateCounters();
+      } catch (e) {
+        console.warn('Aviso en updateCounters:', e);
+      }
+      try {
+        loadRandomArtistFromCurrentGenre(false);
+      } catch (e) {
+        console.warn('Aviso en loadRandomArtist:', e);
+      }
+      try {
+        if (isBirthdayToday(new Date())) spawnRetroConfetti();
+      } catch (e) {}
+
+      setInterval(() => {
+        try {
+          updateCounters();
+        } catch (err) {}
+      }, 1000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startMainApp);
+    } else {
+      startMainApp();
+    }
   </script>
 </body>
 </html>
