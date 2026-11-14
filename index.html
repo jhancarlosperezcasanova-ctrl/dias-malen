@@ -1412,6 +1412,211 @@
       }
     }
 
+  
+    /* =========================================================================
+       NUEVAS CARACTERÍSTICAS DEL JUEGO DE VESTIR DOLLZ STUDIO DELUXE (MALENES)
+       ========================================================================= */
+    .doll-top-bar-stats {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: #110220;
+      border: 1px solid #ff00ff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #ffcc00;
+      font-family: var(--font-mono);
+    }
+
+    .doll-score-badge {
+      color: #00ffcc;
+      font-weight: bold;
+    }
+
+    .doll-preset-pills {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      padding: 4px 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      align-items: center;
+    }
+
+    .preset-pill-btn {
+      background: linear-gradient(180deg, #ff0099, #660066);
+      color: #ffffff;
+      border: 1px outset #ffccff;
+      font-size: 9px;
+      font-family: Tahoma, sans-serif;
+      padding: 2px 6px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: transform 0.15s, background 0.2s;
+    }
+
+    .preset-pill-btn:hover {
+      background: #ff00cc;
+      transform: scale(1.05);
+      box-shadow: 0 0 6px #ffff00;
+    }
+
+    /* Modal de Pasarela y Concurso de Moda */
+    .runway-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 100001;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .runway-modal-overlay.active { display: flex; }
+
+    .runway-card {
+      background: linear-gradient(145deg, #1f022e, #0c0015);
+      border: 3px double #ff00ff;
+      box-shadow: 0 0 40px #ff00ff, 0 10px 25px rgba(0,0,0,0.9);
+      width: 100%;
+      max-width: 580px;
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: Tahoma, sans-serif;
+      animation: zoomInRunway 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes zoomInRunway {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .runway-header {
+      background: linear-gradient(90deg, #ff007f, #800080, #ff007f);
+      color: #fff;
+      padding: 8px 12px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .runway-body {
+      padding: 16px;
+      color: #fff;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .runway-body { flex-direction: column; text-align: center; }
+    }
+
+    .runway-doll-preview {
+      width: 140px;
+      height: 240px;
+      background: radial-gradient(circle, #4a0e4e, #13001e);
+      border: 2px solid #00ffff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px #00ffff;
+      overflow: hidden;
+    }
+
+    .runway-eval-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .runway-score-box {
+      background: #000;
+      border: 2px inset #ff00aa;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .runway-stars {
+      color: #ffff00;
+      font-size: 20px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #ffff00;
+    }
+
+    .runway-score-number {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .runway-verdict {
+      font-size: 12px;
+      line-height: 1.4;
+      background: rgba(255, 0, 150, 0.15);
+      border-left: 3px solid #ff007f;
+      padding: 8px;
+      color: #ffebf7;
+    }
+
+    .runway-trophy {
+      font-size: 12px;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    .doll-pose-selector {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin-top: 4px;
+      font-size: 10px;
+      color: #fff;
+    }
+
+    .doll-pose-btn {
+      background: #2b0c3d;
+      color: #00ffff;
+      border: 1px outset #666;
+      padding: 2px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 9px;
+    }
+
+    .doll-pose-btn.active {
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* Sticker de la pasarela */
+    .doll-accessory-badge {
+      display: inline-block;
+      padding: 2px 4px;
+      font-size: 8px;
+      border-radius: 2px;
+      margin-left: 4px;
+      font-weight: bold;
+      background: #ff007f;
+      color: #fff;
+    }
+
   </style>
 </head>
 <body>
@@ -1626,10 +1831,11 @@
       
       <!-- Barra de título arrastrable (Mouse y Touch) -->
       <div class="doll-titlebar" id="doll-drag-handle">
-        <span>
+        <div style="display:flex; align-items:center; gap:8px;">
           <span style="font-size:14px;">🎀</span>
-          <span>Dollz_Maker_2004_v3.0_Deluxe.exe - [Taller Y2K]</span>
-        </span>
+          <span>Dollz_Studio_2004_Deluxe.exe — [Taller de Alta Moda de Malenes]</span>
+          <span class="doll-top-bar-stats">⭐ Glow: <span id="doll-stat-glow" class="doll-score-badge">0 pts</span></span>
+        </div>
         <div class="title-bar-controls">
           <div class="win-btn" onclick="randomizeDollLook()" title="🎲 Look Aleatorio">🎲</div>
           <div class="win-btn" onclick="downloadDollImage()" title="📸 Descargar Foto PNG">💾</div>
@@ -1641,15 +1847,22 @@
       <!-- Barra de herramientas del vestidor -->
       <div class="doll-menubar">
         <div class="doll-actions-left">
-          <button class="retro-btn" onclick="randomizeDollLook()">🎲 Look Aleatorio</button>
-          <button class="retro-btn" onclick="downloadDollImage()">📸 Descargar Foto PNG</button>
-          <button class="retro-btn" onclick="makeDollSpeakManual()">💬 ¿Qué dice la muñeca?</button>
-          <button class="retro-btn" onclick="toggleGlitterEffect()">✨ Brillos Metroflog</button>
+          <button class="retro-btn" onclick="randomizeDollLook()">🎲 Look Random</button>
+          <button class="retro-btn" onclick="startFashionRunwayShow()" style="background:linear-gradient(180deg,#ffff99,#ffcc00); color:#000; font-weight:bold;">✨ Pasarela & Juez 🏆</button>
+          <button class="retro-btn" onclick="downloadDollImage()">📸 Guardar Foto PNG</button>
+          <button class="retro-btn" onclick="makeDollSpeakManual()">💬 Voz de Muñeca</button>
+          <button class="retro-btn" onclick="toggleGlitterEffect()">✨ Brillos</button>
+          <button class="retro-btn" onclick="saveCustomOutfitSlot()">💾 Guardar Look</button>
+          <button class="retro-btn" onclick="loadCustomOutfitSlot()">📂 Cargar Look</button>
           <button class="retro-btn" onclick="copyDollOutfitSummary()">📋 Copiar Ficha</button>
           <button class="retro-btn" onclick="resetDollWardrobe()">🗑️ Desvestir</button>
         </div>
-        <div style="font-size:10px; color:#660066; font-weight:bold;">
-          ★ Dollz Deluxe Edition ★
+        <div class="doll-preset-pills">
+          <span style="font-size:9px; color:#ffccff; font-weight:bold;">✨ Outfits Rápidos:</span>
+          <button class="preset-pill-btn" onclick="applyFashionPreset('reina')">👑 Reina Malenes</button>
+          <button class="preset-pill-btn" onclick="applyFashionPreset('emo')">🖤 Emo Metroflog</button>
+          <button class="preset-pill-btn" onclick="applyFashionPreset('pop')">💖 Diva Pop 2004</button>
+          <button class="preset-pill-btn" onclick="applyFashionPreset('cyber')">🛸 Cyber Raver</button>
         </div>
       </div>
 
@@ -1854,6 +2067,16 @@
                 <div class="color-swatch" style="background:#b3002d;" onclick="setDollHairColor('#80001f', '#ff1a53', '#4d0013', 5)" title="Rojo Cereza"></div>
               </div>
             </div>
+
+            <!-- Selector de Pose Fashion -->
+            <div class="palette-row" style="margin-top:2px;">
+              <span>💃 Pose Fashion:</span>
+              <div style="display:flex; gap:3px;">
+                <button class="doll-pose-btn active" id="btn-pose-diva" onclick="setDollPose('diva')">Diva Y2K</button>
+                <button class="doll-pose-btn" id="btn-pose-saludo" onclick="setDollPose('saludo')">Saludo Rebelde</button>
+                <button class="doll-pose-btn" id="btn-pose-modelo" onclick="setDollPose('modelo')">Pasarela</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1872,6 +2095,37 @@
         </div>
 
       </div>
+
+      
+  <!-- MODAL DE PASARELA Y JUEZ DE MODA 2000s -->
+  <div class="runway-modal-overlay" id="runway-modal-overlay" onclick="if(event.target.id==='runway-modal-overlay') closeFashionRunway()">
+    <div class="runway-card">
+      <div class="runway-header">
+        <span>🏆 VMAs 2004 — ALFOMBRA ROJA Y PASARELA DE MALENES</span>
+        <div class="win-btn close" onclick="closeFashionRunway()">X</div>
+      </div>
+      <div class="runway-body">
+        <div class="runway-doll-preview" id="runway-doll-preview">
+          <!-- Miniatura SVG proyectada -->
+        </div>
+        <div class="runway-eval-content">
+          <div class="runway-score-box">
+            <div style="font-size:10px; color:#ff99ff; letter-spacing:1px; margin-bottom:2px;">PUNTUACIÓN DE LOS CRÍTICOS</div>
+            <div class="runway-stars" id="runway-stars">★★★★★</div>
+            <div class="runway-score-number" id="runway-score-number">98 / 100</div>
+          </div>
+          <div class="runway-trophy" id="runway-trophy">✨ ¡GALARDÓN: REINA INDISCUTIBLE DEL FLOW! 👑</div>
+          <div class="runway-verdict" id="runway-verdict">
+            "Los paparazzis en la alfombra roja están enloquecidos. ¡Malenes paralizó la ceremonia con esta pinta!"
+          </div>
+          <div style="display:flex; gap:6px; margin-top:6px;">
+            <button class="retro-btn" onclick="downloadDollImage()" style="flex:1; justify-content:center; background:#ffff99; color:#000;">📸 Guardar Foto de Alfombra Roja</button>
+            <button class="retro-btn" onclick="closeFashionRunway()" style="flex:1; justify-content:center;">👗 Seguir Creando</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
       <!-- Barra de Estado Inferior -->
       <div class="doll-statusbar">
@@ -2773,6 +3027,49 @@
     const WARDROBE_DATABASE = {
       hair: [
         {
+          id: 'hair_volumen_diva',
+          name: 'Melena Rizada Volumen Diva 2004',
+          category: 'hair',
+          tag: 'Glam / Beyoncé',
+          icon: '🦁',
+          renderBack: () => `
+            <path d="M70 42 C50 65 42 110 46 160 C58 175 75 140 76 90 Z" fill="var(--doll-hair-main)" filter="url(#softDepth)"/>
+            <path d="M130 42 C150 65 158 110 154 160 C142 175 125 140 124 90 Z" fill="var(--doll-hair-accent)" filter="url(#softDepth)"/>
+            <!-- Mechones rizados de fondo -->
+            <circle cx="56" cy="115" r="14" fill="var(--doll-hair-main)" opacity="0.8"/>
+            <circle cx="144" cy="115" r="14" fill="var(--doll-hair-accent)" opacity="0.8"/>
+          `,
+          renderFront: () => `
+            <path d="M72 44 C80 20 120 20 128 44 C122 30 100 26 72 44 Z" fill="var(--doll-hair-light)"/>
+            <circle cx="78" cy="38" r="11" fill="var(--doll-hair-main)"/>
+            <circle cx="122" cy="38" r="11" fill="var(--doll-hair-accent)"/>
+            <circle cx="100" cy="32" r="12" fill="var(--doll-hair-light)"/>
+            <!-- Ricitos en la frente -->
+            <path d="M84 40 Q88 52 82 58" stroke="var(--doll-hair-main)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M116 40 Q112 52 118 58" stroke="var(--doll-hair-accent)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          `
+        },
+        {
+          id: 'hair_flequillo_barbie',
+          name: 'Lacio Rubio con Diadema Rosa',
+          category: 'hair',
+          tag: 'Barbie Y2K',
+          icon: '👱‍♀️',
+          renderBack: () => `
+            <path d="M71 45 C64 80 62 135 64 185 C73 130 76 80 76 48 Z" fill="var(--doll-hair-main)" filter="url(#softDepth)"/>
+            <path d="M129 45 C136 80 138 135 136 185 C127 130 124 80 124 48 Z" fill="var(--doll-hair-main)" filter="url(#softDepth)"/>
+          `,
+          renderFront: () => `
+            <!-- Diadema Rosa Fucsia -->
+            <path d="M74 42 Q100 24 126 42" stroke="#ff0099" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M74 44 Q86 28 100 28 Q114 28 126 44 L123 48 Q100 42 77 48 Z" fill="var(--doll-hair-light)"/>
+            <!-- Flequillo recto pulido -->
+            <path d="M80 43 L120 43 L120 49 L80 49 Z" fill="var(--doll-hair-main)"/>
+            <path d="M74 42 L77 85 L73 85 Z" fill="var(--doll-hair-accent)"/>
+            <path d="M126 42 L123 85 L127 85 Z" fill="var(--doll-hair-accent)"/>
+          `
+        },
+        {
           id: 'hair_emo',
           name: 'Emo Scene con Mechas',
           category: 'hair',
@@ -2880,6 +3177,46 @@
       ],
 
       tops: [
+        {
+          id: 'top_vestido_gala',
+          name: 'Vestido de Gala Siren Y2K con Diamantes',
+          category: 'tops',
+          tag: 'VMAs Red Carpet',
+          icon: '👗',
+          render: () => `
+            <g filter="url(#softDepth)">
+              <!-- Escote drapeado con brillo de seda fucsia y caída elegante -->
+              <path d="M80 84 C88 80 100 88 100 88 C100 88 112 80 120 84 C123 100 121 122 118 140 C114 180 118 240 122 300 C125 330 135 342 135 342 L65 342 C65 342 75 330 78 300 C82 240 86 180 82 140 C79 122 77 100 80 84 Z" fill="url(#silkRoseGrad)" stroke="#ffffff" stroke-width="0.8"/>
+              <!-- Tirantes finos de diamantes -->
+              <line x1="88" y1="83" x2="91" y2="70" stroke="#00ffff" stroke-width="1.2" stroke-dasharray="1.5,1.5"/>
+              <line x1="112" y1="83" x2="109" y2="70" stroke="#00ffff" stroke-width="1.2" stroke-dasharray="1.5,1.5"/>
+              <!-- Broche de corazón de rubí en la cintura -->
+              <circle cx="100" cy="120" r="3" fill="#ff0055" stroke="#ffff00" stroke-width="0.8"/>
+              <!-- Abertura sensual con drapeado -->
+              <path d="M100 160 Q112 230 126 310" stroke="#ffffff" stroke-width="1.2" opacity="0.7" fill="none"/>
+            </g>
+          `
+        },
+        {
+          id: 'top_halter_shakira',
+          name: 'Top Halter Flecos Dorados "Suerte"',
+          category: 'tops',
+          tag: 'Shakira 2004',
+          icon: '✨',
+          render: () => `
+            <g filter="url(#softDepth)">
+              <path d="M86 80 L100 70 L114 80 L118 112 Q100 118 82 112 Z" fill="#d4af37" stroke="#ffffff" stroke-width="0.8"/>
+              <!-- Collar gargantilla que sujeta el halter -->
+              <path d="M93 72 Q100 75 107 72" stroke="#ffd700" stroke-width="2.5" fill="none"/>
+              <!-- Flecos dorados que caen sobre el abdomen -->
+              <line x1="86" y1="112" x2="84" y2="128" stroke="#ffd700" stroke-width="1.2"/>
+              <line x1="92" y1="114" x2="91" y2="132" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="98" y1="115" x2="98" y2="134" stroke="#ffd700" stroke-width="1.5"/>
+              <line x1="104" y1="114" x2="105" y2="132" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="110" y1="112" x2="112" y2="128" stroke="#ffd700" stroke-width="1.2"/>
+            </g>
+          `
+        },
         {
           id: 'top_silk_corset',
           name: 'Corset Alta Costura Seda & Encaje',
@@ -3204,6 +3541,45 @@
 
       accessories: [
         {
+          id: 'acc_chihuahua_paris',
+          name: 'Chihuahua en Bolso de Lujo Y2K',
+          category: 'accessories',
+          tag: 'Mascota VIP',
+          icon: '🐶',
+          render: () => `
+            <g transform="translate(60, 140)" filter="url(#softDepth)">
+              <!-- Bolso rosa de marca -->
+              <rect x="-10" y="2" width="22" height="16" rx="4" fill="#ff0099" stroke="#ffffff" stroke-width="1"/>
+              <path d="M-6 2 Q1 -12 8 2" stroke="#ffcc00" stroke-width="2" fill="none"/>
+              <!-- Cabecita del perrito saliendo -->
+              <ellipse cx="1" cy="0" rx="6" ry="5.5" fill="#d2a679"/>
+              <!-- Orejitas puntiagudas -->
+              <polygon points="-5,-4 -8,-10 -2,-6" fill="#d2a679"/>
+              <polygon points="7,-4 10,-10 4,-6" fill="#d2a679"/>
+              <!-- Ojitos tiernos y nariz -->
+              <circle cx="-1.5" cy="-0.5" r="1.1" fill="#000"/>
+              <circle cx="3.5" cy="-0.5" r="1.1" fill="#000"/>
+              <circle cx="1" cy="2" r="0.9" fill="#000"/>
+              <!-- Lazito rosa en la cabeza del perrito -->
+              <rect x="-1" y="-5" width="4" height="2.5" rx="1" fill="#ff00cc"/>
+            </g>
+          `
+        },
+        {
+          id: 'acc_micro_retro_vmas',
+          name: 'Micrófono de Oro MTV Live',
+          category: 'accessories',
+          tag: 'Concierto 2004',
+          icon: '🎤',
+          render: () => `
+            <g transform="translate(122, 134) rotate(-20)" filter="url(#softDepth)">
+              <rect x="-2" y="0" width="4" height="18" rx="1" fill="#111" stroke="#333" stroke-width="0.6"/>
+              <ellipse cx="0" cy="-3" rx="4" ry="4.5" fill="#ffd700" stroke="#fff" stroke-width="0.8"/>
+              <line x1="0" y1="18" x2="2" y2="28" stroke="#ff00ff" stroke-width="1.2"/> <!-- Cable espiral neón -->
+            </g>
+          `
+        },
+        {
           id: 'acc_malenes_tiara',
           name: 'Corona Tiara de Reina Malenes',
           category: 'accessories',
@@ -3344,7 +3720,8 @@
         shoes: 'shoes_emo_boots',
         accessories: 'acc_razr'
       },
-      glitterActive: true
+      glitterActive: true,
+      pose: 'diva'
     };
 
     const DOLL_REACTIONS = [
@@ -3376,6 +3753,7 @@
       modal.classList.add('active');
       renderCurrentDollWardrobeTab();
       renderDollSVG();
+      calculateDollStyleScore();
       playRetroDollSound('fanfare');
       if (currentDollState.glitterActive) startGlitterAnimation();
     }
@@ -3515,6 +3893,7 @@
     }
 
     function renderDollSVG() {
+      calculateDollStyleScore();
       // 1. Capa Pelo Trasero
       const hairBackLayer = document.getElementById('layer-hair-back');
       hairBackLayer.innerHTML = '';
@@ -3607,6 +3986,7 @@
 
       renderCurrentDollWardrobeTab();
       renderDollSVG();
+      calculateDollStyleScore();
       playRetroDollSound('fanfare');
       makeDollSpeakRandom();
       showDollToast('🎲 ¡Look Aleatorio Generado!');
@@ -3822,6 +4202,217 @@
     // =========================================================================
     // 7. COMPORTAMIENTO ARRASTRABLE (MOUSE Y TOUCH)
     // =========================================================================
+    
+    // =========================================================================
+    // NUEVAS FUNCIONALIDADES DELUXE: PASARELA, JUEZ DE MODA, POSES Y PRESETS
+    // =========================================================================
+
+    // 1. Selector de Poses Dinámicas
+    function setDollPose(poseName) {
+      currentDollState.pose = poseName;
+      document.querySelectorAll('.doll-pose-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-pose-${poseName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const wrapper = document.getElementById('doll-canvas-wrapper');
+      if (poseName === 'diva') {
+        wrapper.style.transform = 'rotate(0deg) scale(1)';
+      } else if (poseName === 'saludo') {
+        wrapper.style.transform = 'rotate(-1.5deg) scale(1.02)';
+      } else if (poseName === 'modelo') {
+        wrapper.style.transform = 'rotate(1.8deg) scale(1.03)';
+      }
+
+      playRetroDollSound('pop');
+      calculateDollStyleScore();
+      showDollToast(`💃 Pose "${poseName.toUpperCase()}" activada`);
+    }
+
+    // 2. Sistema de Puntuación de Estilo (Glow Score)
+    function calculateDollStyleScore() {
+      let score = 50;
+      const eq = currentDollState.equipped;
+
+      if (eq.hair) score += 10;
+      if (eq.tops) score += 12;
+      if (eq.bottoms || eq.tops === 'top_vestido_gala') score += 12;
+      if (eq.shoes) score += 8;
+      if (eq.accessories) score += 8;
+
+      // Bonus por combinaciones temáticas VIP
+      if (eq.accessories === 'acc_malenes_tiara') score += 10; // Tiara de Malenes
+      if (eq.tops === 'top_silk_corset' && eq.bottoms === 'bottom_leather_pants') score += 8; // Rock chic
+      if (eq.tops === 'top_vestido_gala' && eq.shoes === 'shoes_gladiator_heels') score += 8; // Gala pura
+      if (eq.accessories === 'acc_chihuahua_paris') score += 6; // Icono 2004
+
+      const finalScore = Math.min(100, score);
+      const glowEl = document.getElementById('doll-stat-glow');
+      if (glowEl) glowEl.textContent = `${finalScore} pts`;
+
+      return finalScore;
+    }
+
+    // 3. Outfits Rápidos (Presets)
+    const FASHION_PRESETS = {
+      reina: {
+        hair: 'hair_flequillo_barbie',
+        tops: 'top_vestido_gala',
+        bottoms: null,
+        shoes: 'shoes_gladiator_heels',
+        accessories: 'acc_malenes_tiara',
+        stage: 'bg-stage-redcarpet',
+        skinColor: '#f2ba88',
+        skinIdx: 1,
+        hairColor: ['#d6a836', '#fae092', '#8c6819', 1]
+      },
+      emo: {
+        hair: 'hair_emo',
+        tops: 'top_emo_stripes',
+        bottoms: 'bottom_leather_pants',
+        shoes: 'shoes_emo_boots',
+        accessories: 'acc_choker_set',
+        stage: 'bg-stage-metroflog',
+        skinColor: '#ffe0d0',
+        skinIdx: 0,
+        hairColor: ['#181818', '#ff007f', '#333333', 0]
+      },
+      pop: {
+        hair: 'hair_coletas',
+        tops: 'top_babytee',
+        bottoms: 'bottom_pleated_skirt',
+        shoes: 'shoes_pink_heels',
+        accessories: 'acc_razr',
+        stage: 'bg-stage-disco',
+        skinColor: '#f2ba88',
+        skinIdx: 1,
+        hairColor: ['#cc007a', '#ff66cc', '#80004d', 3]
+      },
+      cyber: {
+        hair: 'hair_spacebuns',
+        tops: 'top_mariposa',
+        bottoms: 'bottom_cyber_skirt',
+        shoes: 'shoes_gladiator_heels',
+        accessories: 'acc_wings',
+        stage: 'bg-stage-matrix',
+        skinColor: '#d8b4fe',
+        skinIdx: 4,
+        hairColor: ['#0099b8', '#80eeff', '#005f73', 4]
+      }
+    };
+
+    function applyFashionPreset(presetKey) {
+      const p = FASHION_PRESETS[presetKey];
+      if (!p) return;
+
+      currentDollState.equipped.hair = p.hair;
+      currentDollState.equipped.tops = p.tops;
+      currentDollState.equipped.bottoms = p.bottoms;
+      currentDollState.equipped.shoes = p.shoes;
+      currentDollState.equipped.accessories = p.accessories;
+
+      setDollSkinTone(p.skinColor, p.skinIdx);
+      setDollHairColor(p.hairColor[0], p.hairColor[1], p.hairColor[2], p.hairColor[3]);
+      setDollStageBg(p.stage);
+
+      renderCurrentDollWardrobeTab();
+      renderDollSVG();
+      calculateDollStyleScore();
+      playRetroDollSound('fanfare');
+
+      const names = { reina: '👑 Reina Malenes', emo: '🖤 Emo Scene 2004', pop: '💖 Diva Pop Y2K', cyber: '🛸 Cyberpunk Raver' };
+      showDollToast(`✨ Look "${names[presetKey]}" aplicado con éxito`);
+    }
+
+    // 4. Guardar y Cargar Looks en LocalStorage
+    function saveCustomOutfitSlot() {
+      try {
+        const lookData = {
+          equipped: { ...currentDollState.equipped },
+          skinColor: currentDollState.skinColor,
+          skinIndex: currentDollState.skinIndex,
+          hairMainColor: currentDollState.hairMainColor,
+          hairAccentColor: currentDollState.hairAccentColor,
+          hairLightColor: currentDollState.hairLightColor,
+          hairColorIndex: currentDollState.hairColorIndex,
+          stageBg: currentDollState.stageBg,
+          pose: currentDollState.pose,
+          savedAt: new Date().toLocaleString('es-ES')
+        };
+        localStorage.setItem('dias_malen_custom_look', JSON.stringify(lookData));
+        showDollToast('💾 ¡Look guardado en tu navegador!');
+        playRetroDollSound('sparkle');
+      } catch (err) {
+        showDollToast('⚠️ No se pudo guardar el look.');
+      }
+    }
+
+    function loadCustomOutfitSlot() {
+      try {
+        const raw = localStorage.getItem('dias_malen_custom_look');
+        if (!raw) {
+          showDollToast('⚠️ No tienes ningún look guardado todavía.');
+          return;
+        }
+        const data = JSON.parse(raw);
+        currentDollState.equipped = data.equipped || currentDollState.equipped;
+        if (data.skinColor) setDollSkinTone(data.skinColor, data.skinIndex || 0);
+        if (data.hairMainColor) setDollHairColor(data.hairMainColor, data.hairAccentColor, data.hairLightColor, data.hairColorIndex || 0);
+        if (data.stageBg) setDollStageBg(data.stageBg);
+        if (data.pose) setDollPose(data.pose);
+
+        renderCurrentDollWardrobeTab();
+        renderDollSVG();
+        calculateDollStyleScore();
+        playRetroDollSound('fanfare');
+        showDollToast(`📂 Look de ${data.savedAt || 'archivo'} restaurado`);
+      } catch (err) {
+        showDollToast('⚠️ Error cargando look.');
+      }
+    }
+
+    // 5. Concurso de Moda y Pasarela de los VMAs
+    function startFashionRunwayShow() {
+      const modal = document.getElementById('runway-modal-overlay');
+      const score = calculateDollStyleScore();
+
+      const starsEl = document.getElementById('runway-stars');
+      const scoreNumEl = document.getElementById('runway-score-number');
+      const trophyEl = document.getElementById('runway-trophy');
+      const verdictEl = document.getElementById('runway-verdict');
+      const previewEl = document.getElementById('runway-doll-preview');
+
+      // Proyectar miniatura de la muñeca
+      const svgEl = document.getElementById('doll-svg-element');
+      if (svgEl) {
+        previewEl.innerHTML = svgEl.outerHTML;
+      }
+
+      scoreNumEl.textContent = `${score} / 100`;
+
+      if (score >= 95) {
+        starsEl.textContent = '★★★★★';
+        trophyEl.textContent = '👑 REINA INDISCUTIBLE DE LA MODA 2004 — TROFEO DE ORO 🏆';
+        verdictEl.textContent = `"¡Absolutamente icónico! Malenes se robó todos los flashes de la prensa internacional. Es el look más memorable de toda la década de los 2000s."`;
+      } else if (score >= 80) {
+        starsEl.textContent = '★★★★☆';
+        trophyEl.textContent = '✨ ESTRELLA TOP DE LA NOCHE — MEDALLA DE PLATA 🥈';
+        verdictEl.textContent = `"¡Flow descomunal! Un look cargado de personalidad criolla y alta costura dosmilera. El público de MTV está de pie aplaudiendo."`;
+      } else {
+        starsEl.textContent = '★★★☆☆';
+        trophyEl.textContent = '🎀 LOOK REBELDE CON BUEN FLOW — MENCIÓN DE HONOR';
+        verdictEl.textContent = `"Buen inicio rebelde, pero todavía puedes meterle más brillo y accesorios para coronarte como la reina de la noche."`;
+      }
+
+      modal.classList.add('active');
+      playRetroDollSound('fanfare');
+      spawnRetroConfetti();
+    }
+
+    function closeFashionRunway() {
+      const modal = document.getElementById('runway-modal-overlay');
+      modal.classList.remove('active');
+    }
+
     (function makeDollWindowDraggable() {
       const windowEl = document.getElementById('doll-window');
       const handle = document.getElementById('doll-drag-handle');
