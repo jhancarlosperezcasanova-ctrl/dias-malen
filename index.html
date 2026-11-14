@@ -4164,93 +4164,138 @@
 
 
   <!-- =========================================================================
-
      MODAL JUEGO 1: DUELO 2 JUGADORES TECLADO PC EXCLUSIVO (PIXEL SMASH 2004)
-
      ========================================================================= -->
-
 <div class="arcade-modal-overlay" id="pvp-modal-overlay" onclick="if(event.target.id==='pvp-modal-overlay') closePvPGame()">
-
   <div class="arcade-window">
-
     <div class="arcade-titlebar">
-
       <span>⚔️ Pixel_Smash_2004_v1.0.exe — [Duelo 2 Jugadores • Exclusivo Teclado PC]</span>
-
       <div class="win-btn close" onclick="closePvPGame()">X</div>
-
     </div>
-
     <div class="arcade-menubar">
-
       <div style="display:flex; gap:6px;">
-
         <button class="retro-btn" onclick="resetPvPRound()">🔄 Reiniciar Pelea</button>
-
         <button class="retro-btn" onclick="closePvPGame()">🚪 Salir</button>
-
       </div>
-
       <div style="font-size:10px; color:#990066; font-weight:bold;">
-
         🎮 MODO COMPETITIVO RETRO (1 VS 1 LOCAL)
-
       </div>
-
     </div>
-
-    
-    
-    </div>
-
     <div class="arcade-game-canvas-box">
-
       <canvas id="pvp-canvas" class="arcade-canvas" width="720" height="380"></canvas>
-
     </div>
-
     <div class="arcade-footer-hints">
-
       <div><strong>💖 JUGADOR 1 (Malenes):</strong> W (Salto) • A (Izq) • D (Der) • F (Golpe) • G (Poder Especial)</div>
-
       <div><strong>💙 JUGADOR 2 (Rival):</strong> ↑ (Salto) • ← (Izq) • → (Der) • K (Golpe) • L (Poder Especial)</div>
-
     </div>
-
   </div>
-
 </div>
 
-
-
 <!-- =========================================================================
-
      MODAL JUEGO 2: MALEN KART 2D (RETRO SUPER RACER - PC & MÓVIL)
-
      ========================================================================= -->
-
 <div class="arcade-modal-overlay" id="kart-modal-overlay" onclick="if(event.target.id==='kart-modal-overlay') closeKartGame()">
-
   <div class="arcade-window">
-
     <div class="arcade-titlebar" style="background:linear-gradient(90deg, #ff00bb, #ff9900, #00ffff);">
-
       <span>🏎️ Malen_Kart_2D_GP.exe — [Gran Premio 2000s • PC & Móvil]</span>
-
       <div class="win-btn close" onclick="closeKartGame()">X</div>
-
     </div>
-
     <div class="arcade-menubar" style="flex-wrap:wrap; gap:6px;">
-
       <div style="display:flex; gap:5px; align-items:center;">
         <button class="retro-btn" onclick="openKartMenu()">🏠 Menú</button>
         <button class="retro-btn" id="btn-kart-mp" onclick="openKartMultiplayerModal()" style="background:linear-gradient(135deg, #ff007f, #00ffff); color:#000; font-weight:bold; box-shadow:0 0 6px #00ffff;">👥 Multijugador (2P)</button>
         <button class="retro-btn" onclick="resetKartRace()">🏁 Reiniciar</button>
         <button class="retro-btn" onclick="closeKartGame()">🚪 Salir</button>
       </div>
+      <!-- Selector de Circuitos / Mapas -->
+      <div style="display:flex; gap:4px; align-items:center;">
+        <span style="font-size:9px; font-weight:bold; color:#003366;">🗺️ Mapa:</span>
+        <button class="retro-btn kart-track-pill active" id="btn-track-sunset" onclick="selectKartTrack('sunset')">🌴 Sunset Beach</button>
+        <button class="retro-btn kart-track-pill" id="btn-track-cyber" onclick="selectKartTrack('cyber')">🛸 Cyber Matrix</button>
+        <button class="retro-btn kart-track-pill" id="btn-track-disco" onclick="selectKartTrack('disco')">🪩 Discoteca Y2K</button>
+        <button class="retro-btn kart-track-pill" id="btn-track-rainbow" onclick="selectKartTrack('rainbow')">🌈 Senda Arcoíris</button>
+      </div>
+    </div>
 
-      
+    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P (MALEN KART GP PRO) -->
+    <div class="kart-mp-dialog-overlay" id="kart-mp-dialog" style="display:none; position:absolute; top:36px; left:0; width:100%; height:calc(100% - 36px); background:rgba(5, 0, 15, 0.92); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
+      <div class="arcade-window" style="max-width:480px; width:94%; margin:10px auto; border:3px outset #00ffff; box-shadow:0 0 25px rgba(0,255,255,0.7); background:#120524;">
+        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #00ffff, #ff00bb);">
+          <span>👥 Multijugador Online (2 Dispositivos • WebRTC P2P)</span>
+          <div class="win-btn close" onclick="closeKartMultiplayerModal()">X</div>
+        </div>
+        <div style="background:#120524; color:#fff; padding:14px; font-family:var(--font-mono, monospace);">
+          <div style="display:flex; gap:8px; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:12px;">
+            <button class="retro-btn active" id="tab-btn-host" onclick="switchKartMpTab('host')">🏠 Crear Sala (Host / P1)</button>
+            <button class="retro-btn" id="tab-btn-join" onclick="switchKartMpTab('join')">📱 Unirse a Sala (P2)</button>
+          </div>
+
+          <!-- Pestaña 1: Crear Sala (Host) -->
+          <div id="kart-mp-tab-host">
+            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace directo con tu amigo en otro móvil o PC:</p>
+            <button class="retro-btn" onclick="createKartMultiplayerRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
+            
+            <div id="kart-mp-host-info" style="display:none; background:#000; border:1px solid #00ffff; padding:10px; margin-bottom:10px; text-align:center;">
+              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
+              <div id="kart-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#00ffff; letter-spacing:4px; margin:4px 0;">----</div>
+              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
+                <button class="retro-btn" onclick="copyKartRoomCode()">📋 Copiar Código</button>
+                <button class="retro-btn" onclick="copyKartShareLink()">🔗 Copiar Enlace Directo</button>
+              </div>
+              <div id="kart-mp-host-status" style="font-size:11px; color:#ff00bb; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
+            </div>
+
+            <button id="btn-kart-mp-start" class="retro-btn" onclick="startMultiplayerRaceAsHost()" style="display:none; background:linear-gradient(90deg, #ff00bb, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡EMPEZAR CARRERA JUNTOS!</button>
+          </div>
+
+          <!-- Pestaña 2: Unirse a Sala (Guest) -->
+          <div id="kart-mp-tab-join" style="display:none;">
+            <p style="font-size:11px; color:#00ffff; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala:</p>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
+              <input type="text" id="kart-mp-player-name" value="Piloto 2" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff00bb; padding:6px; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
+              <input type="text" id="kart-mp-join-code" placeholder="Ej: 4821" maxlength="6" style="width:100%; background:#000; color:#00ffff; border:1px solid #00ffff; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <button class="retro-btn" onclick="joinKartMultiplayerFromInput()" style="background:#00ffff; color:#000; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA SALA</button>
+            <div id="kart-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
+          </div>
+
+          <div style="margin-top:12px; border-top:1px dashed #444; padding-top:8px; font-size:9px; color:#888; text-align:center;">
+            🌐 Conexión en tiempo real WebRTC punto a punto (sin servidores intermediarios, ultrabaja latencia).
+          </div>
+          <div style="text-align:center; margin-top:10px;">
+            <button class="retro-btn" onclick="closeKartMultiplayerModal()">✖ Cerrar Ventana</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arcade-game-canvas-box">
+      <canvas id="kart-canvas" class="arcade-canvas" width="640" height="360"></canvas>
+
+      <!-- Controles táctiles virtuales para Android & iPhone -->
+      <div class="mobile-kart-touch-controls">
+        <div class="touch-dpad">
+          <button class="touch-btn" ontouchstart="kartTouch.left=true" ontouchend="kartTouch.left=false" onmousedown="kartTouch.left=true" onmouseup="kartTouch.left=false">◀</button>
+          <button class="touch-btn" ontouchstart="kartTouch.right=true" ontouchend="kartTouch.right=false" onmousedown="kartTouch.right=true" onmouseup="kartTouch.right=false">▶</button>
+        </div>
+        <div class="touch-actions">
+          <button class="touch-btn touch-item-btn" ontouchstart="kartTouch.item=true" ontouchend="kartTouch.item=false" onmousedown="kartTouch.item=true" onmouseup="kartTouch.item=false" title="Usar Ítem">⭐</button>
+          <button class="touch-btn" ontouchstart="kartTouch.brake=true" ontouchend="kartTouch.brake=false" onmousedown="kartTouch.brake=true" onmouseup="kartTouch.brake=false" title="Frenar">🛑</button>
+          <button class="touch-btn touch-gas-btn" ontouchstart="kartTouch.gas=true" ontouchend="kartTouch.gas=false" onmousedown="kartTouch.gas=true" onmouseup="kartTouch.gas=false" title="Acelerar">⚡</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="arcade-footer-hints">
+      <div>🏁 3 Vueltas por Carrera • Cajas "?" con Turbos 🍄, Plátanos 🍌, Estrellas ⭐, Caparazones Rojos 🐢, Rayos ⚡ y Bombas 💣</div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================
      VENTANA ARCADE MODAL: CONTRA: OPERACIÓN MALENES (RED FALCON 2004)
      ============================================================ -->
@@ -4355,127 +4400,7 @@
   </div>
 </div>
 
-
-<!-- Selector de Circuitos / Mapas -->
-
-      <div style="display:flex; gap:4px; align-items:center;">
-
-        <span style="font-size:9px; font-weight:bold; color:#003366;">🗺️ Mapa:</span>
-
-        <button class="retro-btn kart-track-pill active" id="btn-track-sunset" onclick="selectKartTrack('sunset')">🌴 Sunset Beach</button>
-
-        <button class="retro-btn kart-track-pill" id="btn-track-cyber" onclick="selectKartTrack('cyber')">🛸 Cyber Matrix</button>
-
-        <button class="retro-btn kart-track-pill" id="btn-track-disco" onclick="selectKartTrack('disco')">🪩 Discoteca Y2K</button>
-
-        <button class="retro-btn kart-track-pill" id="btn-track-rainbow" onclick="selectKartTrack('rainbow')">🌈 Senda Arcoíris</button>
-
-      </div>
-
-    </div>
-
-    <div 
-    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P (MALEN KART GP PRO) -->
-    <div class="kart-mp-dialog-overlay" id="kart-mp-dialog" style="display:none; position:absolute; top:36px; left:0; width:100%; height:calc(100% - 36px); background:rgba(5, 0, 15, 0.92); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
-      <div class="arcade-window" style="max-width:480px; width:94%; margin:10px auto; border:3px outset #00ffff; box-shadow:0 0 25px rgba(0,255,255,0.7); background:#120524;">
-        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #00ffff, #ff00bb);">
-          <span>👥 Multijugador Online (2 Dispositivos • WebRTC P2P)</span>
-          <div class="win-btn close" onclick="closeKartMultiplayerModal()">X</div>
-        </div>
-        <div style="background:#120524; color:#fff; padding:14px; font-family:var(--font-mono, monospace);">
-          <div style="display:flex; gap:8px; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:12px;">
-            <button class="retro-btn active" id="tab-btn-host" onclick="switchKartMpTab('host')">🏠 Crear Sala (Host / P1)</button>
-            <button class="retro-btn" id="tab-btn-join" onclick="switchKartMpTab('join')">📱 Unirse a Sala (P2)</button>
-          </div>
-
-          <!-- Pestaña 1: Crear Sala (Host) -->
-          <div id="kart-mp-tab-host">
-            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace directo con tu amigo en otro móvil o PC:</p>
-            <button class="retro-btn" onclick="createKartMultiplayerRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
-            
-            <div id="kart-mp-host-info" style="display:none; background:#000; border:1px solid #00ffff; padding:10px; margin-bottom:10px; text-align:center;">
-              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
-              <div id="kart-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#00ffff; letter-spacing:4px; margin:4px 0;">----</div>
-              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
-                <button class="retro-btn" onclick="copyKartRoomCode()">📋 Copiar Código</button>
-                <button class="retro-btn" onclick="copyKartShareLink()">🔗 Copiar Enlace Directo</button>
-              </div>
-              <div id="kart-mp-host-status" style="font-size:11px; color:#ff00bb; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
-            </div>
-
-            <button id="btn-kart-mp-start" class="retro-btn" onclick="startMultiplayerRaceAsHost()" style="display:none; background:linear-gradient(90deg, #ff00bb, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡EMPEZAR CARRERA JUNTOS!</button>
-          </div>
-
-          <!-- Pestaña 2: Unirse a Sala (Guest) -->
-          <div id="kart-mp-tab-join" style="display:none;">
-            <p style="font-size:11px; color:#00ffff; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala:</p>
-            <div style="margin-bottom:8px;">
-              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
-              <input type="text" id="kart-mp-player-name" value="Piloto 2" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff00bb; padding:6px; font-family:monospace; box-sizing:border-box;">
-            </div>
-            <div style="margin-bottom:10px;">
-              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
-              <input type="text" id="kart-mp-join-code" placeholder="Ej: 4821" maxlength="6" style="width:100%; background:#000; color:#00ffff; border:1px solid #00ffff; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
-            </div>
-            <button class="retro-btn" onclick="joinKartMultiplayerFromInput()" style="background:#00ffff; color:#000; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA SALA</button>
-            <div id="kart-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
-          </div>
-
-          <div style="margin-top:12px; border-top:1px dashed #444; padding-top:8px; font-size:9px; color:#888; text-align:center;">
-            🌐 Conexión en tiempo real WebRTC punto a punto (sin servidores intermediarios, ultrabaja latencia).
-          </div>
-          <div style="text-align:center; margin-top:10px;">
-            <button class="retro-btn" onclick="closeKartMultiplayerModal()">✖ Cerrar Ventana</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div ="arcade-game-canvas-box">
-
-      <canvas id="kart-canvas" class="arcade-canvas" width="640" height="360"></canvas>
-
-
-
-      <!-- Controles táctiles virtuales para Android & iPhone -->
-
-      <div class="mobile-kart-touch-controls">
-
-        <div class="touch-dpad">
-
-          <button class="touch-btn" ontouchstart="kartTouch.left=true" ontouchend="kartTouch.left=false" onmousedown="kartTouch.left=true" onmouseup="kartTouch.left=false">◀</button>
-
-          <button class="touch-btn" ontouchstart="kartTouch.right=true" ontouchend="kartTouch.right=false" onmousedown="kartTouch.right=true" onmouseup="kartTouch.right=false">▶</button>
-
-        </div>
-
-        <div class="touch-actions">
-
-          <button class="touch-btn touch-item-btn" ontouchstart="kartTouch.item=true" ontouchend="kartTouch.item=false" onmousedown="kartTouch.item=true" onmouseup="kartTouch.item=false" title="Usar Ítem">⭐</button>
-
-          <button class="touch-btn" ontouchstart="kartTouch.brake=true" ontouchend="kartTouch.brake=false" onmousedown="kartTouch.brake=true" onmouseup="kartTouch.brake=false" title="Frenar">🛑</button>
-
-          <button class="touch-btn touch-gas-btn" ontouchstart="kartTouch.gas=true" ontouchend="kartTouch.gas=false" onmousedown="kartTouch.gas=true" onmouseup="kartTouch.gas=false" title="Acelerar">⚡</button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="arcade-footer-hints">
-
-      <div>🏁 3 Vueltas por Carrera • Cajas "?" con Turbos 🍄, Plátanos 🍌, Estrellas ⭐, Caparazones Rojos 🐢, Rayos ⚡ y Bombas 💣</div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-  <!-- =========================================================================
+<!-- =========================================================================
 
        VENTANA RETRO REPOTENCIADA: JUEGO DE VESTIR MUÑECAS (DOLLZ STUDIO 2004)
 
@@ -8340,7 +8265,7 @@
 
 
     function openDollGame() {
-
+      closeAllGameModals();
       const modal = document.getElementById('doll-modal-overlay');
 
       const win = document.getElementById('doll-window');
@@ -10903,11 +10828,63 @@ const pvpGame = {
 
 
 
+
+// =========================================================================
+// GESTOR MAESTRO DE MODALES: CIERRA CUALQUIER OTRO JUEGO ACTIVO
+// =========================================================================
+function closeAllGameModals() {
+  // 1. Duelo PvP
+  const pvpModal = document.getElementById('pvp-modal-overlay');
+  if (pvpModal) pvpModal.classList.remove('active');
+  if (typeof pvpGame !== 'undefined') pvpGame.active = false;
+  if (typeof pvpAnimationId !== 'undefined' && pvpAnimationId) {
+    cancelAnimationFrame(pvpAnimationId);
+    pvpAnimationId = null;
+  }
+  if (typeof pvpGame !== 'undefined' && pvpGame.timerInterval) {
+    clearInterval(pvpGame.timerInterval);
+    pvpGame.timerInterval = null;
+  }
+
+  // 2. Malen Kart
+  const kartModal = document.getElementById('kart-modal-overlay');
+  if (kartModal) kartModal.classList.remove('active');
+  if (typeof closeKartMultiplayerModal === 'function') closeKartMultiplayerModal();
+  if (typeof kartGame !== 'undefined') kartGame.active = false;
+  if (typeof kartAnimationId !== 'undefined' && kartAnimationId) {
+    cancelAnimationFrame(kartAnimationId);
+    kartAnimationId = null;
+  }
+  if (typeof kartCountdownTimer !== 'undefined' && kartCountdownTimer) {
+    clearInterval(kartCountdownTimer);
+    kartCountdownTimer = null;
+  }
+
+  // 3. Contra 2004
+  const contraModal = document.getElementById('contra-modal-overlay');
+  if (contraModal) contraModal.classList.remove('active');
+  if (typeof closeContraMpModal === 'function') closeContraMpModal();
+  if (typeof contraGame !== 'undefined') contraGame.active = false;
+  if (typeof contraAnimationId !== 'undefined' && contraAnimationId) {
+    cancelAnimationFrame(contraAnimationId);
+    contraAnimationId = null;
+  }
+
+  // 4. Dollz Studio
+  const dollModal = document.getElementById('doll-modal-overlay');
+  if (dollModal) dollModal.classList.remove('active');
+  if (typeof stopGlitterAnimation === 'function') stopGlitterAnimation();
+
+  // 5. Runway
+  const runwayModal = document.getElementById('runway-modal-overlay');
+  if (runwayModal) runwayModal.classList.remove('active');
+}
+
+
 function openPvPGame() {
-
+  closeAllGameModals();
   const modal = document.getElementById('pvp-modal-overlay');
-
-  modal.classList.add('active');
+  if (modal) modal.classList.add('active');
 
   pvpCanvas = document.getElementById('pvp-canvas');
 
@@ -12471,6 +12448,7 @@ function startKartRaceFromMenu() {
 
 // ABRIR VENTANA DE MALEN KART
 function openKartGame() {
+  closeAllGameModals();
   const modal = document.getElementById('kart-modal-overlay');
   if (modal) modal.classList.add('active');
 
@@ -14922,6 +14900,7 @@ function spawnContraCapsules(stageNum) {
 
 // INICIAR EL JUEGO CONTRA
 function openContraGame() {
+  closeAllGameModals();
   const modal = document.getElementById('contra-modal-overlay');
   if (modal) modal.classList.add('active');
 
