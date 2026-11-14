@@ -4231,11 +4231,9 @@
     <div class="arcade-menubar" style="flex-wrap:wrap; gap:6px;">
 
       <div style="display:flex; gap:5px; align-items:center;">
-
+        <button class="retro-btn" onclick="openKartMenu()">🏠 Menú</button>
         <button class="retro-btn" onclick="resetKartRace()">🏁 Reiniciar</button>
-
         <button class="retro-btn" onclick="closeKartGame()">🚪 Salir</button>
-
       </div>
 
       <!-- Selector de Circuitos / Mapas -->
@@ -4290,7 +4288,7 @@
 
     <div class="arcade-footer-hints">
 
-      <div>🏁 3 Vueltas por Carrera • Coge las Cajas con "?" para turbos de velocidad y estrellas de invencibilidad</div>
+      <div>🏁 3 Vueltas por Carrera • Cajas "?" con Turbos 🍄, Plátanos 🍌, Estrellas ⭐, Caparazones Rojos 🐢, Rayos ⚡ y Bombas 💣</div>
 
     </div>
 
@@ -11736,8 +11734,9 @@ function drawFighter(p, isMalenes) {
 
 
 
+
 // =========================================================================
-// MALEN KART 2D GP — MOTOR BATTLE-TESTED PSEUDO-3D (OUTRUN / JAKE GORDON)
+// MALEN KART 2D GP PRO — MOTOR OUTRUN / MARIO KART DELUXE 2004
 // =========================================================================
 
 const KART_FPS = 60;
@@ -11762,10 +11761,12 @@ const KART_OFFROAD_DECEL = -KART_MAX_SPEED / 2;
 const KART_OFFROAD_LIMIT = KART_MAX_SPEED / 4;
 const KART_CENTRIFUGAL = 0.35;
 
-// Temas visuales para los circuitos de Malenes
+// Temas visuales y ambientales para los 4 circuitos de Malenes
 const KART_TRACK_THEMES = {
   sunset: {
+    id: 'sunset',
     name: '🌴 Malibu Sunset 2004',
+    desc: 'Carretera costera con vista al océano, palmeras y atardecer dorado.',
     skyGradient: ['#1a0033', '#660066', '#ff3366', '#ff9933', '#ffcc00'],
     sunColor: '#ffff66',
     grassLight: '#1a7a24',
@@ -11777,7 +11778,9 @@ const KART_TRACK_THEMES = {
     laneLight: '#ffffff'
   },
   cyber: {
+    id: 'cyber',
     name: '🛸 Cyber Matrix Y2K',
+    desc: 'Circuito futurista con lluvia de código, cuadrícula de neón y curvas cerradas.',
     skyGradient: ['#000511', '#001a2e', '#003344', '#006655'],
     sunColor: '#00ffcc',
     grassLight: '#002211',
@@ -11789,7 +11792,9 @@ const KART_TRACK_THEMES = {
     laneLight: '#00ffcc'
   },
   disco: {
+    id: 'disco',
     name: '🪩 Discoteca Glam 2004',
+    desc: 'Pista de baile retro con bola de discoteca, ecualizador de luces y chicanes.',
     skyGradient: ['#110022', '#2d004d', '#550066', '#880088'],
     sunColor: '#ff00ff',
     grassLight: '#300a38',
@@ -11801,7 +11806,9 @@ const KART_TRACK_THEMES = {
     laneLight: '#ff88ee'
   },
   rainbow: {
+    id: 'rainbow',
     name: '🌈 Senda Arcoíris Pop',
+    desc: 'Montaña rusa espacial con saltos antigravedad, cometas y velocidad extrema.',
     skyGradient: ['#0a001e', '#1a0d3f', '#2a1a5e', '#4c2882'],
     sunColor: '#ffffff',
     grassLight: '#11052c',
@@ -11819,8 +11826,9 @@ let kartCanvas = null;
 let kartCtx = null;
 let kartAnimationId = null;
 let kartCountdownTimer = null;
+let kartAudioCtx = null;
 
-// Entorno matemático Jake Gordon (Util)
+// Helpers matemáticos de Jake Gordon
 const KartUtil = {
   timestamp: function() {
     return (window.performance && window.performance.now) ? window.performance.now() : new Date().getTime();
@@ -11942,15 +11950,15 @@ const kartTouch = {
 // ESTADO GLOBAL DE CARRERA
 const kartGame = {
   active: false,
-  state: 'countdown', // 'countdown', 'racing', 'finished'
+  state: 'menu', // 'menu', 'countdown', 'racing', 'finished'
   countdownNumber: 3,
   countdownText: '3',
   countdownScale: 1.0,
 
   // Jugador (Malenes)
-  position: 0, // z en la pista
-  playerX: 0,  // -1 a 1 en el carril
-  playerZ: (KART_CAMERA_HEIGHT * KART_CAMERA_DEPTH), // distancia delante de la cámara
+  position: 0,
+  playerX: 0,
+  playerZ: (KART_CAMERA_HEIGHT * KART_CAMERA_DEPTH),
   speed: 0,
   maxSpeed: KART_MAX_SPEED,
   accel: KART_ACCEL,
@@ -11969,22 +11977,30 @@ const kartGame = {
   raceRank: 6,
   totalRacers: 6,
 
-  item: null, // 'turbo', 'banana', 'star'
+  // Sistema de Ítems
+  item: null, // 'turbo', 'banana', 'star', 'redShell', 'lightning', 'bomb'
+  rouletteTimer: 0,
+  rouletteCurrentIcon: '?',
 
   trackLength: 0,
   segments: [],
   cars: [],
   hazards: [],
-  itemBoxes: []
+  itemBoxes: [],
+  projectiles: [], // Caparazones rojos teledirigidos o bombas activas en la pista
+  explosions: [],  // Ondas expansivas visuales
+
+  // Animaciones ambientales
+  envTime: 0
 };
 
 // =========================================================================
-// CONSTRUCCIÓN DE LA PISTA (GEOMETRÍA Y SEGMENTOS)
+// CONSTRUCCIÓN GEOMÉTRICA DE PISTAS CON DIFERENTES TRAYECTORIAS
 // =========================================================================
 const ROAD = {
   LENGTH: { NONE: 0, SHORT: 25, MEDIUM: 50, LONG: 100 },
-  HILL:   { NONE: 0, LOW: 20,   MEDIUM: 40,   HIGH: 60 },
-  CURVE:  { NONE: 0, EASY: 2,   MEDIUM: 4,    HARD: 6 }
+  HILL:   { NONE: 0, LOW: 20,   MEDIUM: 40,   HIGH: 65 },
+  CURVE:  { NONE: 0, EASY: 2,   MEDIUM: 4.2,  HARD: 6.8 }
 };
 
 function kartLastY() {
@@ -12089,34 +12105,76 @@ function findKartSegment(z) {
   return kartGame.segments[idx];
 }
 
-// CONSTRUIR EL CIRCUITO COMPLETO
-function buildKartCircuit() {
-  kartGame.segments = [];
+// 1. TRAYECTORIA PISTA 1: PALM BEACH SUNSET (Autovía costera, curvas amplias, puente)
+function buildSunsetCircuit() {
+  addKartStraight(ROAD.LENGTH.LONG);
+  addKartLowRollingHills(ROAD.LENGTH.MEDIUM, ROAD.HILL.LOW);
+  addKartCurve(ROAD.LENGTH.LONG, ROAD.CURVE.EASY, ROAD.HILL.MEDIUM); // Subida a puente
+  addKartStraight(ROAD.LENGTH.MEDIUM);
+  addKartCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.MEDIUM, -ROAD.HILL.MEDIUM); // Bajada panorámica
+  addKartSCurves();
+  addKartStraight(ROAD.LENGTH.MEDIUM);
+  addKartCurve(ROAD.LENGTH.MEDIUM, ROAD.CURVE.MEDIUM, ROAD.HILL.NONE);
+  addKartDownhillToEnd();
+}
 
-  // Trazado dinámico estilo OutRun / Mario Kart
-  addKartStraight(ROAD.LENGTH.SHORT / 2);
-  addKartLowRollingHills();
-  addKartSCurves();
-  addKartCurve(ROAD.LENGTH.MEDIUM, ROAD.CURVE.MEDIUM, ROAD.HILL.LOW);
+// 2. TRAYECTORIA PISTA 2: CYBER MATRIX (Laberinto tecnológico, horquillas de 90° y ondas)
+function buildCyberCircuit() {
+  addKartStraight(ROAD.LENGTH.MEDIUM);
+  addKartCurve(ROAD.LENGTH.SHORT, ROAD.CURVE.HARD, ROAD.HILL.NONE); // Horquilla cerrada derecha
   addKartBumps();
-  addKartLowRollingHills();
-  addKartCurve(ROAD.LENGTH.LONG * 2, ROAD.CURVE.MEDIUM, ROAD.HILL.MEDIUM);
-  addKartStraight();
-  addKartHill(ROAD.LENGTH.MEDIUM, ROAD.HILL.HIGH);
+  addKartStraight(ROAD.LENGTH.SHORT);
+  addKartCurve(ROAD.LENGTH.SHORT, -ROAD.CURVE.HARD, ROAD.HILL.LOW); // Horquilla cerrada izquierda
+  addKartHill(ROAD.LENGTH.LONG, ROAD.HILL.HIGH); // Ascenso vertical al domo digital
+  addKartRoad(30, 40, 30, ROAD.CURVE.MEDIUM, -ROAD.HILL.HIGH); // Caída en picado
   addKartSCurves();
-  addKartCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.MEDIUM, ROAD.HILL.NONE);
-  addKartHill(ROAD.LENGTH.LONG, ROAD.HILL.HIGH);
-  addKartCurve(ROAD.LENGTH.LONG, ROAD.CURVE.MEDIUM, -ROAD.HILL.LOW);
+  addKartCurve(ROAD.LENGTH.MEDIUM, -ROAD.CURVE.HARD, ROAD.HILL.NONE);
   addKartBumps();
-  addKartHill(ROAD.LENGTH.LONG, -ROAD.HILL.MEDIUM);
-  addKartStraight();
+  addKartDownhillToEnd();
+}
+
+// 3. TRAYECTORIA PISTA 3: DISCOTECA GLAM (Chicanes rítmicas, rotonda bailable)
+function buildDiscoCircuit() {
+  addKartStraight(ROAD.LENGTH.MEDIUM);
+  addKartBumps(); // Botes imitando ritmo de bajos
+  addKartCurve(ROAD.LENGTH.LONG * 1.5, ROAD.CURVE.MEDIUM, ROAD.HILL.LOW); // Rotonda continua
+  addKartRoad(25, 25, 25, -ROAD.CURVE.MEDIUM, 0); // Zigzag rápido
+  addKartRoad(25, 25, 25, ROAD.CURVE.MEDIUM, 0);
+  addKartRoad(25, 25, 25, -ROAD.CURVE.MEDIUM, 0);
+  addKartLowRollingHills(ROAD.LENGTH.MEDIUM, ROAD.HILL.MEDIUM);
+  addKartHill(ROAD.LENGTH.MEDIUM, ROAD.HILL.LOW);
+  addKartDownhillToEnd();
+}
+
+// 4. TRAYECTORIA PISTA 4: SENDA ARCOÍRIS (Montaña rusa cósmica con saltos de infarto)
+function buildRainbowCircuit() {
+  addKartStraight(ROAD.LENGTH.SHORT);
+  addKartHill(ROAD.LENGTH.LONG, ROAD.HILL.HIGH); // Subida infinita al espacio
+  addKartCurve(ROAD.LENGTH.LONG, ROAD.CURVE.HARD, ROAD.HILL.LOW); // Curva peraltada extrema
+  addKartRoad(60, 60, 60, 0, -ROAD.HILL.HIGH * 1.5); // Salto vertiginoso en gravedad cero
+  addKartLowRollingHills(ROAD.LENGTH.LONG, ROAD.HILL.HIGH); // Ondulaciones arcoíris
+  addKartCurve(ROAD.LENGTH.LONG, -ROAD.CURVE.HARD, ROAD.HILL.NONE); // Espiral izquierda
   addKartSCurves();
   addKartDownhillToEnd();
+}
+
+// CONSTRUCTOR PRINCIPAL DISPACHADOR
+function buildKartCircuit(trackKey) {
+  if (trackKey && KART_TRACK_THEMES[trackKey]) {
+    currentKartTrackKey = trackKey;
+  }
+  kartGame.segments = [];
+
+  if (currentKartTrackKey === 'sunset') buildSunsetCircuit();
+  else if (currentKartTrackKey === 'cyber') buildCyberCircuit();
+  else if (currentKartTrackKey === 'disco') buildDiscoCircuit();
+  else if (currentKartTrackKey === 'rainbow') buildRainbowCircuit();
+  else buildSunsetCircuit();
 
   kartGame.trackLength = kartGame.segments.length * KART_SEGMENT_LENGTH;
 
-  // Línea de salida y de meta (checkered pattern)
-  var startSegIdx = findKartSegment(kartGame.playerZ).index + 2;
+  // Línea de salida y de meta (patrón de cuadros)
+  var startSegIdx = (findKartSegment(kartGame.playerZ) ? findKartSegment(kartGame.playerZ).index : 0) + 2;
   for (var i = 0; i < 4; i++) {
     if (kartGame.segments[startSegIdx + i]) {
       kartGame.segments[startSegIdx + i].color.road = '#ffffff';
@@ -12131,40 +12189,56 @@ function buildKartCircuit() {
     }
   }
 
-  // Colocar atrezo en los laterales (palmeras, postes de neón, vallas retro)
-  for (var n = 15; n < kartGame.segments.length; n += 12) {
-    var offset = (n % 24 === 0) ? 1.4 : -1.4;
-    var type = (n % 48 === 0) ? 'billboard' : (n % 24 === 0 ? 'palm' : 'cyber');
-    var text = (n % 96 === 0) ? '👑 MALENES 2004' : ((n % 48 === 0) ? '🏁 GRAND PRIX' : '✨ Y2K GLAM');
+  // Atrezo lateral según la pista seleccionada
+  for (var n = 15; n < kartGame.segments.length; n += 14) {
+    var offset = (n % 28 === 0) ? 1.4 : -1.4;
+    var type = 'billboard';
+    var text = '👑 MALENES 2004';
+
+    if (currentKartTrackKey === 'sunset') {
+      type = (n % 42 === 0) ? 'billboard' : 'palm';
+      text = (n % 84 === 0) ? '🌴 MALIBU BEACH' : '👑 MALENES 2004';
+    } else if (currentKartTrackKey === 'cyber') {
+      type = (n % 42 === 0) ? 'billboard' : 'cyberCube';
+      text = (n % 84 === 0) ? '🛸 MATRIX 2000s' : '⚡ CYBER GLAM';
+    } else if (currentKartTrackKey === 'disco') {
+      type = (n % 42 === 0) ? 'billboard' : 'speaker';
+      text = (n % 84 === 0) ? '🪩 GLAMOUR 2004' : '✨ DISCO DANCE';
+    } else if (currentKartTrackKey === 'rainbow') {
+      type = (n % 42 === 0) ? 'billboard' : 'starProp';
+      text = (n % 84 === 0) ? '🌈 SENDA CÓSMICA' : '⭐ MALENES STAR';
+    }
+
     kartGame.segments[n].sprites.push({ offset: offset, type: type, text: text });
   }
 
-  // Cajas de ítems flotantes sobre la pista en puntos estratégicos
-  const itemSegmentIndices = [180, 420, 720, 1020, 1280];
+  // Cajas de ítems en puntos estratégicos
+  const itemInterval = Math.floor(kartGame.segments.length / 5);
   kartGame.itemBoxes = [];
-  itemSegmentIndices.forEach(segIdx => {
-    if (segIdx < kartGame.segments.length) {
-      [-0.5, 0, 0.5].forEach(laneX => {
-        const box = { segmentIndex: segIdx, offset: laneX, active: true };
-        kartGame.segments[segIdx].itemBoxes.push(box);
-        kartGame.itemBoxes.push(box);
-      });
-    }
-  });
+  for (var s = itemInterval; s < kartGame.segments.length; s += itemInterval) {
+    [-0.5, 0, 0.5].forEach(laneX => {
+      const box = { segmentIndex: s, offset: laneX, active: true };
+      kartGame.segments[s].itemBoxes.push(box);
+      kartGame.itemBoxes.push(box);
+    });
+  }
 
+  kartGame.projectiles = [];
+  kartGame.hazards = [];
+  kartGame.explosions = [];
   resetKartRivals();
 }
 
-// INICIALIZACIÓN DE LOS RIVALES (COMPETIDORES REALES EN PISTA)
+// INICIALIZACIÓN DE RIVALES
 function resetKartRivals() {
   kartGame.cars = [];
 
   const rivalData = [
-    { name: 'Paris', color: '#e0e0e0', accent: '#ff007f', speedFactor: 0.82, z: 600 * KART_SEGMENT_LENGTH, offset: -0.4 },
-    { name: 'Britney', color: '#ff69b4', accent: '#ffffff', speedFactor: 0.85, z: 450 * KART_SEGMENT_LENGTH, offset: 0.4 },
-    { name: 'Nicole', color: '#ba55d3', accent: '#ffff00', speedFactor: 0.78, z: 320 * KART_SEGMENT_LENGTH, offset: -0.2 },
-    { name: 'Don Omar', color: '#ffaa00', accent: '#222222', speedFactor: 0.88, z: 200 * KART_SEGMENT_LENGTH, offset: 0.2 },
-    { name: 'Avril', color: '#00e5ff', accent: '#ff0055', speedFactor: 0.80, z: 100 * KART_SEGMENT_LENGTH, offset: -0.5 }
+    { name: 'Paris', color: '#f0f0f5', accent: '#ff007f', speedFactor: 0.83, z: 620 * KART_SEGMENT_LENGTH, offset: -0.4, num: '2' },
+    { name: 'Britney', color: '#ff69b4', accent: '#ffffff', speedFactor: 0.85, z: 480 * KART_SEGMENT_LENGTH, offset: 0.4, num: '3' },
+    { name: 'Nicole', color: '#ba55d3', accent: '#ffff00', speedFactor: 0.79, z: 340 * KART_SEGMENT_LENGTH, offset: -0.2, num: '4' },
+    { name: 'Don Omar', color: '#ffaa00', accent: '#111111', speedFactor: 0.88, z: 220 * KART_SEGMENT_LENGTH, offset: 0.2, num: '5' },
+    { name: 'Avril', color: '#00e5ff', accent: '#ff0055', speedFactor: 0.81, z: 110 * KART_SEGMENT_LENGTH, offset: -0.5, num: '6' }
   ];
 
   for (var i = 0; i < rivalData.length; i++) {
@@ -12174,20 +12248,22 @@ function resetKartRivals() {
       name: data.name,
       color: data.color,
       accent: data.accent,
+      num: data.num,
       offset: data.offset,
       z: data.z,
       speed: KART_MAX_SPEED * data.speedFactor,
       baseSpeed: KART_MAX_SPEED * data.speedFactor,
       percent: KartUtil.percentRemaining(data.z, KART_SEGMENT_LENGTH),
       spinTimer: 0,
+      shrinkTimer: 0, // Por rayo relámpago
       lap: 1
     };
-    segment.cars.push(car);
+    if (segment) segment.cars.push(car);
     kartGame.cars.push(car);
   }
 }
 
-// SELECCIONAR MAPA / CIRCUITO
+// SELECCIONAR MAPA DESDE MENÚ O BOTONES
 function selectKartTrack(trackKey) {
   if (!KART_TRACK_THEMES[trackKey]) return;
   currentKartTrackKey = trackKey;
@@ -12196,12 +12272,25 @@ function selectKartTrack(trackKey) {
   const activeBtn = document.getElementById(`btn-track-${trackKey}`);
   if (activeBtn) activeBtn.classList.add('active');
 
-  buildKartCircuit();
+  buildKartCircuit(trackKey);
   resetKartRace();
+  playKartSound('beepLow');
+}
+
+// VOLVER AL MENÚ DE INICIO
+function openKartMenu() {
+  kartGame.state = 'menu';
+  kartGame.speed = 0;
   if (typeof playRetroDollSound === 'function') playRetroDollSound('pop');
 }
 
-// INICIAR Y CERRAR LA VENTANA DE MALEN KART
+// INICIAR CARRERA DESDE EL MENÚ
+function startKartRaceFromMenu() {
+  resetKartRace();
+  startKartCountdown();
+}
+
+// ABRIR VENTANA DE MALEN KART
 function openKartGame() {
   const modal = document.getElementById('kart-modal-overlay');
   if (modal) modal.classList.add('active');
@@ -12209,12 +12298,10 @@ function openKartGame() {
   kartCanvas = document.getElementById('kart-canvas');
   if (kartCanvas) kartCtx = kartCanvas.getContext('2d');
 
-  buildKartCircuit();
-  resetKartRace();
-
+  buildKartCircuit(currentKartTrackKey);
+  kartGame.state = 'menu';
   kartGame.active = true;
   startKartLoop();
-  startKartCountdown();
 }
 
 function closeKartGame() {
@@ -12240,18 +12327,19 @@ function resetKartRace() {
   kartGame.raceTime = 0;
   kartGame.raceRank = 6;
   kartGame.item = null;
+  kartGame.rouletteTimer = 0;
+  kartGame.projectiles = [];
   kartGame.hazards = [];
+  kartGame.explosions = [];
 
-  // Limpiar coches de todos los segmentos y resetear rivales
   kartGame.segments.forEach(s => {
     s.cars = [];
     s.hazards = [];
   });
   resetKartRivals();
-  startKartCountdown();
 }
 
-// CUENTA REGRESIVA DE CARRERA (3, 2, 1, ¡YA!)
+// CUENTA REGRESIVA (3, 2, 1, ¡YA!)
 function startKartCountdown() {
   if (kartCountdownTimer) clearInterval(kartCountdownTimer);
   kartGame.state = 'countdown';
@@ -12259,7 +12347,7 @@ function startKartCountdown() {
   kartGame.countdownText = '3';
   kartGame.countdownScale = 2.0;
 
-  if (typeof playRetroDollSound === 'function') playRetroDollSound('click');
+  playKartSound('beepLow');
 
   kartCountdownTimer = setInterval(() => {
     kartGame.countdownNumber--;
@@ -12267,14 +12355,14 @@ function startKartCountdown() {
 
     if (kartGame.countdownNumber === 2) {
       kartGame.countdownText = '2';
-      if (typeof playRetroDollSound === 'function') playRetroDollSound('click');
+      playKartSound('beepLow');
     } else if (kartGame.countdownNumber === 1) {
       kartGame.countdownText = '1';
-      if (typeof playRetroDollSound === 'function') playRetroDollSound('click');
+      playKartSound('beepLow');
     } else if (kartGame.countdownNumber === 0) {
       kartGame.countdownText = '¡YA!';
       kartGame.state = 'racing';
-      if (typeof playRetroDollSound === 'function') playRetroDollSound('sparkle');
+      playKartSound('beepHigh');
     } else {
       clearInterval(kartCountdownTimer);
       kartGame.countdownText = '';
@@ -12294,10 +12382,16 @@ function startKartLoop() {
     const dt = Math.min(1, (now - lastTime) / 1000);
     lastTime = now;
     gdt = gdt + dt;
+    kartGame.envTime += dt;
 
-    while (gdt > KART_STEP) {
-      gdt = gdt - KART_STEP;
-      updateKartPhysics(KART_STEP);
+    if (kartGame.state === 'menu') {
+      // Crucero panorámico suave en el menú
+      kartGame.position = KartUtil.increase(kartGame.position, KART_MAX_SPEED * 0.45 * dt, kartGame.trackLength);
+    } else {
+      while (gdt > KART_STEP) {
+        gdt = gdt - KART_STEP;
+        updateKartPhysics(KART_STEP);
+      }
     }
 
     renderKartScene();
@@ -12307,47 +12401,173 @@ function startKartLoop() {
   kartAnimationId = requestAnimationFrame(loop);
 }
 
-// ACTIVAR ÍTEM DEL JUGADOR (TURBO, ESTRELLA, PLÁTANO)
+// =========================================================================
+// SISTEMA EXPANDIDO DE HABILIDADES OFENSIVAS Y DEFENSIVAS
+// =========================================================================
 function useKartItem() {
   if (!kartGame.item || kartGame.state !== 'racing') return;
+  const currentItem = kartGame.item;
 
-  if (kartGame.item === 'turbo') {
-    kartGame.turboTimer = 180; // ~3 segundos a 60 FPS
-    kartGame.speed = Math.min(KART_MAX_SPEED * 1.38, kartGame.speed + KART_ACCEL * 2.5);
-    if (typeof playRetroDollSound === 'function') playRetroDollSound('sparkle');
+  if (currentItem === 'turbo') {
+    kartGame.turboTimer = 180;
+    kartGame.speed = Math.min(KART_MAX_SPEED * 1.42, kartGame.speed + KART_ACCEL * 2.8);
+    playKartSound('turbo');
     kartGame.item = null;
-  } else if (kartGame.item === 'star') {
-    kartGame.starTimer = 300; // ~5 segundos de invencibilidad
-    kartGame.speed = Math.min(KART_MAX_SPEED * 1.25, kartGame.speed + KART_ACCEL * 1.5);
-    if (typeof playRetroDollSound === 'function') playRetroDollSound('fanfare');
+  }
+  else if (currentItem === 'star') {
+    kartGame.starTimer = 320;
+    kartGame.speed = Math.min(KART_MAX_SPEED * 1.25, kartGame.speed + KART_ACCEL * 1.8);
+    playKartSound('fanfare');
     kartGame.item = null;
-  } else if (kartGame.item === 'banana') {
-    // Soltar plátano en el segmento justo detrás
+  }
+  else if (currentItem === 'banana') {
     var playerSegment = findKartSegment(kartGame.position + kartGame.playerZ);
     var hazard = {
       offset: kartGame.playerX,
       z: kartGame.position + kartGame.playerZ - 100
     };
-    playerSegment.hazards.push(hazard);
+    if (playerSegment) playerSegment.hazards.push(hazard);
     kartGame.hazards.push(hazard);
-    if (typeof playRetroDollSound === 'function') playRetroDollSound('click');
+    playKartSound('bump');
+    kartGame.item = null;
+  }
+  else if (currentItem === 'redShell') {
+    // CAPARAZÓN ROJO TELEDIRIGIDO: Busca al rival que va delante
+    var targetRival = null;
+    var minForwardDist = Infinity;
+    kartGame.cars.forEach(car => {
+      var forwardDist = car.z - (kartGame.position + kartGame.playerZ);
+      if (forwardDist < 0) forwardDist += kartGame.trackLength;
+      if (forwardDist > 50 && forwardDist < minForwardDist) {
+        minForwardDist = forwardDist;
+        targetRival = car;
+      }
+    });
+
+    kartGame.projectiles.push({
+      type: 'redShell',
+      z: kartGame.position + kartGame.playerZ + 80,
+      offset: kartGame.playerX,
+      target: targetRival,
+      speed: KART_MAX_SPEED * 1.5,
+      life: 300
+    });
+
+    playKartSound('turbo');
+    kartGame.item = null;
+  }
+  else if (currentItem === 'lightning') {
+    // RAYO RELÁMPAGO Y2K: Electrocuta y encoge a TODOS los rivales en pista
+    kartGame.cars.forEach(car => {
+      car.shrinkTimer = 260; // 4.5 segundos encogidos
+      car.spinTimer = 45;
+      car.speed = car.baseSpeed * 0.42;
+    });
+
+    playKartSound('spin');
+    kartGame.item = null;
+  }
+  else if (currentItem === 'bomb') {
+    // BOMBA GLITCH: Se lanza hacia adelante y explota en área
+    kartGame.projectiles.push({
+      type: 'bomb',
+      z: kartGame.position + kartGame.playerZ + 320,
+      offset: kartGame.playerX,
+      timer: 100, // Explota tras ~1.6 segundos
+      speed: KART_MAX_SPEED * 0.7
+    });
+
+    playKartSound('bump');
     kartGame.item = null;
   }
 }
 
-// ACTUALIZAR POSICIÓN DE COCHES RIVALES CON IA DE CARRERA
+// ACTUALIZACIÓN DE PROYECTILES (CAPARAZONES Y BOMBAS)
+function updateKartProjectiles(dt) {
+  for (var i = kartGame.projectiles.length - 1; i >= 0; i--) {
+    var p = kartGame.projectiles[i];
+
+    if (p.type === 'redShell') {
+      p.life--;
+      p.z = KartUtil.increase(p.z, dt * p.speed, kartGame.trackLength);
+
+      // Si tiene objetivo, corregir trayectoria de carril hacia él
+      if (p.target) {
+        p.offset += (p.target.offset - p.offset) * 0.12;
+
+        // Comprobar impacto con el rival
+        var dist = Math.abs(p.z - p.target.z);
+        if (dist < 180) {
+          p.target.spinTimer = 90; // Trompo prolongado y parada en seco
+          p.target.speed = 0;
+          kartGame.explosions.push({ z: p.target.z, offset: p.target.offset, radius: 24, maxRadius: 70, alpha: 1.0 });
+          playKartSound('spin');
+          kartGame.projectiles.splice(i, 1);
+          continue;
+        }
+      }
+
+      if (p.life <= 0) {
+        kartGame.projectiles.splice(i, 1);
+      }
+    }
+    else if (p.type === 'bomb') {
+      p.timer--;
+      p.z = KartUtil.increase(p.z, dt * p.speed, kartGame.trackLength);
+      p.speed *= 0.94; // Va desacelerando en la pista
+
+      // Explota cuando se agota el temporizador
+      if (p.timer <= 0) {
+        kartGame.explosions.push({ z: p.z, offset: p.offset, radius: 20, maxRadius: 120, alpha: 1.0 });
+        playKartSound('spin');
+
+        // Afectar a todos los coches en el radio de la explosión
+        kartGame.cars.forEach(car => {
+          if (Math.abs(car.z - p.z) < 380 && Math.abs(car.offset - p.offset) < 0.75) {
+            car.spinTimer = 75;
+            car.speed *= 0.2;
+          }
+        });
+
+        // Afectar al jugador si está cerca
+        var playerDist = Math.abs((kartGame.position + kartGame.playerZ) - p.z);
+        if (playerDist < 380 && Math.abs(kartGame.playerX - p.offset) < 0.75) {
+          if (kartGame.starTimer === 0) {
+            kartGame.spinTimer = 60;
+            kartGame.speed *= 0.2;
+          }
+        }
+
+        kartGame.projectiles.splice(i, 1);
+      }
+    }
+  }
+
+  // Actualizar ondas de explosión visuales
+  for (var e = kartGame.explosions.length - 1; e >= 0; e--) {
+    var exp = kartGame.explosions[e];
+    exp.radius += 3.5;
+    exp.alpha -= 0.045;
+    if (exp.alpha <= 0) kartGame.explosions.splice(e, 1);
+  }
+}
+
+// ACTUALIZACIÓN DE RIVALES
 function updateKartCars(dt, playerSegment, playerW) {
   var n, car, oldSegment, newSegment;
-  var carW = 0.4;
+  var carW = 0.38;
 
   for (n = 0; n < kartGame.cars.length; n++) {
     car = kartGame.cars[n];
 
+    if (car.shrinkTimer > 0) car.shrinkTimer--;
+
     if (car.spinTimer > 0) {
       car.spinTimer--;
-      car.speed = Math.max(0, car.speed - (KART_MAX_SPEED * dt * 2));
+      car.speed = Math.max(0, car.speed - (KART_MAX_SPEED * dt * 2.2));
     } else {
-      car.speed = car.baseSpeed;
+      var targetSpd = (car.shrinkTimer > 0) ? car.baseSpeed * 0.45 : car.baseSpeed;
+      car.speed += (targetSpd - car.speed) * 0.06;
     }
 
     oldSegment = findKartSegment(car.z);
@@ -12356,42 +12576,40 @@ function updateKartCars(dt, playerSegment, playerW) {
     car.percent = KartUtil.percentRemaining(car.z, KART_SEGMENT_LENGTH);
     newSegment = findKartSegment(car.z);
 
-    if (oldSegment !== newSegment) {
+    if (oldSegment && newSegment && oldSegment !== newSegment) {
       var idx = oldSegment.cars.indexOf(car);
       if (idx !== -1) oldSegment.cars.splice(idx, 1);
       newSegment.cars.push(car);
 
-      // Paso de vuelta para los rivales
       if (newSegment.index < oldSegment.index) {
         car.lap++;
       }
     }
 
-    // Colisión de coches rivales con cáscaras de plátano
-    if (newSegment.hazards.length > 0) {
+    // Colisión de rival con plátanos en pista
+    if (newSegment && newSegment.hazards.length > 0) {
       for (var h = newSegment.hazards.length - 1; h >= 0; h--) {
         var haz = newSegment.hazards[h];
-        if (Math.abs(car.offset - haz.offset) < 0.3) {
-          car.spinTimer = 55;
+        if (Math.abs(car.offset - haz.offset) < 0.32) {
+          car.spinTimer = 60;
           newSegment.hazards.splice(h, 1);
-          if (typeof playRetroDollSound === 'function') playRetroDollSound('pop');
+          playKartSound('spin');
         }
       }
     }
   }
 }
 
-// IA DE ADELANTAMIENTO Y MANTENIMIENTO DE CARRIL (JAKE GORDON LOOKAHEAD)
+// IA DE ADELANTAMIENTO
 function updateKartCarOffset(car, carSegment, playerSegment, playerW) {
-  var i, j, dir, segment, otherCar, otherCarW = 0.4, lookahead = 20, carW = 0.4;
+  if (!carSegment || !playerSegment) return 0;
+  var i, j, dir, segment, otherCar, otherCarW = 0.38, lookahead = 20, carW = 0.38;
 
-  // Optimización: si está fuera de la distancia de renderizado del jugador, no calcular desvíos
   if ((carSegment.index - playerSegment.index) > KART_DRAW_DISTANCE) return 0;
 
   for (i = 1; i < lookahead; i++) {
     segment = kartGame.segments[(carSegment.index + i) % kartGame.segments.length];
 
-    // Esquivar al jugador si va delante y más lento
     if ((segment === playerSegment) && (car.speed > kartGame.speed) && (KartUtil.overlap(kartGame.playerX, playerW, car.offset, carW, 1.2))) {
       if (kartGame.playerX > 0.5) dir = -1;
       else if (kartGame.playerX < -0.5) dir = 1;
@@ -12399,7 +12617,6 @@ function updateKartCarOffset(car, carSegment, playerSegment, playerW) {
       return dir * (1 / i) * ((car.speed - kartGame.speed) / KART_MAX_SPEED);
     }
 
-    // Esquivar a otros coches rivales
     for (j = 0; j < segment.cars.length; j++) {
       otherCar = segment.cars[j];
       if ((car.speed > otherCar.speed) && KartUtil.overlap(car.offset, carW, otherCar.offset, otherCarW, 1.2)) {
@@ -12411,34 +12628,40 @@ function updateKartCarOffset(car, carSegment, playerSegment, playerW) {
     }
   }
 
-  // Si se sale de los bordes del asfalto, retornar suavemente hacia el centro
-  if (car.offset < -0.8) return 0.05;
-  else if (car.offset > 0.8) return -0.05;
+  if (car.offset < -0.85) return 0.05;
+  else if (car.offset > 0.85) return -0.05;
   return 0;
 }
 
-// MOTOR FÍSICO DEL JUGADOR (ACELERACIÓN, GIRO, INERCIA, DRIFT Y COLISIONES)
+// MOTOR FÍSICO DEL JUGADOR
 function updateKartPhysics(dt) {
   if (kartGame.countdownScale > 1.0) {
     kartGame.countdownScale -= 0.05;
   }
 
-  if (kartGame.state === 'countdown') return;
+  if (kartGame.state === 'countdown' || kartGame.state === 'menu') return;
 
   var playerSegment = findKartSegment(kartGame.position + kartGame.playerZ);
+  if (!playerSegment) return;
+
   var speedPercent = kartGame.speed / KART_MAX_SPEED;
-  var dx = dt * 2 * speedPercent; // tasa de giro proporcional a la velocidad
+  var dx = dt * 2.2 * speedPercent;
   var startPosition = kartGame.position;
-  var playerW = 0.35;
+  var playerW = 0.38;
 
   kartGame.raceTime += dt;
   kartGame.lapTime += dt;
 
-  // Actualizar timers de items
   if (kartGame.turboTimer > 0) kartGame.turboTimer--;
   if (kartGame.starTimer > 0) kartGame.starTimer--;
 
-  // Controles
+  // Ruleta animada de ítems al recoger caja
+  if (kartGame.rouletteTimer > 0) {
+    kartGame.rouletteTimer--;
+    const iconList = ['🍄', '🍌', '⭐', '🐢', '⚡', '💣'];
+    kartGame.rouletteCurrentIcon = iconList[Math.floor(Math.random() * iconList.length)];
+  }
+
   const keys = (typeof pvpKeys !== 'undefined') ? pvpKeys : {};
   const isUp = keys['ArrowUp'] || keys['KeyW'] || kartTouch.gas;
   const isDown = keys['ArrowDown'] || keys['KeyS'] || kartTouch.brake;
@@ -12446,20 +12669,20 @@ function updateKartPhysics(dt) {
   const isRight = keys['ArrowRight'] || keys['KeyD'] || kartTouch.right;
   const isItem = keys['Space'] || keys['KeyE'] || kartTouch.item;
 
-  if (isItem) useKartItem();
+  if (isItem && kartGame.rouletteTimer === 0) useKartItem();
 
-  // Actualizar IA de los coches rivales
+  // Actualizar proyectiles y rivales
+  updateKartProjectiles(dt);
   updateKartCars(dt, playerSegment, playerW);
 
-  // Manejo de trompo por plátano o choque
+  // Trompo
   if (kartGame.spinTimer > 0) {
     kartGame.spinTimer--;
     kartGame.speed = Math.max(0, kartGame.speed - (KART_MAX_SPEED * dt * 1.5));
-    kartGame.steer += 0.3;
+    kartGame.steer += 0.35;
   } else {
-    // Aceleración y frenado
     if (isUp) {
-      var accel = (kartGame.turboTimer > 0) ? KART_ACCEL * 2.2 : KART_ACCEL;
+      var accel = (kartGame.turboTimer > 0) ? KART_ACCEL * 2.3 : KART_ACCEL;
       kartGame.speed = KartUtil.accelerate(kartGame.speed, accel, dt);
     } else if (isDown) {
       kartGame.speed = KartUtil.accelerate(kartGame.speed, KART_BRAKING, dt);
@@ -12467,7 +12690,6 @@ function updateKartPhysics(dt) {
       kartGame.speed = KartUtil.accelerate(kartGame.speed, KART_DECEL, dt);
     }
 
-    // Dirección
     if (isLeft) {
       kartGame.playerX = kartGame.playerX - dx;
       kartGame.steer = Math.max(-1, kartGame.steer - 0.2);
@@ -12475,47 +12697,41 @@ function updateKartPhysics(dt) {
       kartGame.playerX = kartGame.playerX + dx;
       kartGame.steer = Math.min(1, kartGame.steer + 0.2);
     } else {
-      kartGame.steer *= 0.7;
+      kartGame.steer *= 0.72;
     }
   }
 
-  // Fuerza centrífuga en curvas
+  // Fuerza centrífuga
   kartGame.playerX = kartGame.playerX - (dx * speedPercent * playerSegment.curve * KART_CENTRIFUGAL);
 
-  // Penalización por salir del asfalto (al césped)
+  // Césped
   if ((kartGame.playerX < -1) || (kartGame.playerX > 1)) {
     if (kartGame.speed > KART_OFFROAD_LIMIT) {
       kartGame.speed = KartUtil.accelerate(kartGame.speed, KART_OFFROAD_DECEL, dt);
     }
   }
 
-  // Limitar carril del jugador
   kartGame.playerX = KartUtil.limit(kartGame.playerX, -2.5, 2.5);
-
-  // Limitar velocidad según turbos o estado normal
-  var topAllowedSpeed = (kartGame.turboTimer > 0) ? KART_MAX_SPEED * 1.35 : KART_MAX_SPEED;
+  var topAllowedSpeed = (kartGame.turboTimer > 0) ? KART_MAX_SPEED * 1.4 : KART_MAX_SPEED;
   kartGame.speed = KartUtil.limit(kartGame.speed, 0, topAllowedSpeed);
 
-  // Desplazamiento por la pista
   kartGame.position = KartUtil.increase(kartGame.position, dt * kartGame.speed, kartGame.trackLength);
 
-  // COLISIONES CON COCHES EN EL SEGMENTO DEL JUGADOR
+  // COLISIONES CON COCHES EN EL MISMO SEGMENTO
   for (var n = 0; n < playerSegment.cars.length; n++) {
     var car = playerSegment.cars[n];
-    var carW = 0.35;
+    var carW = 0.38;
     if (kartGame.speed > car.speed) {
       if (KartUtil.overlap(kartGame.playerX, playerW, car.offset, carW, 0.8)) {
         if (kartGame.starTimer > 0) {
-          // Invencibilidad con Estrella: el rival sale despedido con trompo
-          car.spinTimer = 60;
-          if (typeof playRetroDollSound === 'function') playRetroDollSound('sparkle');
+          car.spinTimer = 70;
+          playKartSound('spin');
         } else {
-          // Choque normal entre karts (rebote elástico)
-          var push = (kartGame.playerX > car.offset) ? 0.2 : -0.2;
+          var push = (kartGame.playerX > car.offset) ? 0.22 : -0.22;
           kartGame.playerX += push;
           car.offset -= push;
           kartGame.speed = car.speed * (car.speed / kartGame.speed);
-          if (typeof playRetroDollSound === 'function') playRetroDollSound('click');
+          playKartSound('bump');
         }
       }
     }
@@ -12525,43 +12741,55 @@ function updateKartPhysics(dt) {
   if (playerSegment.hazards.length > 0) {
     for (var h = playerSegment.hazards.length - 1; h >= 0; h--) {
       var haz = playerSegment.hazards[h];
-      if (Math.abs(kartGame.playerX - haz.offset) < 0.3) {
+      if (Math.abs(kartGame.playerX - haz.offset) < 0.32) {
         if (kartGame.starTimer === 0) {
-          kartGame.spinTimer = 45;
-          if (typeof playRetroDollSound === 'function') playRetroDollSound('pop');
+          kartGame.spinTimer = 50;
+          playKartSound('spin');
         }
         playerSegment.hazards.splice(h, 1);
       }
     }
   }
 
-  // COLISIÓN CON CAJAS DE ÍTEMS
+  // RECOGER CAJAS DE ÍTEMS
   if (playerSegment.itemBoxes.length > 0) {
     playerSegment.itemBoxes.forEach(box => {
-      if (box.active && Math.abs(kartGame.playerX - box.offset) < 0.45) {
-        if (!kartGame.item) {
-          const items = ['turbo', 'banana', 'star'];
-          kartGame.item = items[Math.floor(Math.random() * items.length)];
+      if (box.active && Math.abs(kartGame.playerX - box.offset) < 0.48) {
+        if (!kartGame.item && kartGame.rouletteTimer === 0) {
           box.active = false;
-          if (typeof playRetroDollSound === 'function') playRetroDollSound('sparkle');
+          kartGame.rouletteTimer = 35; // Ruleta durante medio segundo
+          playKartSound('turbo');
+
+          // Asignación inteligente con probabilidad compensatoria
+          setTimeout(() => {
+            var pool = ['turbo', 'banana', 'star'];
+            if (kartGame.raceRank >= 4) {
+              pool.push('redShell', 'lightning', 'bomb', 'star');
+            } else {
+              pool.push('banana', 'turbo', 'bomb');
+            }
+            kartGame.item = KartUtil.randomChoice(pool);
+            playKartSound('beepHigh');
+          }, 600);
+
           setTimeout(() => { box.active = true; }, 4000);
         }
       }
     });
   }
 
-  // PASO POR LÍNEA DE META Y VUELTAS
+  // VUELTAS Y META
   if (kartGame.position < startPosition) {
     kartGame.lap++;
-    if (typeof playRetroDollSound === 'function') playRetroDollSound('fanfare');
+    playKartSound('fanfare');
 
     if (kartGame.lap > kartGame.maxLaps) {
       kartGame.state = 'finished';
-      if (typeof playRetroDollSound === 'function') playRetroDollSound('fanfare');
+      playKartSound('fanfare');
     }
   }
 
-  // CÁLCULO DE LA POSICIÓN EN LA CARRERA (RANKING 1º A 6º)
+  // RANKING DE CARRERA (1º a 6º)
   var playerTotalProgress = ((kartGame.lap - 1) * kartGame.trackLength) + kartGame.position;
   var rank = 1;
   kartGame.cars.forEach(car => {
@@ -12572,7 +12800,7 @@ function updateKartPhysics(dt) {
 }
 
 // =========================================================================
-// RENDERIZADOR PSEUDO-3D SUPER SCALER (JAKE GORDON ARCHITECTURE)
+// RENDERIZADO VISUAL CON ANIMACIONES EXCLUSIVAS POR PISTA
 // =========================================================================
 function renderKartScene() {
   if (!kartCanvas || !kartCtx) return;
@@ -12580,17 +12808,20 @@ function renderKartScene() {
   const width = kartCanvas.width;
   const height = kartCanvas.height;
   const theme = KART_TRACK_THEMES[currentKartTrackKey] || KART_TRACK_THEMES.sunset;
+  const now = kartGame.envTime * 1000;
 
   var baseSegment = findKartSegment(kartGame.position);
+  if (!baseSegment) return;
+
   var basePercent = KartUtil.percentRemaining(kartGame.position, KART_SEGMENT_LENGTH);
-  var playerSegment = findKartSegment(kartGame.position + kartGame.playerZ);
+  var playerSegment = findKartSegment(kartGame.position + kartGame.playerZ) || baseSegment;
   var playerPercent = KartUtil.percentRemaining(kartGame.position + kartGame.playerZ, KART_SEGMENT_LENGTH);
   var playerY = KartUtil.interpolate(playerSegment.p1.world.y, playerSegment.p2.world.y, playerPercent);
   var maxy = height;
 
   ctx.clearRect(0, 0, width, height);
 
-  // 1. Cielo degradado temático
+  // 1. CIELO Y FONDO DEGRADADO
   var skyGrad = ctx.createLinearGradient(0, 0, 0, height * 0.5);
   for (var i = 0; i < theme.skyGradient.length; i++) {
     skyGrad.addColorStop(i / (theme.skyGradient.length - 1), theme.skyGradient[i]);
@@ -12598,20 +12829,18 @@ function renderKartScene() {
   ctx.fillStyle = skyGrad;
   ctx.fillRect(0, 0, width, height * 0.5);
 
-  // Sol de neón / Estrella de fondo
-  ctx.fillStyle = theme.sunColor;
-  ctx.beginPath();
-  var sunX = width / 2 - (kartGame.playerX * 50);
-  ctx.arc(sunX, height * 0.25, 30, 0, Math.PI * 2);
-  ctx.fill();
+  // 2. ANIMACIONES EXCLUSIVAS DIFERENCIALES SEGÚN LA PISTA
+  renderTrackSpecificAnimations(ctx, width, height, currentKartTrackKey, now);
 
   var x = 0;
   var dx = -(baseSegment.curve * basePercent);
   var n, i, segment;
 
-  // 2. PRIMERA PASADA: PROYECCIÓN GEOMÉTRICA DE CARRETERA (DE FRENTE HACIA ATRÁS)
+  // 3. PRIMERA PASADA: TRAZADO DE CARRETERA
   for (n = 0; n < KART_DRAW_DISTANCE; n++) {
     segment = kartGame.segments[(baseSegment.index + n) % kartGame.segments.length];
+    if (!segment) continue;
+
     segment.looped = segment.index < baseSegment.index;
     segment.fog = KartUtil.exponentialFog(n / KART_DRAW_DISTANCE, KART_FOG_DENSITY);
     segment.clip = maxy;
@@ -12641,11 +12870,12 @@ function renderKartScene() {
     maxy = segment.p1.screen.y;
   }
 
-  // 3. SEGUNDA PASADA: OBJETOS, RIVALES Y CAJAS EN PISTA (DE ATRÁS HACIA ADELANTE)
+  // 4. SEGUNDA PASADA: OBJETOS, CAJAS, ATREZO Y RIVALES
   for (n = (KART_DRAW_DISTANCE - 1); n > 0; n--) {
     segment = kartGame.segments[(baseSegment.index + n) % kartGame.segments.length];
+    if (!segment) continue;
 
-    // Cajas de ítems en pista
+    // Cajas de ítems
     for (i = 0; i < segment.itemBoxes.length; i++) {
       var box = segment.itemBoxes[i];
       if (box.active && segment.p1.screen.scale > 0) {
@@ -12658,7 +12888,7 @@ function renderKartScene() {
       }
     }
 
-    // Cáscaras de plátano
+    // Plátanos
     for (i = 0; i < segment.hazards.length; i++) {
       var haz = segment.hazards[i];
       if (segment.p1.screen.scale > 0) {
@@ -12666,25 +12896,25 @@ function renderKartScene() {
         var hazX = segment.p1.screen.x + (hazScale * haz.offset * KART_ROAD_WIDTH * width / 2);
         var hazY = segment.p1.screen.y;
         if (hazY < segment.clip) {
-          ctx.font = `${Math.max(10, Math.round(hazScale * 1200))}px sans-serif`;
+          ctx.font = `${Math.max(12, Math.round(hazScale * 1600))}px sans-serif`;
           ctx.textAlign = 'center';
           ctx.fillText('🍌', hazX, hazY);
         }
       }
     }
 
-    // Elementos del paisaje (árboles, carteles retro)
+    // Atrezo lateral
     for (i = 0; i < segment.sprites.length; i++) {
       var sprite = segment.sprites[i];
       var spriteScale = segment.p1.screen.scale;
       var spriteX = segment.p1.screen.x + (spriteScale * sprite.offset * KART_ROAD_WIDTH * width / 2);
       var spriteY = segment.p1.screen.y;
       if (spriteY < segment.clip) {
-        drawRoadsideProp(ctx, spriteX, spriteY, spriteScale, sprite.type, sprite.text);
+        drawRoadsideProp(ctx, spriteX, spriteY, spriteScale, sprite.type, sprite.text, now);
       }
     }
 
-    // COCHES RIVALES (PROYECTADOS SOBRE EL SEGMENTO EXACTO DE CARRETERA)
+    // RIVALES: TAMAÑO REAL CORREGIDO (CALIBRADO AL ANCHO DE PISTA)
     for (i = 0; i < segment.cars.length; i++) {
       var car = segment.cars[i];
       var carScale = KartUtil.interpolate(segment.p1.screen.scale, segment.p2.screen.scale, car.percent);
@@ -12692,19 +12922,26 @@ function renderKartScene() {
       var carY = KartUtil.interpolate(segment.p1.screen.y, segment.p2.screen.y, car.percent);
 
       if (carY < segment.clip) {
-        drawRivalKartSprite(ctx, carX, carY, carScale, car);
+        drawRivalKartSprite(ctx, carX, carY, carScale, car, width);
       }
     }
   }
 
-  // 4. KART DEL JUGADOR (MALENES #1) EN PRIMER PLANO
-  var playerScreenY = height - 15;
-  drawPlayerKartSprite(ctx, width / 2, playerScreenY);
+  // 5. PROYECTILES Y ONDAS DE EXPLOSIÓN
+  drawProjectilesAndExplosions(ctx, width, height, baseSegment);
 
-  // 5. INTERFAZ GRÁFICA RETRO (HUD COMPLETO Y RADAR)
-  drawKartHUD(ctx, width, height);
+  // 6. KART DEL JUGADOR (MALENES)
+  if (kartGame.state !== 'menu') {
+    var playerScreenY = height - 16;
+    drawPlayerKartSprite(ctx, width / 2, playerScreenY);
+  }
 
-  // Mensaje de cuenta regresiva
+  // 7. HUD Y OVERLAYS
+  if (kartGame.state === 'racing' || kartGame.state === 'countdown') {
+    drawKartHUD(ctx, width, height);
+  }
+
+  // Cuenta regresiva
   if (kartGame.countdownText) {
     ctx.save();
     ctx.translate(width / 2, height / 2 - 20);
@@ -12720,33 +12957,348 @@ function renderKartScene() {
     ctx.restore();
   }
 
-  // Pantalla de meta y victoria
+  // MENÚ DE INICIO DE MALEN KART
+  if (kartGame.state === 'menu') {
+    drawKartStartMenu(ctx, width, height, now);
+  }
+
+  // PANTALLA DE META Y VICTORIA
   if (kartGame.state === 'finished') {
     ctx.save();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.78)';
     ctx.fillRect(0, 0, width, height);
 
     ctx.fillStyle = '#ff00ff';
     ctx.font = 'bold 26px "Trebuchet MS", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🏁 ¡CARRERA TERMINADA! 🏁', width / 2, height * 0.3);
+    ctx.fillText('🏁 ¡CARRERA TERMINADA! 🏁', width / 2, height * 0.28);
 
     ctx.fillStyle = '#ffff00';
-    ctx.font = 'bold 20px monospace';
-    ctx.fillText(`Posición Final: ${kartGame.raceRank}º de 6`, width / 2, height * 0.45);
+    ctx.font = 'bold 22px monospace';
+    var medal = (kartGame.raceRank === 1) ? '🥇' : (kartGame.raceRank === 2 ? '🥈' : (kartGame.raceRank === 3 ? '🥉' : '🎖️'));
+    ctx.fillText(`${medal} Posición Final: ${kartGame.raceRank}º de 6`, width / 2, height * 0.44);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '14px monospace';
-    ctx.fillText(`Tiempo Total: ${(kartGame.raceTime).toFixed(2)}s`, width / 2, height * 0.58);
+    ctx.fillText(`Tiempo de Carrera: ${(kartGame.raceTime).toFixed(2)}s`, width / 2, height * 0.58);
 
     ctx.fillStyle = '#00ffff';
-    ctx.font = 'bold 14px "Trebuchet MS", sans-serif';
-    ctx.fillText('Pulsa "Reiniciar" para correr de nuevo', width / 2, height * 0.75);
+    ctx.font = 'bold 15px "Trebuchet MS", sans-serif';
+    ctx.fillText('🏆 Pulsa [🏁 Reiniciar] o [🏠 Menú] en la barra superior', width / 2, height * 0.76);
     ctx.restore();
   }
 }
 
-// DIBUJAR SPRITE DEL KART DEL JUGADOR (MALENES CON TIARA Y CHROME SPOILER)
+// =========================================================================
+// RENDERIZADO DE ANIMACIONES DIFERENCIALES POR PISTA
+// =========================================================================
+function renderTrackSpecificAnimations(ctx, w, h, trackKey, now) {
+  ctx.save();
+
+  if (trackKey === 'sunset') {
+    // 1. PALM BEACH: Océano animado con reflejos de sol y gaviotas
+    var seaY = h * 0.38;
+    var seaGrad = ctx.createLinearGradient(0, seaY, 0, h * 0.5);
+    seaGrad.addColorStop(0, '#ff9933');
+    seaGrad.addColorStop(0.3, '#cc3366');
+    seaGrad.addColorStop(1, '#1a3366');
+    ctx.fillStyle = seaGrad;
+    ctx.fillRect(0, seaY, w, h * 0.12);
+
+    // Ondas marinas
+    ctx.strokeStyle = 'rgba(255, 255, 200, 0.5)';
+    ctx.lineWidth = 1.5;
+    for (var wave = 0; wave < 3; wave++) {
+      ctx.beginPath();
+      for (var wx = 0; wx < w; wx += 20) {
+        var wy = seaY + 10 + (wave * 12) + Math.sin(now * 0.003 + wx * 0.04 + wave) * 3;
+        if (wx === 0) ctx.moveTo(wx, wy);
+        else ctx.lineTo(wx, wy);
+      }
+      ctx.stroke();
+    }
+
+    // Sol poniente
+    ctx.fillStyle = '#ffff66';
+    ctx.beginPath();
+    ctx.arc(w * 0.5 - (kartGame.playerX * 30), seaY - 4, 32, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Gaviotas volando en formación
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.8;
+    for (var g = 0; g < 4; g++) {
+      var gx = ((now * 0.035 + g * 140) % (w + 100)) - 50;
+      var gy = h * 0.15 + Math.sin(now * 0.002 + g) * 12 + (g * 14);
+      var wing = Math.sin(now * 0.012 + g) * 5;
+      ctx.beginPath();
+      ctx.moveTo(gx - 8, gy + wing);
+      ctx.quadraticCurveTo(gx - 4, gy - 4, gx, gy);
+      ctx.quadraticCurveTo(gx + 4, gy - 4, gx + 8, gy + wing);
+      ctx.stroke();
+    }
+  }
+  else if (trackKey === 'cyber') {
+    // 2. CYBER MATRIX: Lluvia de código binario / hex y cuadrícula de neón
+    ctx.font = '10px monospace';
+    ctx.fillStyle = 'rgba(0, 255, 204, 0.65)';
+    var chars = ['0', '1', 'Y', '2', 'K', 'M', 'A', 'L', 'E', 'N', '#'];
+    for (var col = 0; col < w; col += 32) {
+      var speed = ((col % 3) + 1) * 0.08;
+      var cy = (now * speed + col * 17) % (h * 0.45);
+      var char = chars[(Math.floor(col + cy) % chars.length)];
+      ctx.fillText(char, col, cy);
+    }
+
+    // Cuadrícula de horizonte (Wireframe Grid)
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.35)';
+    ctx.lineWidth = 1;
+    var horizonY = h * 0.45;
+    for (var gridX = -w; gridX < w * 2; gridX += 45) {
+      ctx.beginPath();
+      ctx.moveTo(w / 2, horizonY);
+      ctx.lineTo(gridX, h * 0.5);
+      ctx.stroke();
+    }
+  }
+  else if (trackKey === 'disco') {
+    // 3. DISCOTECA GLAM: Bola de espejos giratoria, haces de luces y ecualizador
+    var ballX = w / 2;
+    var ballY = 24;
+    var ballRadius = 20;
+
+    // Focos de colores giratorios que barren la pantalla
+    var colors = ['rgba(255, 0, 180, 0.18)', 'rgba(0, 255, 255, 0.18)', 'rgba(255, 255, 0, 0.18)'];
+    for (var b = 0; b < 3; b++) {
+      var beamAngle = (now * 0.0018) + (b * Math.PI * 2 / 3);
+      ctx.fillStyle = colors[b];
+      ctx.beginPath();
+      ctx.moveTo(ballX, ballY);
+      ctx.lineTo(ballX + Math.cos(beamAngle - 0.25) * w, h * 0.5);
+      ctx.lineTo(ballX + Math.cos(beamAngle + 0.25) * w, h * 0.5);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Bola de discoteca
+    ctx.fillStyle = '#e6e6e6';
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Ecualizador de música retro en el horizonte
+    var numBars = 26;
+    var barW = (w / numBars) - 3;
+    for (var eb = 0; eb < numBars; eb++) {
+      var barH = Math.abs(Math.sin(now * 0.006 + eb * 0.45)) * 26 + 4;
+      var hue = (eb / numBars) * 300;
+      ctx.fillStyle = `hsl(${hue}, 100%, 55%)`;
+      ctx.fillRect(eb * (barW + 3), (h * 0.45) - barH, barW, barH);
+    }
+  }
+  else if (trackKey === 'rainbow') {
+    // 4. SENDA ARCOÍRIS: Estrellas fugaces, cometas y nebulosa con arcoíris cósmico
+    // Estrellas titilantes
+    for (var s = 0; s < 30; s++) {
+      var sx = ((s * 73) % w);
+      var sy = ((s * 47) % (h * 0.42));
+      var twinkle = Math.abs(Math.sin(now * 0.005 + s));
+      ctx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+
+    // Cometa fugaz
+    var cometProgress = (now * 0.0007) % 1;
+    var cometX = cometProgress * (w + 200) - 100;
+    var cometY = cometProgress * (h * 0.35);
+    var cometGrad = ctx.createLinearGradient(cometX, cometY, cometX - 60, cometY - 30);
+    cometGrad.addColorStop(0, '#ffffff');
+    cometGrad.addColorStop(0.3, '#00ffff');
+    cometGrad.addColorStop(1, 'transparent');
+    ctx.strokeStyle = cometGrad;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cometX, cometY);
+    ctx.lineTo(cometX - 60, cometY - 30);
+    ctx.stroke();
+
+    // Cinturón de aura arcoíris
+    var rgbCycle = (now * 0.06) % 360;
+    ctx.strokeStyle = `hsla(${rgbCycle}, 100%, 70%, 0.4)`;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(w / 2, h * 0.25, 45, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+// =========================================================================
+// DIBUJAR SPRITES DE RIVALES (ESCALADO EXACTO Y REALISTA)
+// =========================================================================
+function drawRivalKartSprite(ctx, x, y, scale, car, canvasWidth) {
+  // ESCALA CORREGIDA: Ajustada al ancho de mundo real para igualar el kart del jugador al estar cerca
+  var baseW = scale * 340 * (canvasWidth / 2);
+  var isShrunk = (car.shrinkTimer && car.shrinkTimer > 0);
+  if (isShrunk) baseW *= 0.52; // Si fue alcanzado por rayo
+
+  var w = Math.max(14, Math.round(baseW));
+  var h = Math.round(w * 0.72);
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  if (car.spinTimer > 0) {
+    ctx.rotate((car.spinTimer * 0.45));
+  }
+
+  // Sombra del kart
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, w * 0.52, h * 0.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ruedas laterales de goma
+  ctx.fillStyle = '#111111';
+  var tireW = Math.max(2, Math.round(w * 0.16));
+  var tireH = Math.max(4, Math.round(h * 0.52));
+  ctx.fillRect(-w * 0.52, -tireH * 0.9, tireW, tireH);
+  ctx.fillRect(w * 0.52 - tireW, -tireH * 0.9, tireW, tireH);
+
+  // Llantas de aleación
+  ctx.fillStyle = '#aaaaaa';
+  ctx.fillRect(-w * 0.50, -tireH * 0.7, Math.max(1, tireW * 0.5), tireH * 0.6);
+  ctx.fillRect(w * 0.52 - tireW * 0.7, -tireH * 0.7, Math.max(1, tireW * 0.5), tireH * 0.6);
+
+  // Chasis rival aerodinámico
+  ctx.fillStyle = car.color;
+  ctx.beginPath();
+  ctx.moveTo(-w * 0.36, -h * 0.1);
+  ctx.lineTo(-w * 0.22, -h * 0.88);
+  ctx.lineTo(w * 0.22, -h * 0.88);
+  ctx.lineTo(w * 0.36, -h * 0.1);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = car.accent;
+  ctx.lineWidth = Math.max(1, Math.round(w * 0.04));
+  ctx.stroke();
+
+  // Alerón trasero
+  ctx.fillStyle = car.accent;
+  ctx.fillRect(-w * 0.42, -h * 0.2, w * 0.84, Math.max(2, h * 0.18));
+
+  // Piloto rival (cabeza y pelo / sombrero)
+  ctx.fillStyle = '#ffdbac';
+  ctx.beginPath();
+  ctx.arc(0, -h * 0.95, Math.max(3, w * 0.15), 0, Math.PI * 2);
+  ctx.fill();
+
+  // Gafas de sol / detalle
+  ctx.fillStyle = '#111';
+  ctx.fillRect(-w * 0.1, -h * 1.02, w * 0.2, Math.max(1, h * 0.08));
+
+  // Si está electrocutado por rayo relámpago, dibujar chispas amarillas
+  if (isShrunk && Math.floor(Date.now() / 60) % 2 === 0) {
+    ctx.strokeStyle = '#ffff00';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.4, -h);
+    ctx.lineTo(0, -h * 1.3);
+    ctx.lineTo(w * 0.4, -h);
+    ctx.stroke();
+  }
+
+  // Etiqueta del nombre con bandera y número
+  if (w > 28) {
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    var fontSize = Math.max(8, Math.round(w * 0.18));
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.strokeText(`#${car.num} ${car.name}`, 0, -h * 1.25);
+    ctx.fillText(`#${car.num} ${car.name}`, 0, -h * 1.25);
+  }
+
+  ctx.restore();
+}
+
+// DIBUJAR PROYECTILES Y EXPLOSIONES
+function drawProjectilesAndExplosions(ctx, width, height, baseSegment) {
+  // Proyectiles (Caparazón Rojo o Bomba)
+  kartGame.projectiles.forEach(p => {
+    var pSeg = findKartSegment(p.z);
+    if (!pSeg || !pSeg.p1.screen.scale) return;
+
+    var scale = pSeg.p1.screen.scale;
+    var px = pSeg.p1.screen.x + (scale * p.offset * KART_ROAD_WIDTH * width / 2);
+    var py = pSeg.p1.screen.y;
+
+    if (py < pSeg.clip) {
+      ctx.save();
+      ctx.translate(px, py);
+
+      if (p.type === 'redShell') {
+        var shellSize = Math.max(10, Math.round(scale * 2200));
+        ctx.fillStyle = '#ff0033';
+        ctx.beginPath();
+        ctx.arc(0, -shellSize * 0.6, shellSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#ffff00';
+        ctx.font = `bold ${Math.round(shellSize * 0.9)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🐢', 0, -shellSize * 0.6);
+      }
+      else if (p.type === 'bomb') {
+        var bombSize = Math.max(10, Math.round(scale * 2400));
+        ctx.fillStyle = (Math.floor(Date.now() / 80) % 2 === 0) ? '#ff0000' : '#111111';
+        ctx.beginPath();
+        ctx.arc(0, -bombSize * 0.6, bombSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffff00';
+        ctx.font = `bold ${Math.round(bombSize * 0.9)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('💣', 0, -bombSize * 0.6);
+      }
+
+      ctx.restore();
+    }
+  });
+
+  // Ondas de choque de explosiones
+  kartGame.explosions.forEach(exp => {
+    var eSeg = findKartSegment(exp.z);
+    if (!eSeg || !eSeg.p1.screen.scale) return;
+
+    var scale = eSeg.p1.screen.scale;
+    var ex = eSeg.p1.screen.x + (scale * exp.offset * KART_ROAD_WIDTH * width / 2);
+    var ey = eSeg.p1.screen.y;
+
+    ctx.save();
+    ctx.strokeStyle = `rgba(255, 100, 0, ${exp.alpha})`;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(ex, ey - 20, exp.radius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(255, 255, 0, ${exp.alpha * 0.6})`;
+    ctx.beginPath();
+    ctx.arc(ex, ey - 20, exp.radius * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+// DIBUJAR KART DEL JUGADOR
 function drawPlayerKartSprite(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
@@ -12755,13 +13307,13 @@ function drawPlayerKartSprite(ctx, x, y) {
   if (kartGame.spinTimer > 0) steerTilt += (kartGame.spinTimer * 0.5);
   ctx.rotate(steerTilt);
 
-  // Sombra del kart
+  // Sombra
   ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
   ctx.beginPath();
   ctx.ellipse(0, -6, 52, 14, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Ruedas traseras y delanteras
+  // Ruedas
   ctx.fillStyle = '#111';
   ctx.fillRect(-52, -26, 16, 26);
   ctx.fillRect(36, -26, 16, 26);
@@ -12769,8 +13321,9 @@ function drawPlayerKartSprite(ctx, x, y) {
   ctx.fillRect(-48, -20, 8, 14);
   ctx.fillRect(40, -20, 8, 14);
 
-  // Llamaradas del turbo de escape si acelera o tiene turbo activo
-  if ((kartGame.speed > 500 && ((typeof pvpKeys !== 'undefined' && (pvpKeys['ArrowUp'] || pvpKeys['KeyW'])) || kartTouch.gas)) || kartGame.turboTimer > 0) {
+  // Llamas de turbo en escapes
+  var keys = (typeof pvpKeys !== 'undefined') ? pvpKeys : {};
+  if ((kartGame.speed > 500 && (keys['ArrowUp'] || keys['KeyW'] || kartTouch.gas)) || kartGame.turboTimer > 0) {
     ctx.fillStyle = (kartGame.turboTimer > 0) ? '#00ffff' : '#ff6600';
     ctx.beginPath();
     ctx.moveTo(-24, 0);
@@ -12785,7 +13338,7 @@ function drawPlayerKartSprite(ctx, x, y) {
     ctx.fill();
   }
 
-  // Chasis principal (Rosa neón Malenes o Arcoíris si tiene estrella)
+  // Chasis Malenes (Rosa neón o arcoíris si estrella activa)
   var bodyGrad = ctx.createLinearGradient(-35, -45, 35, 0);
   if (kartGame.starTimer > 0 && Math.floor(Date.now() / 80) % 2 === 0) {
     bodyGrad.addColorStop(0, '#ffff00');
@@ -12797,7 +13350,6 @@ function drawPlayerKartSprite(ctx, x, y) {
     bodyGrad.addColorStop(1, '#cc0088');
   }
 
-  // Cuerpo aerodinámico del kart
   ctx.fillStyle = bodyGrad;
   ctx.beginPath();
   ctx.moveTo(-35, -15);
@@ -12810,7 +13362,7 @@ function drawPlayerKartSprite(ctx, x, y) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Alerón trasero cromado
+  // Alerón cromado
   ctx.fillStyle = '#d0d0d8';
   ctx.fillRect(-42, -12, 84, 8);
   ctx.fillStyle = '#ff00aa';
@@ -12818,18 +13370,18 @@ function drawPlayerKartSprite(ctx, x, y) {
   ctx.textAlign = 'center';
   ctx.fillText('MALENES #1', 0, -6);
 
-  // Piloto: Malenes (Pelo rubio recogido y tiara de diamantes)
-  ctx.fillStyle = '#fce4c8'; // Cara / Piel
+  // Piloto: Malenes
+  ctx.fillStyle = '#fce4c8';
   ctx.beginPath();
   ctx.arc(0, -56, 12, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = '#fae082'; // Cabello rubio glam 2000s
+  ctx.fillStyle = '#fae082';
   ctx.beginPath();
   ctx.arc(0, -60, 13, Math.PI, 0);
   ctx.fill();
 
-  // Tiara brillante
+  // Tiara de diamantes
   ctx.fillStyle = '#ffff00';
   ctx.beginPath();
   ctx.moveTo(-8, -66);
@@ -12845,64 +13397,7 @@ function drawPlayerKartSprite(ctx, x, y) {
   ctx.restore();
 }
 
-// DIBUJAR SPRITE DE KART RIVAL (PERSPECTIVA Y ESCALADO EXACTO)
-function drawRivalKartSprite(ctx, x, y, scale, car) {
-  var w = Math.max(16, Math.round(scale * 1500));
-  var h = Math.max(10, Math.round(scale * 900));
-
-  ctx.save();
-  ctx.translate(x, y);
-
-  if (car.spinTimer > 0) {
-    ctx.rotate((car.spinTimer * 0.4));
-  }
-
-  // Sombra en el suelo
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-  ctx.beginPath();
-  ctx.ellipse(0, 0, w * 0.6, h * 0.2, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Ruedas
-  ctx.fillStyle = '#111111';
-  ctx.fillRect(-w * 0.58, -h * 0.45, w * 0.22, h * 0.45);
-  ctx.fillRect(w * 0.36, -h * 0.45, w * 0.22, h * 0.45);
-
-  // Chasis rival
-  ctx.fillStyle = car.color;
-  ctx.beginPath();
-  ctx.moveTo(-w * 0.42, -h * 0.2);
-  ctx.lineTo(-w * 0.28, -h * 0.85);
-  ctx.lineTo(w * 0.28, -h * 0.85);
-  ctx.lineTo(w * 0.42, -h * 0.2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = car.accent;
-  ctx.lineWidth = Math.max(1, Math.round(scale * 40));
-  ctx.stroke();
-
-  // Alerón
-  ctx.fillStyle = car.accent;
-  ctx.fillRect(-w * 0.48, -h * 0.2, w * 0.96, h * 0.18);
-
-  // Casco / Piloto rival
-  ctx.fillStyle = '#333333';
-  ctx.beginPath();
-  ctx.arc(0, -h * 0.95, Math.max(3, w * 0.16), 0, Math.PI * 2);
-  ctx.fill();
-
-  // Etiqueta del nombre sobre el coche
-  if (w > 26) {
-    ctx.fillStyle = '#ffffff';
-    ctx.font = `bold ${Math.max(9, Math.round(w * 0.2))}px monospace`;
-    ctx.textAlign = 'center';
-    ctx.fillText(car.name, 0, -h * 1.3);
-  }
-
-  ctx.restore();
-}
-
-// DIBUJAR CAJA DE ÍTEMS EN PISTA
+// CAJA DE ÍTEMS EN PISTA
 function drawItemBoxSprite(ctx, x, y, size) {
   size = Math.max(10, Math.min(45, size));
   ctx.save();
@@ -12923,8 +13418,8 @@ function drawItemBoxSprite(ctx, x, y, size) {
   ctx.restore();
 }
 
-// DIBUJAR ATREZO LATERAL (PALMERAS, CARTELES RETRO)
-function drawRoadsideProp(ctx, x, y, scale, type, text) {
+// ATREZO LATERAL (PALMERAS, CARTELES, CUBOS CYBER)
+function drawRoadsideProp(ctx, x, y, scale, type, text, now) {
   var size = scale * 1800;
   if (size < 6) return;
 
@@ -12945,33 +13440,129 @@ function drawRoadsideProp(ctx, x, y, scale, type, text) {
     ctx.textAlign = 'center';
     ctx.fillText(text, 0, -bh * 0.5 - 14);
 
-    // Poste
     ctx.fillStyle = '#666';
     ctx.fillRect(-3, -14, 6, 14);
   } else if (type === 'palm') {
-    // Palmera estilizada 2D
     var ph = Math.min(150, size * 2.2);
+    var sway = Math.sin(now * 0.003 + x) * (size * 0.15);
     ctx.strokeStyle = '#6d4c41';
     ctx.lineWidth = Math.max(2, size * 0.1);
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(size * 0.2, -ph * 0.5, 0, -ph);
+    ctx.quadraticCurveTo(sway, -ph * 0.5, sway * 1.5, -ph);
     ctx.stroke();
 
     ctx.fillStyle = '#2e7d32';
     ctx.beginPath();
-    ctx.arc(0, -ph, Math.max(8, ph * 0.35), 0, Math.PI * 2);
+    ctx.arc(sway * 1.5, -ph, Math.max(8, ph * 0.35), 0, Math.PI * 2);
+    ctx.fill();
+  } else if (type === 'cyberCube') {
+    var cubeS = Math.min(60, size * 1.4);
+    ctx.rotate(now * 0.002);
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-cubeS / 2, -cubeS / 2, cubeS, cubeS);
+    ctx.fillStyle = 'rgba(0, 255, 204, 0.25)';
+    ctx.fillRect(-cubeS / 2, -cubeS / 2, cubeS, cubeS);
+  } else if (type === 'speaker') {
+    var spkW = Math.min(50, size * 1.2);
+    var spkH = spkW * 1.6;
+    ctx.fillStyle = '#1a1a24';
+    ctx.fillRect(-spkW / 2, -spkH, spkW, spkH);
+    ctx.strokeStyle = '#ff00ff';
+    ctx.strokeRect(-spkW / 2, -spkH, spkW, spkH);
+    ctx.fillStyle = '#ffea00';
+    ctx.beginPath();
+    ctx.arc(0, -spkH * 0.65, spkW * 0.35, 0, Math.PI * 2);
     ctx.fill();
   }
 
   ctx.restore();
 }
 
-// DIBUJAR HUD Y RADAR MINIMAPA
+// =========================================================================
+// MENÚ DE INICIO RETRO ARCADE (START MENU SCREEN)
+// =========================================================================
+function drawKartStartMenu(ctx, width, height, now) {
+  ctx.save();
+
+  // Overlay semitransparente con tinte Y2K
+  ctx.fillStyle = 'rgba(10, 0, 25, 0.72)';
+  ctx.fillRect(0, 0, width, height);
+
+  // Marco retro brillante
+  ctx.strokeStyle = '#ff00bb';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(10, 10, width - 20, height - 20);
+
+  // Título principal con brillo neon pulsante
+  var titlePulse = Math.sin(now * 0.004) * 0.1 + 1.0;
+  ctx.save();
+  ctx.translate(width / 2, height * 0.22);
+  ctx.scale(titlePulse, titlePulse);
+  ctx.fillStyle = '#ffff00';
+  ctx.strokeStyle = '#ff00aa';
+  ctx.lineWidth = 5;
+  ctx.font = 'bold 32px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.strokeText('🏎️ MALEN KART 2D GP', 0, 0);
+  ctx.fillText('🏎️ MALEN KART 2D GP', 0, 0);
+  ctx.restore();
+
+  // Subtítulo
+  ctx.fillStyle = '#00ffff';
+  ctx.font = 'bold 12px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('★ EDICIÓN ESPECIAL 2004 — ANIVERSARIO DE MALENES ★', width / 2, height * 0.32);
+
+  // Pista seleccionada actualmente
+  var theme = KART_TRACK_THEMES[currentKartTrackKey] || KART_TRACK_THEMES.sunset;
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '12px "Trebuchet MS", sans-serif';
+  ctx.fillText(`Circuito Actual: ${theme.name}`, width / 2, height * 0.44);
+  ctx.fillStyle = '#ffaaee';
+  ctx.font = '10px monospace';
+  ctx.fillText(theme.desc, width / 2, height * 0.51);
+
+  // Botón principal "INICIAR CARRERA"
+  var btnW = 240;
+  var btnH = 42;
+  var btnX = width / 2 - btnW / 2;
+  var btnY = height * 0.60;
+
+  var btnGrad = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY + btnH);
+  btnGrad.addColorStop(0, '#00ff88');
+  btnGrad.addColorStop(1, '#0099ff');
+
+  ctx.fillStyle = btnGrad;
+  ctx.fillRect(btnX, btnY, btnW, btnH);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(btnX, btnY, btnW, btnH);
+
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 16px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🏁 INICIAR CARRERA', width / 2, btnY + 26);
+
+  // Instrucción para el jugador
+  ctx.fillStyle = '#ffff66';
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('Haz clic aquí o pulsa [ESPACIO / ENTER] para empezar', width / 2, height * 0.79);
+
+  // Guía rápida de controles
+  ctx.fillStyle = '#aaaaaa';
+  ctx.font = '9px monospace';
+  ctx.fillText('PC: Flechas o WASD + Espacio | Móvil: Botones en pantalla | 3 Vueltas por Carrera', width / 2, height * 0.90);
+
+  ctx.restore();
+}
+
+// HUD Y MINIMAPA EN CARRERA
 function drawKartHUD(ctx, width, height) {
   ctx.save();
 
-  // 1. Tacómetro y Velocímetro (Esquina Inferior Izquierda)
+  // 1. Velocímetro y tacómetro (Inferior Izquierda)
   ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
   ctx.fillRect(8, height - 42, 130, 34);
   ctx.strokeStyle = '#ff00bb';
@@ -12984,12 +13575,11 @@ function drawKartHUD(ctx, width, height) {
   ctx.textAlign = 'left';
   ctx.fillText(`${kmh} KM/H`, 16, height - 26);
 
-  // Barra de aceleración
   var barW = Math.min(110, (kartGame.speed / KART_MAX_SPEED) * 110);
   ctx.fillStyle = (kartGame.turboTimer > 0) ? '#ffff00' : '#00ff88';
   ctx.fillRect(16, height - 18, barW, 6);
 
-  // 2. Ranking / Posición (Esquina Superior Izquierda)
+  // 2. Ranking y Vuelta (Superior Izquierda)
   ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
   ctx.fillRect(8, 8, 120, 48);
   ctx.strokeStyle = '#ffff00';
@@ -13005,28 +13595,41 @@ function drawKartHUD(ctx, width, height) {
   ctx.font = '10px monospace';
   ctx.fillText(`VUELTA: ${Math.min(3, kartGame.lap)} / 3`, 16, 46);
 
-  // 3. Slot de Ítem (Centro Superior)
+  // 3. Slot de Ítems (Centro Superior) con ruleta animada
   ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
-  ctx.fillRect(width / 2 - 24, 8, 48, 48);
+  ctx.fillRect(width / 2 - 26, 8, 52, 50);
   ctx.strokeStyle = '#ff00ff';
   ctx.lineWidth = 2;
-  ctx.strokeRect(width / 2 - 24, 8, 48, 48);
+  ctx.strokeRect(width / 2 - 26, 8, 52, 50);
 
-  if (kartGame.item) {
-    var icon = (kartGame.item === 'turbo') ? '🍄' : (kartGame.item === 'star' ? '⭐' : '🍌');
+  if (kartGame.rouletteTimer > 0) {
     ctx.font = '24px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(icon, width / 2, 32);
-  } else {
-    ctx.fillStyle = '#666';
-    ctx.font = '16px monospace';
+    ctx.fillText(kartGame.rouletteCurrentIcon, width / 2, 33);
+  } else if (kartGame.item) {
+    var iconMap = {
+      turbo: '🍄',
+      banana: '🍌',
+      star: '⭐',
+      redShell: '🐢',
+      lightning: '⚡',
+      bomb: '💣'
+    };
+    var icon = iconMap[kartGame.item] || '🎁';
+    ctx.font = '24px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('ITEM', width / 2, 32);
+    ctx.fillText(icon, width / 2, 33);
+  } else {
+    ctx.fillStyle = '#666';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ITEM', width / 2, 33);
   }
 
-  // 4. Minimapa Radar (Esquina Superior Derecha)
+  // 4. Minimapa Radar (Superior Derecha)
   var mapW = 60;
   var mapH = 60;
   var mapX = width - mapW - 10;
@@ -13037,14 +13640,13 @@ function drawKartHUD(ctx, width, height) {
   ctx.strokeStyle = '#00ffff';
   ctx.strokeRect(mapX, mapY, mapW, mapH);
 
-  // Circuito en el mapa (elipse)
   ctx.strokeStyle = '#555';
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.ellipse(mapX + mapW / 2, mapY + mapH / 2, mapW * 0.36, mapH * 0.36, 0, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Punto del jugador (Malenes en Rosa)
+  // Posición del jugador (Malenes en rosa)
   var pAngle = (kartGame.position / kartGame.trackLength) * Math.PI * 2;
   var pDotX = mapX + mapW / 2 + Math.cos(pAngle) * (mapW * 0.36);
   var pDotY = mapY + mapH / 2 + Math.sin(pAngle) * (mapH * 0.36);
@@ -13053,7 +13655,7 @@ function drawKartHUD(ctx, width, height) {
   ctx.arc(pDotX, pDotY, 4, 0, Math.PI * 2);
   ctx.fill();
 
-  // Puntos de los rivales
+  // Posiciones de rivales
   kartGame.cars.forEach(car => {
     var cAngle = (car.z / kartGame.trackLength) * Math.PI * 2;
     var cDotX = mapX + mapW / 2 + Math.cos(cAngle) * (mapW * 0.36);
@@ -13067,7 +13669,7 @@ function drawKartHUD(ctx, width, height) {
   ctx.restore();
 }
 
-
+// EFECTOS DE SONIDO SINTETIZADOS CHIPTUNE (WEB AUDIO API)
 function playKartSound(type) {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -13119,28 +13721,50 @@ function playKartSound(type) {
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
       osc.start(now);
       osc.stop(now + 0.45);
+    } else if (type === 'fanfare') {
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+        const o = kartAudioCtx.createOscillator();
+        const g = kartAudioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.value = freq;
+        o.connect(g);
+        g.connect(kartAudioCtx.destination);
+        const t = now + (idx * 0.1);
+        g.gain.setValueAtTime(0.08, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+        o.start(t);
+        o.stop(t + 0.28);
+      });
     }
   } catch (e) {}
 }
+
+// Manejador de clics en el canvas para el menú de inicio
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('kart-canvas');
+  if (canvas) {
+    canvas.addEventListener('click', (e) => {
+      if (kartGame.state === 'menu') {
+        startKartRaceFromMenu();
+      }
+    });
+  }
+});
+
+// Tecla Enter o Espacio para iniciar en el menú
+window.addEventListener('keydown', (e) => {
+  if (kartGame.active && kartGame.state === 'menu') {
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      startKartRaceFromMenu();
+    }
+  }
+});
 
 // Compatibilidad con llamadas legacy
 function initKartRivals() { resetKartRivals(); }
 function updateKartPhysicsPro(dt) { updateKartPhysics(dt); }
 function renderKartPseudo3D() { renderKartScene(); }
-
-
-    // 7. COMPORTAMIENTO ARRASTRABLE (MOUSE Y TOUCH)
-
-    // =========================================================================
-
-    
-
-    // =========================================================================
-
-    // NUEVAS FUNCIONALIDADES DELUXE: PASARELA, JUEZ DE MODA, POSES Y PRESETS
-
-    // =========================================================================
-
 
 
     // 1. Selector de Poses Dinámicas
