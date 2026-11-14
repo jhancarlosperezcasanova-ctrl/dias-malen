@@ -1617,7 +1617,85 @@
       color: #fff;
     }
 
+  
+    /* =========================================================
+       CONTENEDOR 3D REAL-TIME PARA EL TALLER DE MUÑECAS
+       ========================================================= */
+    #doll-3d-canvas-container {
+      display: none;
+      width: 100%;
+      height: 340px;
+      position: relative;
+      cursor: grab;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #doll-3d-canvas-container:active { cursor: grabbing; }
+
+    #doll-3d-canvas-container canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    .doll-3d-anim-controls {
+      display: none;
+      gap: 4px;
+      justify-content: center;
+      margin-top: 4px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 3px 6px;
+      border-radius: 4px;
+      border: 1px solid #ff00ff;
+    }
+
+    .anim-mode-btn {
+      background: #250238;
+      color: #00ffcc;
+      border: 1px outset #ff00ff;
+      font-size: 9px;
+      font-family: Tahoma, sans-serif;
+      padding: 2px 6px;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .anim-mode-btn.active, .anim-mode-btn:hover {
+      background: #ff00cc;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .doll-3d-hint {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: #00ffff;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2px 6px;
+      border-radius: 3px;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+
+    /* Animación de respiración / pose viva en modo 2D */
+    .doll-canvas-wrapper.alive-anim {
+      animation: dollBreathing 2.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes dollBreathing {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-3px) scale(1.015); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
   </style>
+  <!-- LIBRERÍAS THREE.JS PARA RENDERIZADO 3D REALISTA Y ANIMACIÓN EN TIEMPO REAL -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -1847,6 +1925,7 @@
       <!-- Barra de herramientas del vestidor -->
       <div class="doll-menubar">
         <div class="doll-actions-left">
+          <button class="retro-btn" id="btn-toggle-3d" onclick="toggle3D2DMode()" style="background:linear-gradient(180deg,#ff00cc,#6600cc); color:#fff; font-weight:bold; box-shadow:0 0 8px #ff00ff;">💎 Modo 3D / Movimiento</button>
           <button class="retro-btn" onclick="randomizeDollLook()">🎲 Look Random</button>
           <button class="retro-btn" onclick="startFashionRunwayShow()" style="background:linear-gradient(180deg,#ffff99,#ffcc00); color:#000; font-weight:bold;">✨ Pasarela & Juez 🏆</button>
           <button class="retro-btn" onclick="downloadDollImage()">📸 Guardar Foto PNG</button>
@@ -1877,7 +1956,20 @@
           </div>
 
           <!-- Contenedor SVG de la muñeca -->
-          <div class="doll-canvas-wrapper" id="doll-canvas-wrapper">
+          <!-- Contenedor 3D WebGL con Luces, Sombras y Animación Articulada -->
+          <div id="doll-3d-canvas-container">
+            <div class="doll-3d-hint">🔄 Arrastra con el ratón o dedo para girar 360°</div>
+          </div>
+
+          <!-- Selector de Animaciones 3D -->
+          <div class="doll-3d-anim-controls" id="doll-3d-anim-controls">
+            <span style="font-size:9px; color:#ffccff;">🎬 Animación:</span>
+            <button class="anim-mode-btn active" id="btn-anim-catwalk" onclick="set3DAnimationMode('catwalk')">👠 Pasarela</button>
+            <button class="anim-mode-btn" id="btn-anim-dance" onclick="set3DAnimationMode('dance')">💃 Baile 2004</button>
+            <button class="anim-mode-btn" id="btn-anim-idle" onclick="set3DAnimationMode('idle')">✨ Respiración</button>
+          </div>
+
+          <div class="doll-canvas-wrapper alive-anim" id="doll-canvas-wrapper">
             <svg class="doll-svg" id="doll-svg-element" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <!-- Filtro de sombra suave para realismo en prendas y cuerpo -->
@@ -3845,12 +3937,14 @@
 
     function unequipCategory(category) {
       currentDollState.equipped[category] = null;
+      if (typeof update3DOutfitsAndHair === "function") update3DOutfitsAndHair();
       playRetroDollSound('pop');
       renderCurrentDollWardrobeTab();
       renderDollSVG();
     }
 
     function setDollSkinTone(hexColor, swatchIndex) {
+      if (typeof update3DOutfitsAndHair === "function") update3DOutfitsAndHair();
       currentDollState.skinColor = hexColor;
       currentDollState.skinIndex = swatchIndex;
 
@@ -3866,6 +3960,7 @@
     }
 
     function setDollHairColor(main, accent, light, swatchIndex) {
+      if (typeof update3DOutfitsAndHair === "function") update3DOutfitsAndHair();
       currentDollState.hairMainColor = main;
       currentDollState.hairAccentColor = accent;
       currentDollState.hairLightColor = light;
@@ -4200,6 +4295,759 @@
     }
 
     // =========================================================================
+    # coding: utf-8
+// =============================================================================
+// DOLLZ 3D REAL-TIME ENGINE (WebGL + Three.js) PARA DIAS-MALEN (MALENES)
+// =============================================================================
+
+let threeRenderer = null;
+let threeScene = null;
+let threeCamera = null;
+let threeAnimationId = null;
+let is3DMode = false;
+let doll3DGroup = null;
+
+// Huesos / Grupos articulados de la muñeca para animación continua en 3D
+let doll3DBones = {
+  root: null,
+  body: null,
+  head: null,
+  chest: null,
+  armL: null,
+  forearmL: null,
+  armR: null,
+  forearmR: null,
+  legL: null,
+  legR: null,
+  hairGroup: null,
+  clothesGroup: null,
+  accGroup: null,
+  wingsMesh: null,
+  tiaraMesh: null,
+  chihuahuaMesh: null
+};
+
+// Materiales PBR y Stylized Toon/Gloss
+let materials3D = {
+  skin: null,
+  hair: null,
+  hairAccent: null,
+  lingerie: null,
+  top: null,
+  bottom: null,
+  shoes: null,
+  gold: null,
+  silver: null,
+  diamond: null,
+  leather: null,
+  denim: null,
+  neonPink: null
+};
+
+let current3DAnim = 'catwalk'; // 'catwalk', 'dance', 'idle', 'pose'
+let animClock = 0;
+
+function initThreeEngine() {
+  const container = document.getElementById('doll-3d-canvas-container');
+  if (!container || threeRenderer) return;
+
+  const width = container.clientWidth || 320;
+  const height = container.clientHeight || 480;
+
+  threeScene = new THREE.Scene();
+
+  threeCamera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
+  threeCamera.position.set(0, 1.25, 4.2);
+
+  threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  threeRenderer.setSize(width, height);
+  threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  threeRenderer.shadowMap.enabled = true;
+  threeRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  threeRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+  threeRenderer.toneMappingExposure = 1.15;
+
+  container.appendChild(threeRenderer.domElement);
+
+  // Luces de Pasarela Glamour
+  const ambientLight = new THREE.AmbientLight(0xffe6ff, 0.95);
+  threeScene.add(ambientLight);
+
+  const mainSpot = new THREE.SpotLight(0xffffff, 2.2);
+  mainSpot.position.set(2, 5, 4);
+  mainSpot.angle = Math.PI / 4;
+  mainSpot.penumbra = 0.6;
+  mainSpot.castShadow = true;
+  threeScene.add(mainSpot);
+
+  const pinkRimLight = new THREE.DirectionalLight(0xff00bb, 2.0);
+  pinkRimLight.position.set(-3, 3, -2);
+  threeScene.add(pinkRimLight);
+
+  const cyanRimLight = new THREE.DirectionalLight(0x00ffff, 1.8);
+  cyanRimLight.position.set(3, 2, -2);
+  threeScene.add(cyanRimLight);
+
+  // Tarima de pasarela espejada 3D
+  const stageGeo = new THREE.CylinderGeometry(1.6, 1.7, 0.15, 36);
+  const stageMat = new THREE.MeshStandardMaterial({
+    color: 0x1a022b,
+    roughness: 0.15,
+    metalness: 0.75,
+    emissive: 0x330033
+  });
+  const stageMesh = new THREE.Mesh(stageGeo, stageMat);
+  stageMesh.position.y = -0.9;
+  stageMesh.receiveShadow = true;
+  threeScene.add(stageMesh);
+
+  // Anillo de neón alrededor de la tarima
+  const ringGeo = new THREE.TorusGeometry(1.65, 0.03, 16, 50);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+  const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+  ringMesh.rotation.x = Math.PI / 2;
+  ringMesh.position.y = -0.82;
+  threeScene.add(ringMesh);
+
+  // Interacción de rotación con mouse/touch
+  let isDragging = false;
+  let prevMouseX = 0;
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    prevMouseX = e.clientX;
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDragging || !doll3DGroup) return;
+    const deltaX = e.clientX - prevMouseX;
+    doll3DGroup.rotation.y += deltaX * 0.012;
+    prevMouseX = e.clientX;
+  });
+
+  container.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      prevMouseX = e.touches[0].clientX;
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchmove', (e) => {
+    if (!isDragging || !doll3DGroup || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - prevMouseX;
+    doll3DGroup.rotation.y += deltaX * 0.012;
+    prevMouseX = e.touches[0].clientX;
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => { isDragging = false; });
+
+  window.addEventListener('resize', onThreeResize);
+
+  build3DDollCharacter();
+  startThreeLoop();
+}
+
+function onThreeResize() {
+  const container = document.getElementById('doll-3d-canvas-container');
+  if (!container || !threeRenderer || !threeCamera) return;
+  const w = container.clientWidth || 320;
+  const h = container.clientHeight || 480;
+  threeCamera.aspect = w / h;
+  threeCamera.updateProjectionMatrix();
+  threeRenderer.setSize(w, h);
+}
+
+function build3DDollCharacter() {
+  if (doll3DGroup) threeScene.remove(doll3DGroup);
+
+  doll3DGroup = new THREE.Group();
+  doll3DGroup.position.set(0, 0.25, 0);
+
+  // Inicializar materiales
+  materials3D.skin = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(currentDollState.skinColor || '#f2ba88'),
+    roughness: 0.45,
+    metalness: 0.08
+  });
+
+  materials3D.hair = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(currentDollState.hairMainColor || '#181818'),
+    roughness: 0.35,
+    metalness: 0.25
+  });
+
+  materials3D.hairAccent = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(currentDollState.hairAccentColor || '#ff007f'),
+    roughness: 0.35,
+    metalness: 0.35
+  });
+
+  materials3D.gold = new THREE.MeshStandardMaterial({
+    color: 0xffd700,
+    metalness: 0.92,
+    roughness: 0.18,
+    emissive: 0x332200
+  });
+
+  materials3D.silver = new THREE.MeshStandardMaterial({
+    color: 0xe2e8f0,
+    metalness: 0.95,
+    roughness: 0.12
+  });
+
+  materials3D.diamond = new THREE.MeshPhysicalMaterial({
+    color: 0x00ffff,
+    metalness: 0.1,
+    roughness: 0.05,
+    transmission: 0.85,
+    thickness: 0.5
+  });
+
+  materials3D.neonPink = new THREE.MeshStandardMaterial({
+    color: 0xff0099,
+    roughness: 0.25,
+    metalness: 0.35,
+    emissive: 0x440022
+  });
+
+  // Hueso Raíz
+  doll3DBones.root = new THREE.Group();
+  doll3DGroup.add(doll3DBones.root);
+
+  // Pelvis / Caderas
+  const pelvisGeo = new THREE.CylinderGeometry(0.24, 0.28, 0.3, 16);
+  const pelvisMesh = new THREE.Mesh(pelvisGeo, materials3D.skin);
+  pelvisMesh.position.y = 0.25;
+  pelvisMesh.castShadow = true;
+  doll3DBones.root.add(pelvisMesh);
+
+  // Torso / Cintura
+  doll3DBones.body = new THREE.Group();
+  doll3DBones.body.position.set(0, 0.4, 0);
+  doll3DBones.root.add(doll3DBones.body);
+
+  const waistGeo = new THREE.CylinderGeometry(0.22, 0.18, 0.32, 16);
+  const waistMesh = new THREE.Mesh(waistGeo, materials3D.skin);
+  waistMesh.position.y = 0.12;
+  waistMesh.castShadow = true;
+  doll3DBones.body.add(waistMesh);
+
+  // Pecho / Clavículas
+  doll3DBones.chest = new THREE.Group();
+  doll3DBones.chest.position.set(0, 0.3, 0);
+  doll3DBones.body.add(doll3DBones.chest);
+
+  const chestGeo = new THREE.CylinderGeometry(0.26, 0.22, 0.32, 16);
+  const chestMesh = new THREE.Mesh(chestGeo, materials3D.skin);
+  chestMesh.position.y = 0.12;
+  chestMesh.castShadow = true;
+  doll3DBones.chest.add(chestMesh);
+
+  // Busto estilizado Y2K
+  const bustGeo = new THREE.SphereGeometry(0.13, 16, 16);
+  const bustL = new THREE.Mesh(bustGeo, materials3D.skin);
+  bustL.position.set(-0.11, 0.15, 0.14);
+  bustL.scale.set(1, 0.95, 1.15);
+  doll3DBones.chest.add(bustL);
+
+  const bustR = new THREE.Mesh(bustGeo, materials3D.skin);
+  bustR.position.set(0.11, 0.15, 0.14);
+  bustR.scale.set(1, 0.95, 1.15);
+  doll3DBones.chest.add(bustR);
+
+  // Cuello
+  const neckGeo = new THREE.CylinderGeometry(0.09, 0.11, 0.22, 16);
+  const neckMesh = new THREE.Mesh(neckGeo, materials3D.skin);
+  neckMesh.position.y = 0.36;
+  doll3DBones.chest.add(neckMesh);
+
+  // Cabeza Articulada
+  doll3DBones.head = new THREE.Group();
+  doll3DBones.head.position.set(0, 0.58, 0);
+  doll3DBones.chest.add(doll3DBones.head);
+
+  const headGeo = new THREE.SphereGeometry(0.28, 24, 24);
+  const headMesh = new THREE.Mesh(headGeo, materials3D.skin);
+  headMesh.scale.set(0.94, 1.12, 0.96);
+  headMesh.castShadow = true;
+  doll3DBones.head.add(headMesh);
+
+  // Ojos 3D vivos y almendrados
+  const eyeWhiteGeo = new THREE.SphereGeometry(0.065, 16, 16);
+  const eyeIrisGeo = new THREE.SphereGeometry(0.045, 16, 16);
+  const eyePupilGeo = new THREE.SphereGeometry(0.025, 16, 16);
+  const eyeSparkGeo = new THREE.SphereGeometry(0.014, 8, 8);
+
+  const eyeWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const eyeIrisMat = new THREE.MeshBasicMaterial({ color: 0x5b21b6 });
+  const eyePupilMat = new THREE.MeshBasicMaterial({ color: 0x050508 });
+  const eyeSparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+  // Ojo Izq
+  const eyeL = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+  eyeL.position.set(-0.11, 0.04, 0.22);
+  eyeL.scale.set(1.15, 0.85, 0.7);
+  doll3DBones.head.add(eyeL);
+
+  const irisL = new THREE.Mesh(eyeIrisGeo, eyeIrisMat);
+  irisL.position.set(-0.11, 0.04, 0.25);
+  doll3DBones.head.add(irisL);
+
+  const pupilL = new THREE.Mesh(eyePupilGeo, eyePupilMat);
+  pupilL.position.set(-0.11, 0.04, 0.27);
+  doll3DBones.head.add(pupilL);
+
+  const sparkL = new THREE.Mesh(eyeSparkGeo, eyeSparkMat);
+  sparkL.position.set(-0.12, 0.06, 0.285);
+  doll3DBones.head.add(sparkL);
+
+  // Ojo Der
+  const eyeR = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+  eyeR.position.set(0.11, 0.04, 0.22);
+  eyeR.scale.set(1.15, 0.85, 0.7);
+  doll3DBones.head.add(eyeR);
+
+  const irisR = new THREE.Mesh(eyeIrisGeo, eyeIrisMat);
+  irisR.position.set(0.11, 0.04, 0.25);
+  doll3DBones.head.add(irisR);
+
+  const pupilR = new THREE.Mesh(eyePupilGeo, eyePupilMat);
+  pupilR.position.set(0.11, 0.04, 0.27);
+  doll3DBones.head.add(pupilR);
+
+  const sparkR = new THREE.Mesh(eyeSparkGeo, eyeSparkMat);
+  sparkR.position.set(0.10, 0.06, 0.285);
+  doll3DBones.head.add(sparkR);
+
+  // Labios Carnosos Y2K con brillo gloss
+  const lipGeo = new THREE.SphereGeometry(0.045, 14, 14);
+  const lipMat = new THREE.MeshStandardMaterial({
+    color: 0xff0066,
+    roughness: 0.1,
+    metalness: 0.4
+  });
+  const lipUpper = new THREE.Mesh(lipGeo, lipMat);
+  lipUpper.position.set(0, -0.13, 0.26);
+  lipUpper.scale.set(1.6, 0.55, 0.7);
+  doll3DBones.head.add(lipUpper);
+
+  // BRAZO IZQUIERDO ARTICULADO (Hombro -> Codo -> Mano)
+  doll3DBones.armL = new THREE.Group();
+  doll3DBones.armL.position.set(-0.31, 0.24, 0);
+  doll3DBones.chest.add(doll3DBones.armL);
+
+  const shoulderGeo = new THREE.SphereGeometry(0.08, 14, 14);
+  const shoulderL = new THREE.Mesh(shoulderGeo, materials3D.skin);
+  doll3DBones.armL.add(shoulderL);
+
+  const upperArmGeo = new THREE.CylinderGeometry(0.065, 0.055, 0.35, 14);
+  const upperArmL = new THREE.Mesh(upperArmGeo, materials3D.skin);
+  upperArmL.position.y = -0.18;
+  doll3DBones.armL.add(upperArmL);
+
+  doll3DBones.forearmL = new THREE.Group();
+  doll3DBones.forearmL.position.set(0, -0.35, 0);
+  doll3DBones.armL.add(doll3DBones.forearmL);
+
+  const forearmGeo = new THREE.CylinderGeometry(0.055, 0.045, 0.35, 14);
+  const forearmMeshL = new THREE.Mesh(forearmGeo, materials3D.skin);
+  forearmMeshL.position.y = -0.16;
+  doll3DBones.forearmL.add(forearmMeshL);
+
+  const handGeo = new THREE.SphereGeometry(0.055, 12, 12);
+  const handL = new THREE.Mesh(handGeo, materials3D.skin);
+  handL.position.set(0, -0.35, 0);
+  handL.scale.set(0.65, 1.25, 0.85);
+  doll3DBones.forearmL.add(handL);
+
+  // BRAZO DERECHO ARTICULADO
+  doll3DBones.armR = new THREE.Group();
+  doll3DBones.armR.position.set(0.31, 0.24, 0);
+  doll3DBones.chest.add(doll3DBones.armR);
+
+  const shoulderR = new THREE.Mesh(shoulderGeo, materials3D.skin);
+  doll3DBones.armR.add(shoulderR);
+
+  const upperArmR = new THREE.Mesh(upperArmGeo, materials3D.skin);
+  upperArmR.position.y = -0.18;
+  doll3DBones.armR.add(upperArmR);
+
+  doll3DBones.forearmR = new THREE.Group();
+  doll3DBones.forearmR.position.set(0, -0.35, 0);
+  doll3DBones.armR.add(doll3DBones.forearmR);
+
+  const forearmMeshR = new THREE.Mesh(forearmGeo, materials3D.skin);
+  forearmMeshR.position.y = -0.16;
+  doll3DBones.forearmR.add(forearmMeshR);
+
+  const handR = new THREE.Mesh(handGeo, materials3D.skin);
+  handR.position.set(0, -0.35, 0);
+  handR.scale.set(0.65, 1.25, 0.85);
+  doll3DBones.forearmR.add(handR);
+
+  // PIERNA IZQUIERDA (Cadera -> Muslo -> Pantorrilla -> Pie)
+  doll3DBones.legL = new THREE.Group();
+  doll3DBones.legL.position.set(-0.14, 0.15, 0);
+  doll3DBones.root.add(doll3DBones.legL);
+
+  const thighGeo = new THREE.CylinderGeometry(0.11, 0.08, 0.5, 14);
+  const thighL = new THREE.Mesh(thighGeo, materials3D.skin);
+  thighL.position.y = -0.24;
+  doll3DBones.legL.add(thighL);
+
+  const calfGeo = new THREE.CylinderGeometry(0.08, 0.06, 0.52, 14);
+  const calfL = new THREE.Mesh(calfGeo, materials3D.skin);
+  calfL.position.y = -0.73;
+  doll3DBones.legL.add(calfL);
+
+  const footGeo = new THREE.BoxGeometry(0.09, 0.08, 0.2);
+  const footL = new THREE.Mesh(footGeo, materials3D.skin);
+  footL.position.set(0, -1.02, 0.05);
+  doll3DBones.legL.add(footL);
+
+  // PIERNA DERECHA
+  doll3DBones.legR = new THREE.Group();
+  doll3DBones.legR.position.set(0.14, 0.15, 0);
+  doll3DBones.root.add(doll3DBones.legR);
+
+  const thighR = new THREE.Mesh(thighGeo, materials3D.skin);
+  thighR.position.y = -0.24;
+  doll3DBones.legR.add(thighR);
+
+  const calfR = new THREE.Mesh(calfGeo, materials3D.skin);
+  calfR.position.y = -0.73;
+  doll3DBones.legR.add(calfR);
+
+  const footR = new THREE.Mesh(footGeo, materials3D.skin);
+  footR.position.set(0, -1.02, 0.05);
+  doll3DBones.legR.add(footR);
+
+  // GRUPOS PARA PRENDAS Y ACCESORIOS 3D
+  doll3DBones.hairGroup = new THREE.Group();
+  doll3DBones.head.add(doll3DBones.hairGroup);
+
+  doll3DBones.clothesGroup = new THREE.Group();
+  doll3DBones.body.add(doll3DBones.clothesGroup);
+
+  doll3DBones.accGroup = new THREE.Group();
+  doll3DBones.root.add(doll3DBones.accGroup);
+
+  threeScene.add(doll3DGroup);
+
+  update3DOutfitsAndHair();
+}
+
+function update3DOutfitsAndHair() {
+  if (!doll3DGroup) return;
+
+  // Actualizar color de piel en tiempo real
+  if (materials3D.skin) {
+    materials3D.skin.color.set(currentDollState.skinColor || '#f2ba88');
+  }
+
+  // 1. RECONSTRUIR PELO 3D
+  while (doll3DBones.hairGroup.children.length > 0) {
+    doll3DBones.hairGroup.remove(doll3DBones.hairGroup.children[0]);
+  }
+
+  materials3D.hair.color.set(currentDollState.hairMainColor || '#181818');
+  materials3D.hairAccent.color.set(currentDollState.hairAccentColor || '#ff007f');
+
+  const hairId = currentDollState.equipped.hair || 'hair_emo';
+
+  if (hairId === 'hair_spacebuns') {
+    // Moños espaciales 3D
+    const bunGeo = new THREE.SphereGeometry(0.14, 16, 16);
+    const bunL = new THREE.Mesh(bunGeo, materials3D.hairAccent);
+    bunL.position.set(-0.28, 0.3, 0);
+    doll3DBones.hairGroup.add(bunL);
+
+    const bunR = new THREE.Mesh(bunGeo, materials3D.hairAccent);
+    bunR.position.set(0.28, 0.3, 0);
+    doll3DBones.hairGroup.add(bunR);
+
+    const scalpGeo = new THREE.SphereGeometry(0.295, 18, 18);
+    const scalp = new THREE.Mesh(scalpGeo, materials3D.hair);
+    scalp.position.set(0, 0.04, -0.04);
+    doll3DBones.hairGroup.add(scalp);
+  } else if (hairId === 'hair_flequillo_barbie') {
+    // Lacio Barbie con diadema rosa 3D
+    const scalpGeo = new THREE.SphereGeometry(0.295, 18, 18);
+    const scalp = new THREE.Mesh(scalpGeo, materials3D.hair);
+    scalp.position.set(0, 0.04, -0.04);
+    doll3DBones.hairGroup.add(scalp);
+
+    const strandGeo = new THREE.CylinderGeometry(0.12, 0.08, 1.1, 12);
+    const strandL = new THREE.Mesh(strandGeo, materials3D.hair);
+    strandL.position.set(-0.25, -0.35, -0.02);
+    doll3DBones.hairGroup.add(strandL);
+
+    const strandR = new THREE.Mesh(strandGeo, materials3D.hair);
+    strandR.position.set(0.25, -0.35, -0.02);
+    doll3DBones.hairGroup.add(strandR);
+
+    // Diadema rosa
+    const headbandGeo = new THREE.TorusGeometry(0.29, 0.03, 12, 24);
+    const headband = new THREE.Mesh(headbandGeo, materials3D.neonPink);
+    headband.rotation.x = Math.PI / 3;
+    headband.position.set(0, 0.08, 0.02);
+    doll3DBones.hairGroup.add(headband);
+  } else {
+    // Emo Scene / Volumen Diva / Coletas por defecto
+    const scalpGeo = new THREE.SphereGeometry(0.3, 18, 18);
+    const scalp = new THREE.Mesh(scalpGeo, materials3D.hair);
+    scalp.position.set(0, 0.04, -0.04);
+    doll3DBones.hairGroup.add(scalp);
+
+    // Flequillo emo asimétrico cayendo sobre un ojo
+    const bangGeo = new THREE.ConeGeometry(0.22, 0.45, 14);
+    const bang = new THREE.Mesh(bangGeo, materials3D.hairAccent);
+    bang.rotation.z = -Math.PI / 4;
+    bang.rotation.y = 0.3;
+    bang.position.set(-0.14, 0.1, 0.2);
+    doll3DBones.hairGroup.add(bang);
+
+    // Melena larga por la espalda
+    const backGeo = new THREE.CylinderGeometry(0.22, 0.3, 1.05, 14);
+    const backHair = new THREE.Mesh(backGeo, materials3D.hair);
+    backHair.position.set(0, -0.3, -0.16);
+    doll3DBones.hairGroup.add(backHair);
+  }
+
+  // 2. RECONSTRUIR PRENDAS 3D (Tops & Bottoms)
+  while (doll3DBones.clothesGroup.children.length > 0) {
+    doll3DBones.clothesGroup.remove(doll3DBones.clothesGroup.children[0]);
+  }
+
+  const topId = currentDollState.equipped.tops;
+  const bottomId = currentDollState.equipped.bottoms;
+
+  if (topId === 'top_vestido_gala') {
+    // Vestido de Gala Siren 3D (largo hasta el suelo con brillo de seda y apertura)
+    const dressTopGeo = new THREE.CylinderGeometry(0.27, 0.22, 0.5, 16);
+    const dressTop = new THREE.Mesh(dressTopGeo, materials3D.neonPink);
+    dressTop.position.y = 0.25;
+    doll3DBones.clothesGroup.add(dressTop);
+
+    const dressSkirtGeo = new THREE.ConeGeometry(0.55, 1.35, 20);
+    const dressSkirt = new THREE.Mesh(dressSkirtGeo, materials3D.neonPink);
+    dressSkirt.position.y = -0.55;
+    doll3DBones.clothesGroup.add(dressSkirt);
+  } else {
+    // Top BabyTee / Corset / Halter 3D
+    const topGeo = new THREE.CylinderGeometry(0.265, 0.225, 0.42, 16);
+    const topColor = (topId === 'top_halter_shakira') ? materials3D.gold : (topId === 'top_silk_corset' ? materials3D.neonPink : materials3D.silver);
+    const topMesh = new THREE.Mesh(topGeo, topColor);
+    topMesh.position.y = 0.28;
+    doll3DBones.clothesGroup.add(topMesh);
+
+    // Falda / Pantalón 3D
+    if (bottomId === 'bottom_leather_pants') {
+      const pantsMat = new THREE.MeshStandardMaterial({ color: 0x111116, roughness: 0.2, metalness: 0.6 });
+      const pantsGeo = new THREE.CylinderGeometry(0.26, 0.29, 0.35, 16);
+      const pantsMesh = new THREE.Mesh(pantsGeo, pantsMat);
+      pantsMesh.position.y = -0.08;
+      doll3DBones.clothesGroup.add(pantsMesh);
+    } else {
+      // Minifalda / Shorts plisada
+      const skirtGeo = new THREE.CylinderGeometry(0.24, 0.36, 0.35, 18);
+      const skirtMat = new THREE.MeshStandardMaterial({ color: 0xb3003b, roughness: 0.5 });
+      const skirtMesh = new THREE.Mesh(skirtGeo, skirtMat);
+      skirtMesh.position.y = -0.06;
+      doll3DBones.clothesGroup.add(skirtMesh);
+    }
+  }
+
+  // 3. ACCESORIOS 3D (Tiara de Reina Malenes, Alas, Perrito Chihuahua)
+  while (doll3DBones.accGroup.children.length > 0) {
+    doll3DBones.accGroup.remove(doll3DBones.accGroup.children[0]);
+  }
+
+  const accId = currentDollState.equipped.accessories;
+
+  // Corona Tiara de Malenes 3D
+  if (accId === 'acc_malenes_tiara') {
+    const tiaraGroup = new THREE.Group();
+    tiaraGroup.position.set(0, 1.58, 0);
+
+    const baseRingGeo = new THREE.TorusGeometry(0.24, 0.02, 12, 32);
+    const baseRing = new THREE.Mesh(baseRingGeo, materials3D.gold);
+    baseRing.rotation.x = Math.PI / 2.2;
+    tiaraGroup.add(baseRing);
+
+    // Puntas de la corona con gemas
+    for (let i = -2; i <= 2; i++) {
+      const h = (i === 0) ? 0.16 : (Math.abs(i) === 1 ? 0.12 : 0.08);
+      const spikeGeo = new THREE.ConeGeometry(0.03, h, 8);
+      const spike = new THREE.Mesh(spikeGeo, materials3D.gold);
+      spike.position.set(i * 0.09, 0.06 + h / 2, 0.18 - Math.abs(i) * 0.03);
+      tiaraGroup.add(spike);
+
+      const gemGeo = new THREE.SphereGeometry(0.022, 10, 10);
+      const gem = new THREE.Mesh(gemGeo, materials3D.diamond);
+      gem.position.set(i * 0.09, 0.08 + h, 0.18 - Math.abs(i) * 0.03);
+      tiaraGroup.add(gem);
+    }
+    doll3DBones.accGroup.add(tiaraGroup);
+  }
+
+  // Alas de Ángel / Hada Cyber 3D
+  if (accId === 'acc_wings') {
+    const wingGeo = new THREE.PlaneGeometry(0.9, 0.75);
+    const wingMat = new THREE.MeshPhysicalMaterial({
+      color: 0x00ffff,
+      transmission: 0.8,
+      opacity: 0.85,
+      transparent: true,
+      roughness: 0.1,
+      metalness: 0.3,
+      side: THREE.DoubleSide
+    });
+    const wingL = new THREE.Mesh(wingGeo, wingMat);
+    wingL.position.set(-0.55, 0.8, -0.22);
+    wingL.rotation.y = Math.PI / 5;
+    doll3DBones.accGroup.add(wingL);
+
+    const wingR = new THREE.Mesh(wingGeo, wingMat);
+    wingR.position.set(0.55, 0.8, -0.22);
+    wingR.rotation.y = -Math.PI / 5;
+    doll3DBones.accGroup.add(wingR);
+  }
+
+  // Perrito Chihuahua en Bolso de Lujo Y2K 3D
+  if (accId === 'acc_chihuahua_paris') {
+    const bagGroup = new THREE.Group();
+    bagGroup.position.set(-0.42, 0.45, 0.1);
+
+    const bagGeo = new THREE.BoxGeometry(0.24, 0.22, 0.15);
+    const bagMat = new THREE.MeshStandardMaterial({ color: 0xff0088, roughness: 0.2, metalness: 0.4 });
+    const bagMesh = new THREE.Mesh(bagGeo, bagMat);
+    bagGroup.add(bagMesh);
+
+    // Cabecita del perrito
+    const dogHeadGeo = new THREE.SphereGeometry(0.085, 14, 14);
+    const dogMat = new THREE.MeshStandardMaterial({ color: 0xd4a373 });
+    const dogHead = new THREE.Mesh(dogHeadGeo, dogMat);
+    dogHead.position.set(0, 0.12, 0.02);
+    bagGroup.add(dogHead);
+
+    // Orejas de chihuahua
+    const earGeo = new THREE.ConeGeometry(0.035, 0.08, 8);
+    const earL = new THREE.Mesh(earGeo, dogMat);
+    earL.position.set(-0.06, 0.2, 0.02);
+    earL.rotation.z = 0.3;
+    bagGroup.add(earL);
+
+    const earR = new THREE.Mesh(earGeo, dogMat);
+    earR.position.set(0.06, 0.2, 0.02);
+    earR.rotation.z = -0.3;
+    bagGroup.add(earR);
+
+    doll3DBones.accGroup.add(bagGroup);
+  }
+}
+
+// Bucle de Animación Continua 3D (Movimiento natural, balanceo de cadera y brazos estilo pasarela)
+function startThreeLoop() {
+  if (threeAnimationId) cancelAnimationFrame(threeAnimationId);
+
+  function animate() {
+    threeAnimationId = requestAnimationFrame(animate);
+    animClock += 0.045;
+
+    if (doll3DBones.root) {
+      if (current3DAnim === 'catwalk') {
+        // Movimiento de pasarela: cadera balanceándose rítmicamente
+        doll3DBones.root.position.y = Math.sin(animClock * 2) * 0.04;
+        doll3DBones.root.rotation.y = Math.sin(animClock) * 0.18;
+
+        // Balanceo elegante de torso y hombros
+        if (doll3DBones.body) doll3DBones.body.rotation.z = Math.sin(animClock) * 0.08;
+        if (doll3DBones.chest) doll3DBones.chest.rotation.y = -Math.sin(animClock) * 0.12;
+        if (doll3DBones.head) {
+          doll3DBones.head.rotation.y = Math.sin(animClock * 0.6) * 0.1;
+          doll3DBones.head.rotation.x = Math.sin(animClock * 1.2) * 0.04;
+        }
+
+        // Brazos articulados balanceándose
+        if (doll3DBones.armL) {
+          doll3DBones.armL.rotation.x = Math.sin(animClock) * 0.35;
+          doll3DBones.armL.rotation.z = -0.15 + Math.sin(animClock * 0.5) * 0.08;
+        }
+        if (doll3DBones.armR) {
+          doll3DBones.armR.rotation.x = -Math.sin(animClock) * 0.35;
+          doll3DBones.armR.rotation.z = 0.15 - Math.sin(animClock * 0.5) * 0.08;
+        }
+
+        // Piernas cruzando ligeramente el paso de modelo
+        if (doll3DBones.legL) doll3DBones.legL.rotation.x = -Math.sin(animClock) * 0.22;
+        if (doll3DBones.legR) doll3DBones.legR.rotation.x = Math.sin(animClock) * 0.22;
+      } else if (current3DAnim === 'dance') {
+        // Baile discoteca 2004
+        doll3DBones.root.position.y = Math.abs(Math.sin(animClock * 3)) * 0.08;
+        doll3DBones.root.rotation.y = Math.sin(animClock * 1.5) * 0.35;
+        if (doll3DBones.armL) doll3DBones.armL.rotation.z = -0.8 + Math.sin(animClock * 3) * 0.3;
+        if (doll3DBones.armR) doll3DBones.armR.rotation.z = 0.8 - Math.sin(animClock * 3) * 0.3;
+      } else {
+        // Idle suave de respiración
+        doll3DBones.root.position.y = Math.sin(animClock * 1.2) * 0.02;
+        if (doll3DBones.chest) doll3DBones.chest.scale.set(1 + Math.sin(animClock * 1.2) * 0.015, 1, 1 + Math.sin(animClock * 1.2) * 0.015);
+      }
+    }
+
+    if (threeRenderer && threeScene && threeCamera) {
+      threeRenderer.render(threeScene, threeCamera);
+    }
+  }
+
+  animate();
+}
+
+function set3DAnimationMode(mode) {
+  current3DAnim = mode;
+  document.querySelectorAll('.anim-mode-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`btn-anim-${mode}`);
+  if (btn) btn.classList.add('active');
+  playRetroDollSound('pop');
+}
+
+function toggle3D2DMode() {
+  is3DMode = !is3DMode;
+  const svgWrapper = document.getElementById('doll-canvas-wrapper');
+  const threeWrapper = document.getElementById('doll-3d-canvas-container');
+  const toggleBtn = document.getElementById('btn-toggle-3d');
+  const animControls = document.getElementById('doll-3d-anim-controls');
+
+  if (is3DMode) {
+    if (svgWrapper) svgWrapper.style.display = 'none';
+    if (threeWrapper) threeWrapper.style.display = 'block';
+    if (animControls) animControls.style.display = 'flex';
+    if (toggleBtn) {
+      toggleBtn.textContent = '🌟 Modo 2D Clásico';
+      toggleBtn.style.background = '#00ffff';
+      toggleBtn.style.color = '#000';
+    }
+    initThreeEngine();
+    update3DOutfitsAndHair();
+    onThreeResize();
+    showDollToast('✨ ¡Motor 3D Realista Activado!');
+    playRetroDollSound('fanfare');
+  } else {
+    if (svgWrapper) svgWrapper.style.display = 'flex';
+    if (threeWrapper) threeWrapper.style.display = 'none';
+    if (animControls) animControls.style.display = 'none';
+    if (toggleBtn) {
+      toggleBtn.textContent = '💎 Ver Muñeca en 3D';
+      toggleBtn.style.background = '';
+      toggleBtn.style.color = '';
+    }
+    showDollToast('✨ Volviendo al Taller 2D');
+  }
+}
+
+
     // 7. COMPORTAMIENTO ARRASTRABLE (MOUSE Y TOUCH)
     // =========================================================================
     
