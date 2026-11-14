@@ -4193,57 +4193,7 @@
     </div>
 
     
-    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P -->
-    <div class="kart-mp-dialog-overlay" id="kart-mp-dialog" style="display:none; position:absolute; top:42px; left:0; width:100%; height:calc(100% - 42px); background:rgba(0,0,0,0.85); z-index:100; overflow-y:auto; padding:15px; box-sizing:border-box;">
-      <div class="arcade-window" style="max-width:480px; width:94%; margin:15px auto; border:3px outset #00ffff; box-shadow:0 0 25px rgba(0,255,255,0.7); background:#120524;">
-        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #00ffff, #ff00bb);">
-          <span>👥 Multijugador Online (2 Dispositivos • WebRTC P2P)</span>
-          <div class="win-btn close" onclick="closeKartMultiplayerModal()">X</div>
-        </div>
-        <div style="background:#120524; color:#fff; padding:12px; font-family:var(--font-mono, monospace);">
-          <div style="display:flex; gap:8px; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:12px;">
-            <button class="retro-btn active" id="tab-btn-host" onclick="switchKartMpTab('host')">🏠 Crear Sala (Host / P1)</button>
-            <button class="retro-btn" id="tab-btn-join" onclick="switchKartMpTab('join')">📱 Unirse a Sala (P2)</button>
-          </div>
-
-          <!-- Pestaña 1: Crear Sala (Host) -->
-          <div id="kart-mp-tab-host">
-            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace directo con tu amigo en otro móvil o PC:</p>
-            <button class="retro-btn" onclick="createKartMultiplayerRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
-            
-            <div id="kart-mp-host-info" style="display:none; background:#000; border:1px solid #00ffff; padding:10px; margin-bottom:10px; text-align:center;">
-              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
-              <div id="kart-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#00ffff; letter-spacing:4px; margin:4px 0;">----</div>
-              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
-                <button class="retro-btn" onclick="copyKartRoomCode()">📋 Copiar Código</button>
-                <button class="retro-btn" onclick="copyKartShareLink()">🔗 Copiar Enlace Directo</button>
-              </div>
-              <div id="kart-mp-host-status" style="font-size:11px; color:#ff00bb; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
-            </div>
-
-            <button id="btn-kart-mp-start" class="retro-btn" onclick="startMultiplayerRaceAsHost()" style="display:none; background:linear-gradient(90deg, #ff00bb, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡EMPEZAR CARRERA JUNTOS!</button>
-          </div>
-
-          <!-- Pestaña 2: Unirse a Sala (Guest) -->
-          <div id="kart-mp-tab-join" style="display:none;">
-            <p style="font-size:11px; color:#00ffff; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala:</p>
-            <div style="margin-bottom:8px;">
-              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
-              <input type="text" id="kart-mp-player-name" value="Piloto 2" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff00bb; padding:6px; font-family:monospace; box-sizing:border-box;">
-            </div>
-            <div style="margin-bottom:10px;">
-              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
-              <input type="text" id="kart-mp-join-code" placeholder="Ej: 4821" maxlength="6" style="width:100%; background:#000; color:#00ffff; border:1px solid #00ffff; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
-            </div>
-            <button class="retro-btn" onclick="joinKartMultiplayerFromInput()" style="background:#00ffff; color:#000; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA SALA</button>
-            <div id="kart-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
-          </div>
-
-          <div style="margin-top:12px; border-top:1px dashed #444; padding-top:8px; font-size:9px; color:#888; text-align:center;">
-            🌐 Conexión en tiempo real WebRTC punto a punto (sin servidores intermediarios, ultrabaja latencia).
-          </div>
-        </div>
-      </div>
+    
     </div>
 
     <div class="arcade-game-canvas-box">
@@ -4311,7 +4261,64 @@
 
     </div>
 
-    <div class="arcade-game-canvas-box">
+    <div 
+    <!-- DIÁLOGO RETRO MULTIJUGADOR ONLINE P2P (MALEN KART GP PRO) -->
+    <div class="kart-mp-dialog-overlay" id="kart-mp-dialog" style="display:none; position:absolute; top:36px; left:0; width:100%; height:calc(100% - 36px); background:rgba(5, 0, 15, 0.92); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
+      <div class="arcade-window" style="max-width:480px; width:94%; margin:10px auto; border:3px outset #00ffff; box-shadow:0 0 25px rgba(0,255,255,0.7); background:#120524;">
+        <div class="arcade-titlebar" style="background:linear-gradient(90deg, #00ffff, #ff00bb);">
+          <span>👥 Multijugador Online (2 Dispositivos • WebRTC P2P)</span>
+          <div class="win-btn close" onclick="closeKartMultiplayerModal()">X</div>
+        </div>
+        <div style="background:#120524; color:#fff; padding:14px; font-family:var(--font-mono, monospace);">
+          <div style="display:flex; gap:8px; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:12px;">
+            <button class="retro-btn active" id="tab-btn-host" onclick="switchKartMpTab('host')">🏠 Crear Sala (Host / P1)</button>
+            <button class="retro-btn" id="tab-btn-join" onclick="switchKartMpTab('join')">📱 Unirse a Sala (P2)</button>
+          </div>
+
+          <!-- Pestaña 1: Crear Sala (Host) -->
+          <div id="kart-mp-tab-host">
+            <p style="font-size:11px; color:#ffcc00; margin-bottom:8px;">Crea una sala y comparte el código o enlace directo con tu amigo en otro móvil o PC:</p>
+            <button class="retro-btn" onclick="createKartMultiplayerRoom()" style="background:#00ff88; color:#000; font-weight:bold; width:100%; padding:9px; margin-bottom:10px; font-size:12px;">🔑 CREAR NUEVA SALA P2P</button>
+            
+            <div id="kart-mp-host-info" style="display:none; background:#000; border:1px solid #00ffff; padding:10px; margin-bottom:10px; text-align:center;">
+              <div style="font-size:10px; color:#888;">CÓDIGO DE LA SALA:</div>
+              <div id="kart-mp-room-code-display" style="font-size:28px; font-weight:bold; color:#00ffff; letter-spacing:4px; margin:4px 0;">----</div>
+              <div style="display:flex; gap:6px; justify-content:center; margin-top:6px; flex-wrap:wrap;">
+                <button class="retro-btn" onclick="copyKartRoomCode()">📋 Copiar Código</button>
+                <button class="retro-btn" onclick="copyKartShareLink()">🔗 Copiar Enlace Directo</button>
+              </div>
+              <div id="kart-mp-host-status" style="font-size:11px; color:#ff00bb; margin-top:8px;">⏳ Esperando que el Jugador 2 se conecte...</div>
+            </div>
+
+            <button id="btn-kart-mp-start" class="retro-btn" onclick="startMultiplayerRaceAsHost()" style="display:none; background:linear-gradient(90deg, #ff00bb, #ffff00); color:#000; font-weight:bold; width:100%; padding:10px; font-size:14px;">🚀 ¡EMPEZAR CARRERA JUNTOS!</button>
+          </div>
+
+          <!-- Pestaña 2: Unirse a Sala (Guest) -->
+          <div id="kart-mp-tab-join" style="display:none;">
+            <p style="font-size:11px; color:#00ffff; margin-bottom:8px;">Ingresa el código que te dio el creador de la sala:</p>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Tu Nombre / Apodo:</label>
+              <input type="text" id="kart-mp-player-name" value="Piloto 2" maxlength="12" style="width:100%; background:#000; color:#fff; border:1px solid #ff00bb; padding:6px; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:10px; display:block; color:#aaa;">Código de Sala (4 dígitos):</label>
+              <input type="text" id="kart-mp-join-code" placeholder="Ej: 4821" maxlength="6" style="width:100%; background:#000; color:#00ffff; border:1px solid #00ffff; padding:8px; font-size:18px; font-weight:bold; letter-spacing:3px; text-align:center; font-family:monospace; box-sizing:border-box;">
+            </div>
+            <button class="retro-btn" onclick="joinKartMultiplayerFromInput()" style="background:#00ffff; color:#000; font-weight:bold; width:100%; padding:9px; font-size:12px;">🔗 CONECTARSE A LA SALA</button>
+            <div id="kart-mp-join-status" style="font-size:11px; color:#ffff00; margin-top:8px; text-align:center;"></div>
+          </div>
+
+          <div style="margin-top:12px; border-top:1px dashed #444; padding-top:8px; font-size:9px; color:#888; text-align:center;">
+            🌐 Conexión en tiempo real WebRTC punto a punto (sin servidores intermediarios, ultrabaja latencia).
+          </div>
+          <div style="text-align:center; margin-top:10px;">
+            <button class="retro-btn" onclick="closeKartMultiplayerModal()">✖ Cerrar Ventana</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div ="arcade-game-canvas-box">
 
       <canvas id="kart-canvas" class="arcade-canvas" width="640" height="360"></canvas>
 
@@ -13590,7 +13597,7 @@ function drawKartStartMenu(ctx, width, height, now) {
   ctx.save();
 
   // Overlay semitransparente con tinte Y2K
-  ctx.fillStyle = 'rgba(10, 0, 25, 0.72)';
+  ctx.fillStyle = 'rgba(10, 0, 25, 0.76)';
   ctx.fillRect(0, 0, width, height);
 
   // Marco retro brillante
@@ -13599,14 +13606,14 @@ function drawKartStartMenu(ctx, width, height, now) {
   ctx.strokeRect(10, 10, width - 20, height - 20);
 
   // Título principal con brillo neon pulsante
-  var titlePulse = Math.sin(now * 0.004) * 0.1 + 1.0;
+  var titlePulse = Math.sin(now * 0.004) * 0.08 + 1.0;
   ctx.save();
-  ctx.translate(width / 2, height * 0.22);
+  ctx.translate(width / 2, height * 0.18);
   ctx.scale(titlePulse, titlePulse);
   ctx.fillStyle = '#ffff00';
   ctx.strokeStyle = '#ff00aa';
   ctx.lineWidth = 5;
-  ctx.font = 'bold 32px "Trebuchet MS", sans-serif';
+  ctx.font = 'bold 30px "Trebuchet MS", sans-serif';
   ctx.textAlign = 'center';
   ctx.strokeText('🏎️ MALEN KART 2D GP', 0, 0);
   ctx.fillText('🏎️ MALEN KART 2D GP', 0, 0);
@@ -13614,68 +13621,70 @@ function drawKartStartMenu(ctx, width, height, now) {
 
   // Subtítulo
   ctx.fillStyle = '#00ffff';
-  ctx.font = 'bold 12px monospace';
+  ctx.font = 'bold 11px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('★ EDICIÓN ESPECIAL 2004 — ANIVERSARIO DE MALENES ★', width / 2, height * 0.32);
+  ctx.fillText('★ EDICIÓN ESPECIAL 2004 — ANIVERSARIO DE MALENES ★', width / 2, height * 0.28);
 
   // Pista seleccionada actualmente
   var theme = KART_TRACK_THEMES[currentKartTrackKey] || KART_TRACK_THEMES.sunset;
   ctx.fillStyle = '#ffffff';
-  ctx.font = '12px "Trebuchet MS", sans-serif';
-  ctx.fillText(`Circuito Actual: ${theme.name}`, width / 2, height * 0.44);
+  ctx.font = 'bold 12px "Trebuchet MS", sans-serif';
+  ctx.fillText(`Circuito: ${theme.name}`, width / 2, height * 0.38);
   ctx.fillStyle = '#ffaaee';
   ctx.font = '10px monospace';
-  ctx.fillText(theme.desc, width / 2, height * 0.51);
+  ctx.fillText(theme.desc, width / 2, height * 0.45);
 
-  // Botón principal "INICIAR CARRERA"
-  var btnW = 240;
-  var btnH = 42;
-  var btnX = width / 2 - btnW / 2;
-  var btnY = height * 0.60;
+  // BOTÓN 1: 🏁 INICIAR CARRERA (SOLO)
+  var btn1W = 260;
+  var btn1H = 38;
+  var btn1X = width / 2 - btn1W / 2;
+  var btn1Y = height * 0.52;
 
-  var btnGrad = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY + btnH);
-  btnGrad.addColorStop(0, '#00ff88');
-  btnGrad.addColorStop(1, '#0099ff');
+  var btn1Grad = ctx.createLinearGradient(btn1X, btn1Y, btn1X + btn1W, btn1Y + btn1H);
+  btn1Grad.addColorStop(0, '#00ff88');
+  btn1Grad.addColorStop(1, '#00aaff');
 
-  ctx.fillStyle = btnGrad;
-  ctx.fillRect(btnX, btnY, btnW, btnH);
+  ctx.fillStyle = btn1Grad;
+  ctx.fillRect(btn1X, btn1Y, btn1W, btn1H);
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 2;
-  ctx.strokeRect(btnX, btnY, btnW, btnH);
-
-  
-  // Botón Multijugador en el menú
-  var mpBtnW = 200;
-  var mpBtnH = 26;
-  var mpBtnX = width / 2 - mpBtnW / 2;
-  var mpBtnY = height * 0.72;
-
-  ctx.fillStyle = 'rgba(0, 255, 255, 0.2)';
-  ctx.fillRect(mpBtnX, mpBtnY, mpBtnW, mpBtnH);
-  ctx.strokeStyle = '#00ffff';
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(mpBtnX, mpBtnY, mpBtnW, mpBtnH);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 11px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('👥 MODO MULTIJUGADOR (2P)', width / 2, mpBtnY + 17);
+  ctx.strokeRect(btn1X, btn1Y, btn1W, btn1H);
 
   ctx.fillStyle = '#000000';
-
-  ctx.font = 'bold 16px "Trebuchet MS", sans-serif';
+  ctx.font = 'bold 15px "Trebuchet MS", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('🏁 INICIAR CARRERA', width / 2, btnY + 26);
+  ctx.fillText('🏁 INICIAR CARRERA (SOLO)', width / 2, btn1Y + 24);
 
-  // Instrucción para el jugador
+  // BOTÓN 2: 👥 MULTIJUGADOR ONLINE (2P)
+  var btn2W = 260;
+  var btn2H = 38;
+  var btn2X = width / 2 - btn2W / 2;
+  var btn2Y = height * 0.66;
+
+  var btn2Grad = ctx.createLinearGradient(btn2X, btn2Y, btn2X + btn2W, btn2Y + btn2H);
+  btn2Grad.addColorStop(0, '#ff00aa');
+  btn2Grad.addColorStop(1, '#00ffff');
+
+  ctx.fillStyle = btn2Grad;
+  ctx.fillRect(btn2X, btn2Y, btn2W, btn2H);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(btn2X, btn2Y, btn2W, btn2H);
+
+  ctx.fillStyle = '#000000';
+  ctx.font = 'bold 15px "Trebuchet MS", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('👥 MULTIJUGADOR ONLINE (2P)', width / 2, btn2Y + 24);
+
+  // Instrucción
   ctx.fillStyle = '#ffff66';
   ctx.font = 'bold 11px monospace';
-  ctx.fillText('Haz clic aquí o pulsa [ESPACIO / ENTER] para empezar', width / 2, height * 0.79);
+  ctx.fillText('Haz clic en un modo para jugar | [ESPACIO / ENTER] = Solo', width / 2, height * 0.83);
 
   // Guía rápida de controles
   ctx.fillStyle = '#aaaaaa';
   ctx.font = '9px monospace';
-  ctx.fillText('PC: Flechas o WASD + Espacio | Móvil: Botones en pantalla | 3 Vueltas por Carrera', width / 2, height * 0.90);
+  ctx.fillText('PC: Flechas o WASD + Espacio | Móvil: Botones en pantalla | 3 Vueltas por Carrera', width / 2, height * 0.92);
 
   ctx.restore();
 }
@@ -13894,11 +13903,46 @@ function playKartSound(type) {
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('kart-canvas');
   if (canvas) {
-    canvas.addEventListener('click', (e) => {
-      if (kartGame.state === 'menu') {
-        startKartRaceFromMenu();
+    function handleMenuClick(clientX, clientY) {
+      if (kartGame.state !== 'menu') return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+
+      // Dimensiones de los botones del menú (width = 640, height = 360)
+      // Botón 1: Solo (y: 187 a 225)
+      // Botón 2: Multijugador (y: 237 a 276)
+      const btnW = 260;
+      const btnX = (canvas.width / 2) - (btnW / 2); // 190
+
+      // Clic en Botón 2: Multijugador Online (2P)
+      if (x >= btnX && x <= btnX + btnW && y >= (canvas.height * 0.66) && y <= (canvas.height * 0.66) + 38) {
+        openKartMultiplayerModal();
+        return;
       }
+
+      // Clic en Botón 1: Solo
+      if (x >= btnX && x <= btnX + btnW && y >= (canvas.height * 0.52) && y <= (canvas.height * 0.52) + 38) {
+        startKartRaceFromMenu();
+        return;
+      }
+
+      // Clic general fuera de botones
+      startKartRaceFromMenu();
+    }
+
+    canvas.addEventListener('click', (e) => {
+      handleMenuClick(e.clientX, e.clientY);
     });
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (kartGame.state === 'menu' && e.touches && e.touches.length > 0) {
+        e.preventDefault();
+        handleMenuClick(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
   }
 });
 
